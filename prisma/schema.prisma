@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Role {
+  id             String       @id @default(uuid())
+  name           String       @unique
+  description    String       @default("")
+  corePoolSize   Int          @default(2)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  candidates     Candidate[]
+  roleScenarios  RoleScenario[]
+}
+
+model Scenario {
+  id          String         @id @default(uuid())
+  title       String
+  stage       Int            // 1, 2, or 3
+  type        String         // "core" or "role-specific"
+  roleType    String?        // null for core, e.g. "engineering", "sales" for role-specific
+  tree        String         // JSON string: branching tree structure
+  tenets      String         // JSON string: array of tenet names this scenario evaluates
+  scoringRubric String       // JSON string: scoring rules per path
+  isPublished Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  roleScenarios RoleScenario[]
+}
+
+model RoleScenario {
+  id         String   @id @default(uuid())
+  roleId     String
+  scenarioId String
+  role       Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  scenario   Scenario @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, scenarioId])
+}
+
+model Candidate {
+  id          String       @id @default(uuid())
+  name        String
+  email       String
+  roleId      String
+  token       String       @unique
+  tokenExpiry DateTime
+  status      String       @default("invited") // invited, in_progress, completed, scored
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  role        Role         @relation(fields: [roleId], references: [id])
+  assessment  Assessment?
+}
+
+model Assessment {
+  id            String   @id @default(uuid())
+  candidateId   String   @unique
+  currentStage  Int      @default(0)   // 0 = not started, 1, 2, 3
+  stage1Data    String?  // JSON: choices, timestamps, behavioral signals
+  stage2Data    String?  // JSON: decision paths per scenario
+  stage3Data    String?  // JSON: role-specific challenge results
+  completedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  candidate     Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  score         Score?
+}
+
+model Score {
+  id              String   @id @default(uuid())
+  assessmentId    String   @unique
+  clientFocused   Float    @default(0)
+  empowering      Float    @default(0)
+  productive      Float    @default(0)
+  balanced        Float    @default(0)
+  reliable        Float    @default(0)
+  improving       Float    @default(0)
+  transparent     Float    @default(0)
+  roleFitScore    Float    @default(0)
+  behavioralScore Float    @default(0)
+  compositeScore  Float    @default(0)
+  breakdown       String?  // JSON: detailed scoring breakdown
+  aiAnalysis      String?  // JSON: Claude's qualitative analysis
+  scoredAt        DateTime @default(now())
+  assessment      Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+}
