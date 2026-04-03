@@ -6,6 +6,14 @@ const adapter = new PrismaLibSql({ url: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
+  // Clear existing data (order matters for foreign keys)
+  await prisma.score.deleteMany();
+  await prisma.assessment.deleteMany();
+  await prisma.candidate.deleteMany();
+  await prisma.roleScenario.deleteMany();
+  await prisma.scenario.deleteMany();
+  await prisma.role.deleteMany();
+
   // --- Roles ---
   const engRole = await prisma.role.create({
     data: {
