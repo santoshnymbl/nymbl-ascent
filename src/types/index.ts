@@ -78,4 +78,11 @@ export interface Stage3Result {
   signals: BehavioralSignal[];
 }
 
+export type TenetScores = Record<Tenet, number>;
+
+export interface ScenarioRubric {
+  scenarioId: string;
+  pathScores: Record<string, Partial<Record<Tenet, number>>>;
+}
+
 export type CandidateStatus = "invited" | "in_progress" | "completed" | "scored";
