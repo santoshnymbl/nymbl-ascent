@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { Upload, AlertCircle, FileText } from "lucide-react";
 
 interface CsvCandidate {
   name: string;
@@ -101,22 +102,31 @@ export default function CsvUpload({ onParsed }: CsvUploadProps) {
       <button
         type="button"
         onClick={() => fileRef.current?.click()}
-        className="px-4 py-2 border border-dashed border-gray-400 rounded-lg text-sm text-gray-600 hover:border-blue-500 hover:text-blue-600 transition"
+        className="group flex flex-col items-center justify-center w-full py-6 border-2 border-dashed border-slate-300 rounded-xl text-sm text-slate-500 hover:border-blue-500 hover:text-blue-600 transition-colors duration-150 cursor-pointer"
       >
-        Upload CSV
+        <Upload
+          size={24}
+          className="mb-2 text-slate-400 group-hover:text-blue-500 transition-colors duration-150"
+        />
+        <span className="font-medium">Upload CSV</span>
+        <span className="text-xs text-slate-400 mt-1">
+          Must have &quot;name&quot; and &quot;email&quot; columns
+        </span>
       </button>
 
       {fileName && (
-        <p className="mt-2 text-sm text-green-700">{fileName}</p>
+        <div className="mt-2 flex items-center gap-2 text-sm text-green-700">
+          <FileText size={16} className="shrink-0" />
+          {fileName}
+        </div>
       )}
 
       {error && (
-        <p className="mt-2 text-sm text-red-600">{error}</p>
+        <div className="mt-2 flex items-center gap-2 text-sm text-red-600">
+          <AlertCircle size={16} className="shrink-0" />
+          {error}
+        </div>
       )}
-
-      <p className="mt-1 text-xs text-gray-400">
-        CSV must have &quot;name&quot; and &quot;email&quot; columns.
-      </p>
     </div>
   );
 }

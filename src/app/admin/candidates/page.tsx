@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import CsvUpload from "@/components/admin/CsvUpload";
+import { UserPlus, AlertCircle, CheckCircle2 } from "lucide-react";
 
 /* ---------- types ---------- */
 
@@ -26,10 +27,10 @@ interface InviteCandidate {
 }
 
 const STATUS_BADGES: Record<string, string> = {
-  invited: "bg-blue-100 text-blue-800",
-  in_progress: "bg-yellow-100 text-yellow-800",
-  completed: "bg-orange-100 text-orange-800",
-  scored: "bg-green-100 text-green-800",
+  invited: "bg-blue-100 text-blue-700",
+  in_progress: "bg-amber-100 text-amber-700",
+  completed: "bg-orange-100 text-orange-700",
+  scored: "bg-green-100 text-green-700",
 };
 
 function statusLabel(s: string) {
@@ -156,21 +157,30 @@ export default function AdminCandidatesPage() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">Candidates</h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold font-[family-name:var(--font-heading)] text-slate-800">
+          Candidates
+        </h2>
+      </div>
 
       {/* ---- Invite Section ---- */}
-      <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-        <h3 className="text-lg font-semibold mb-4">Invite Candidates</h3>
+      <div className="bg-white rounded-xl border border-slate-200 p-6 mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <UserPlus size={20} className="text-orange-500" />
+          <h3 className="text-lg font-semibold font-[family-name:var(--font-heading)] text-slate-800">
+            Invite Candidates
+          </h3>
+        </div>
 
         {/* Role select shared by single & bulk */}
         <div className="mb-4 max-w-xs">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-slate-700 mb-1">
             Role
           </label>
           <select
             value={inviteRoleId}
             onChange={(e) => setInviteRoleId(e.target.value)}
-            className="w-full border rounded-lg px-3 py-2 text-sm"
+            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150 bg-white"
           >
             <option value="">Select role...</option>
             {roles.map((r) => (
@@ -183,8 +193,8 @@ export default function AdminCandidatesPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Single invite */}
-          <div className="border rounded-lg p-4">
-            <p className="text-sm font-medium text-gray-600 mb-3">
+          <div className="border border-slate-200 rounded-xl p-5">
+            <p className="text-sm font-semibold text-slate-700 mb-3">
               Single Invite
             </p>
             <div className="space-y-3">
@@ -193,28 +203,29 @@ export default function AdminCandidatesPage() {
                 placeholder="Name"
                 value={inviteName}
                 onChange={(e) => setInviteName(e.target.value)}
-                className="w-full border rounded-lg px-3 py-2 text-sm"
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150"
               />
               <input
                 type="email"
                 placeholder="Email"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
-                className="w-full border rounded-lg px-3 py-2 text-sm"
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150"
               />
               <button
                 onClick={handleSingleInvite}
                 disabled={inviting}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50 transition"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 disabled:opacity-50 transition-colors duration-150"
               >
+                <UserPlus size={16} />
                 {inviting ? "Sending..." : "Send Invite"}
               </button>
             </div>
           </div>
 
           {/* Bulk CSV upload */}
-          <div className="border rounded-lg p-4">
-            <p className="text-sm font-medium text-gray-600 mb-3">
+          <div className="border border-slate-200 rounded-xl p-5">
+            <p className="text-sm font-semibold text-slate-700 mb-3">
               Bulk Upload
             </p>
             <CsvUpload
@@ -222,14 +233,15 @@ export default function AdminCandidatesPage() {
             />
             {csvCandidates.length > 0 && (
               <div className="mt-3">
-                <p className="text-sm text-gray-600 mb-2">
+                <p className="text-sm text-slate-600 mb-2">
                   {csvCandidates.length} candidate(s) ready
                 </p>
                 <button
                   onClick={handleBulkInvite}
                   disabled={inviting}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50 transition"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 disabled:opacity-50 transition-colors duration-150"
                 >
+                  <UserPlus size={16} />
                   {inviting ? "Sending..." : "Send All Invites"}
                 </button>
               </div>
@@ -239,23 +251,30 @@ export default function AdminCandidatesPage() {
 
         {/* Invite feedback */}
         {inviteMsg && (
-          <p
-            className={`mt-4 text-sm ${inviteMsg.type === "success" ? "text-green-700" : "text-red-600"}`}
+          <div
+            className={`mt-4 flex items-center gap-2 text-sm ${
+              inviteMsg.type === "success" ? "text-green-700" : "text-red-600"
+            }`}
           >
+            {inviteMsg.type === "success" ? (
+              <CheckCircle2 size={16} />
+            ) : (
+              <AlertCircle size={16} />
+            )}
             {inviteMsg.text}
-          </p>
+          </div>
         )}
       </div>
 
       {/* ---- Filter ---- */}
       <div className="flex items-center gap-4 mb-4">
-        <label className="text-sm font-medium text-gray-700">
+        <label className="text-sm font-medium text-slate-700">
           Filter by role:
         </label>
         <select
           value={filterRoleId}
           onChange={(e) => setFilterRoleId(e.target.value)}
-          className="border rounded-lg px-3 py-2 text-sm"
+          className="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150"
         >
           <option value="">All roles</option>
           {roles.map((r) => (
@@ -268,41 +287,48 @@ export default function AdminCandidatesPage() {
 
       {/* ---- Table ---- */}
       {loading ? (
-        <p className="text-gray-500">Loading candidates...</p>
+        <p className="text-slate-400 text-sm">Loading candidates...</p>
       ) : candidates.length === 0 ? (
-        <p className="text-gray-500">No candidates found.</p>
+        <p className="text-slate-400 text-sm">No candidates found.</p>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm overflow-x-auto">
+        <div className="bg-white rounded-xl border border-slate-200 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b text-left text-gray-500">
-                <th className="px-4 py-3 font-medium">Name</th>
-                <th className="px-4 py-3 font-medium">Email</th>
-                <th className="px-4 py-3 font-medium">Role</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-                <th className="px-4 py-3 font-medium">Composite Score</th>
-                <th className="px-4 py-3 font-medium">Date</th>
+              <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase text-slate-500 tracking-wider">
+                <th className="px-4 py-3 font-medium sticky top-0 bg-slate-50">Name</th>
+                <th className="px-4 py-3 font-medium sticky top-0 bg-slate-50">Email</th>
+                <th className="px-4 py-3 font-medium sticky top-0 bg-slate-50">Role</th>
+                <th className="px-4 py-3 font-medium sticky top-0 bg-slate-50">Status</th>
+                <th className="px-4 py-3 font-medium sticky top-0 bg-slate-50">Composite Score</th>
+                <th className="px-4 py-3 font-medium sticky top-0 bg-slate-50">Date</th>
               </tr>
             </thead>
             <tbody>
-              {candidates.map((c) => (
-                <tr key={c.id} className="border-b last:border-0 hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium">{c.name}</td>
-                  <td className="px-4 py-3 text-gray-600">{c.email}</td>
-                  <td className="px-4 py-3">{c.role.name}</td>
+              {candidates.map((c, i) => (
+                <tr
+                  key={c.id}
+                  className={`border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors duration-150 ${
+                    i % 2 === 1 ? "bg-slate-50/50" : ""
+                  }`}
+                >
+                  <td className="px-4 py-3 font-medium text-slate-800">{c.name}</td>
+                  <td className="px-4 py-3 text-slate-500">{c.email}</td>
+                  <td className="px-4 py-3 text-slate-700">{c.role.name}</td>
                   <td className="px-4 py-3">
                     <span
-                      className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium capitalize ${STATUS_BADGES[c.status] ?? "bg-gray-100 text-gray-800"}`}
+                      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${STATUS_BADGES[c.status] ?? "bg-slate-100 text-slate-600"}`}
                     >
                       {statusLabel(c.status)}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    {c.assessment?.score
-                      ? c.assessment.score.compositeScore.toFixed(1)
-                      : "-"}
+                    <span className="font-mono text-sm font-semibold text-slate-800">
+                      {c.assessment?.score
+                        ? c.assessment.score.compositeScore.toFixed(1)
+                        : "-"}
+                    </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3 text-slate-400 text-xs">
                     {new Date(c.createdAt).toLocaleDateString()}
                   </td>
                 </tr>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Briefcase, Users, Clock, CheckCircle2 } from "lucide-react";
 
 interface RoleData {
   id: string;
@@ -62,32 +63,69 @@ export default function AdminDashboard() {
   }, []);
 
   const cards = [
-    { title: "Total Roles", value: totalRoles, color: "bg-blue-600" },
-    { title: "Total Candidates", value: totalCandidates, color: "bg-green-600" },
-    { title: "Pending Scoring", value: pendingScoring, color: "bg-yellow-500" },
-    { title: "Completed Today", value: completedToday, color: "bg-purple-600" },
+    {
+      title: "Total Roles",
+      value: totalRoles,
+      icon: Briefcase,
+      iconBg: "bg-blue-100",
+      iconColor: "text-blue-600",
+    },
+    {
+      title: "Total Candidates",
+      value: totalCandidates,
+      icon: Users,
+      iconBg: "bg-green-100",
+      iconColor: "text-green-600",
+    },
+    {
+      title: "Pending Scoring",
+      value: pendingScoring,
+      icon: Clock,
+      iconBg: "bg-amber-100",
+      iconColor: "text-amber-600",
+    },
+    {
+      title: "Completed Today",
+      value: completedToday,
+      icon: CheckCircle2,
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-600",
+    },
   ];
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
+      <h2 className="text-2xl font-bold font-[family-name:var(--font-heading)] text-slate-800 mb-6">
+        Dashboard
+      </h2>
 
       {loading ? (
-        <p className="text-gray-500">Loading stats...</p>
+        <p className="text-slate-400 text-sm">Loading stats...</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {cards.map((card) => (
-            <div
-              key={card.title}
-              className="rounded-xl shadow-sm bg-white overflow-hidden"
-            >
-              <div className={`${card.color} h-2`} />
-              <div className="p-6">
-                <p className="text-sm text-gray-500">{card.title}</p>
-                <p className="text-3xl font-bold mt-1">{card.value}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {cards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <div
+                key={card.title}
+                className="bg-white rounded-xl border border-slate-200 p-5 hover:border-blue-500 transition-colors duration-150"
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm text-slate-500">{card.title}</p>
+                    <p className="text-3xl font-bold text-slate-800 mt-1">
+                      {card.value}
+                    </p>
+                  </div>
+                  <div
+                    className={`w-10 h-10 rounded-full ${card.iconBg} ${card.iconColor} flex items-center justify-center shrink-0`}
+                  >
+                    <Icon size={20} />
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

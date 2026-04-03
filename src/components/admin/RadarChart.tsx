@@ -51,7 +51,7 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
           key={value}
           points={ringPolygon(value)}
           fill="none"
-          stroke="#e5e7eb"
+          stroke="#e2e8f0"
           strokeWidth={1}
         />
       ))}
@@ -67,7 +67,7 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
             y1={cy}
             x2={x}
             y2={y}
-            stroke="#d1d5db"
+            stroke="#e2e8f0"
             strokeWidth={1}
           />
         );
@@ -76,10 +76,10 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
       {/* Data polygon */}
       <polygon
         points={dataPolygon}
-        fill="rgb(99 102 241)"
-        fillOpacity={0.2}
-        stroke="rgb(99 102 241)"
-        strokeWidth={2}
+        fill="rgb(37 99 235)"
+        fillOpacity={0.15}
+        stroke="rgb(37 99 235)"
+        strokeWidth={2.5}
       />
 
       {/* Data points */}
@@ -88,15 +88,15 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
           key={`dot-${i}`}
           cx={x}
           cy={y}
-          r={3}
-          fill="rgb(99 102 241)"
+          r={5}
+          fill="rgb(37 99 235)"
         />
       ))}
 
       {/* Labels */}
       {TENETS.map((t, i) => {
         const angle = startAngle + i * angleStep;
-        const labelR = radius + 20;
+        const labelR = radius + 22;
         const [x, y] = polarToXY(angle, labelR);
         let anchor: "middle" | "end" | "start" = "middle";
         if (x < cx - 5) anchor = "end";
@@ -108,8 +108,10 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
             y={y}
             textAnchor={anchor}
             dominantBaseline="middle"
-            className="text-xs fill-gray-600"
-            fontSize={11}
+            fill="#64748b"
+            fontSize={12}
+            fontFamily="var(--font-heading), Poppins, sans-serif"
+            fontWeight={500}
           >
             {TENET_LABELS[t]}
           </text>

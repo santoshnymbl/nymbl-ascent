@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { TENETS, TENET_LABELS, Tenet } from "@/types";
 import RadarChart from "@/components/admin/RadarChart";
+import { ArrowLeft, Brain } from "lucide-react";
 
 interface ScoreData {
   compositeScore: number;
@@ -63,14 +64,18 @@ export default function CandidateDetailPage() {
   }, [candidateId]);
 
   if (loading) {
-    return <p className="text-gray-500">Loading candidate detail...</p>;
+    return <p className="text-slate-400 text-sm">Loading candidate detail...</p>;
   }
 
   if (error || !candidate) {
     return (
       <div>
-        <p className="text-red-600 mb-4">{error || "Not found."}</p>
-        <Link href="/admin/results" className="text-indigo-600 hover:underline">
+        <p className="text-red-600 text-sm mb-4">{error || "Not found."}</p>
+        <Link
+          href="/admin/results"
+          className="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-800 text-sm transition-colors duration-150"
+        >
+          <ArrowLeft size={16} />
           Back to Results
         </Link>
       </div>
@@ -102,23 +107,31 @@ export default function CandidateDetailPage() {
     <div>
       <Link
         href="/admin/results"
-        className="text-indigo-600 hover:underline text-sm mb-4 inline-block"
+        className="inline-flex items-center gap-1.5 text-slate-500 hover:text-blue-600 text-sm mb-5 transition-colors duration-150"
       >
-        &larr; Back to Results
+        <ArrowLeft size={16} />
+        Back to Results
       </Link>
 
       {/* Header */}
-      <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">{candidate.name}</h2>
-        <p className="text-gray-500">{candidate.email}</p>
-        <p className="text-sm text-gray-600 mt-1">
-          Role: <span className="font-medium">{candidate.role.name}</span>
-        </p>
+      <div className="bg-white rounded-xl border border-slate-200 p-6 mb-6">
+        <h2 className="text-2xl font-bold font-[family-name:var(--font-heading)] text-slate-800">
+          {candidate.name}
+        </h2>
+        <div className="flex flex-wrap items-center gap-2 mt-2">
+          <span className="text-sm text-slate-500">{candidate.email}</span>
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+            {candidate.role.name}
+          </span>
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 capitalize">
+            {candidate.status}
+          </span>
+        </div>
       </div>
 
       {!score ? (
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <p className="text-gray-500">
+        <div className="bg-white rounded-xl border border-slate-200 p-6">
+          <p className="text-slate-400 text-sm">
             This candidate has not been scored yet.
           </p>
         </div>
@@ -127,13 +140,15 @@ export default function CandidateDetailPage() {
           {/* Composite Score + Radar Chart */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             {/* Composite Score & Weights */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="text-lg font-semibold mb-4">Composite Score</h3>
-              <div className="text-5xl font-bold text-indigo-600 mb-6">
+            <div className="bg-white rounded-xl border border-slate-200 p-6">
+              <h3 className="text-base font-semibold font-[family-name:var(--font-heading)] text-slate-800 mb-4">
+                Composite Score
+              </h3>
+              <div className="text-5xl font-bold font-mono text-blue-600 mb-6">
                 {score.compositeScore.toFixed(1)}
               </div>
 
-              <h4 className="text-sm font-medium text-gray-600 uppercase mb-3">
+              <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
                 Weight Breakdown
               </h4>
               <div className="space-y-3">
@@ -152,14 +167,14 @@ export default function CandidateDetailPage() {
                   return (
                     <div key={item.label}>
                       <div className="flex justify-between text-sm mb-1">
-                        <span className="text-gray-700">{item.label}</span>
-                        <span className="text-gray-500">
+                        <span className="text-slate-700">{item.label}</span>
+                        <span className="text-slate-400 font-mono text-xs">
                           {item.weight}% &middot; {value.toFixed(1)}
                         </span>
                       </div>
-                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-indigo-500 rounded-full transition-all"
+                          className="h-full bg-blue-500 rounded-full transition-all duration-200"
                           style={{ width: `${Math.min(100, value)}%` }}
                         />
                       </div>
@@ -170,15 +185,19 @@ export default function CandidateDetailPage() {
             </div>
 
             {/* Radar Chart */}
-            <div className="bg-white rounded-xl shadow-sm p-6 flex flex-col items-center justify-center">
-              <h3 className="text-lg font-semibold mb-4">Tenet Profile</h3>
+            <div className="bg-white rounded-xl border border-slate-200 p-6 flex flex-col items-center justify-center">
+              <h3 className="text-base font-semibold font-[family-name:var(--font-heading)] text-slate-800 mb-4">
+                Tenet Profile
+              </h3>
               <RadarChart scores={tenetScores} size={300} />
             </div>
           </div>
 
           {/* Per-Tenet Horizontal Bar Chart */}
-          <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-            <h3 className="text-lg font-semibold mb-4">Tenet Scores</h3>
+          <div className="bg-white rounded-xl border border-slate-200 p-6 mb-6">
+            <h3 className="text-base font-semibold font-[family-name:var(--font-heading)] text-slate-800 mb-4">
+              Tenet Scores
+            </h3>
             <div className="space-y-3">
               {TENETS.map((t) => {
                 const val = tenetScores[t];
@@ -186,16 +205,16 @@ export default function CandidateDetailPage() {
                   maxTenetScore > 0 ? (val / maxTenetScore) * 100 : 0;
                 return (
                   <div key={t} className="flex items-center gap-3">
-                    <span className="w-32 text-sm text-gray-700 text-right shrink-0">
+                    <span className="w-32 text-sm text-slate-600 text-right shrink-0">
                       {TENET_LABELS[t]}
                     </span>
-                    <div className="flex-1 h-6 bg-gray-100 rounded-full overflow-hidden relative">
+                    <div className="flex-1 h-6 bg-slate-100 rounded-full overflow-hidden relative">
                       <div
-                        className="h-full bg-indigo-500 rounded-full transition-all"
+                        className="h-full bg-blue-500 rounded-full transition-all duration-200"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
-                    <span className="w-12 text-sm font-medium text-gray-800 text-right">
+                    <span className="w-12 text-sm font-mono font-semibold text-slate-800 text-right">
                       {val.toFixed(1)}
                     </span>
                   </div>
@@ -206,9 +225,14 @@ export default function CandidateDetailPage() {
 
           {/* AI Analysis */}
           {aiAnalysisText && (
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="text-lg font-semibold mb-4">AI Analysis</h3>
-              <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-wrap">
+            <div className="bg-white rounded-xl border border-slate-200 p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Brain size={20} className="text-purple-500" />
+                <h3 className="text-base font-semibold font-[family-name:var(--font-heading)] text-slate-800">
+                  AI Analysis
+                </h3>
+              </div>
+              <div className="prose prose-sm max-w-none text-slate-600 whitespace-pre-wrap leading-relaxed">
                 {aiAnalysisText}
               </div>
             </div>

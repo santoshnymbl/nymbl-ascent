@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { TENETS, TENET_LABELS, Tenet } from "@/types";
+import { Download, ArrowRight } from "lucide-react";
 
 interface RoleOption {
   id: string;
@@ -109,33 +110,37 @@ export default function AdminResultsPage() {
   const statusColor = (status: string) => {
     switch (status) {
       case "scored":
-        return "bg-green-100 text-green-800";
+        return "bg-green-100 text-green-700";
       case "completed":
-        return "bg-blue-100 text-blue-800";
+        return "bg-blue-100 text-blue-700";
       case "in_progress":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-amber-100 text-amber-700";
       default:
-        return "bg-gray-100 text-gray-700";
+        return "bg-slate-100 text-slate-600";
     }
   };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">Results</h2>
+        <h2 className="text-2xl font-bold font-[family-name:var(--font-heading)] text-slate-800">
+          Results
+        </h2>
         <button
           onClick={exportCSV}
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg text-sm font-medium hover:bg-slate-900 transition-colors duration-150"
         >
+          <Download size={16} />
           Export CSV
         </button>
       </div>
 
+      {/* Filters */}
       <div className="flex gap-4 mb-6">
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
-          className="border rounded-lg px-3 py-2 text-sm bg-white"
+          className="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150"
         >
           <option value="">All Roles</option>
           {roles.map((r) => (
@@ -148,7 +153,7 @@ export default function AdminResultsPage() {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as SortKey)}
-          className="border rounded-lg px-3 py-2 text-sm bg-white"
+          className="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150"
         >
           <option value="compositeScore">Composite Score</option>
           {TENETS.map((t) => (
@@ -160,41 +165,48 @@ export default function AdminResultsPage() {
       </div>
 
       {loading ? (
-        <p className="text-gray-500">Loading results...</p>
+        <p className="text-slate-400 text-sm">Loading results...</p>
       ) : sorted.length === 0 ? (
-        <p className="text-gray-500">No completed assessments found.</p>
+        <p className="text-slate-400 text-sm">No completed assessments found.</p>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
+            <thead className="bg-slate-50 text-slate-500 uppercase text-xs tracking-wider">
               <tr>
-                <th className="px-4 py-3 text-left">#</th>
-                <th className="px-4 py-3 text-left">Candidate</th>
-                <th className="px-4 py-3 text-left">Role</th>
-                <th className="px-4 py-3 text-right">Composite Score</th>
-                <th className="px-4 py-3 text-center">Status</th>
-                <th className="px-4 py-3 text-center">Action</th>
+                <th className="px-4 py-3 text-left font-medium sticky top-0 bg-slate-50">#</th>
+                <th className="px-4 py-3 text-left font-medium sticky top-0 bg-slate-50">Candidate</th>
+                <th className="px-4 py-3 text-left font-medium sticky top-0 bg-slate-50">Role</th>
+                <th className="px-4 py-3 text-right font-medium sticky top-0 bg-slate-50">Composite Score</th>
+                <th className="px-4 py-3 text-center font-medium sticky top-0 bg-slate-50">Status</th>
+                <th className="px-4 py-3 text-center font-medium sticky top-0 bg-slate-50">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-slate-100">
               {sorted.map((c, i) => (
-                <tr key={c.id} className="hover:bg-gray-50 transition">
-                  <td className="px-4 py-3 text-gray-500 font-mono">
-                    {i + 1}
+                <tr
+                  key={c.id}
+                  className={`hover:bg-slate-50 transition-colors duration-150 ${
+                    i % 2 === 1 ? "bg-slate-50/50" : ""
+                  }`}
+                >
+                  <td className="px-4 py-3">
+                    <span className="w-7 h-7 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold inline-flex items-center justify-center">
+                      {i + 1}
+                    </span>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="font-medium text-gray-900">{c.name}</div>
-                    <div className="text-gray-500 text-xs">{c.email}</div>
+                    <div className="font-semibold text-slate-800">{c.name}</div>
+                    <div className="text-slate-400 text-xs">{c.email}</div>
                   </td>
-                  <td className="px-4 py-3 text-gray-700">{c.role.name}</td>
+                  <td className="px-4 py-3 text-slate-600">{c.role.name}</td>
                   <td className="px-4 py-3 text-right">
-                    <span className="text-xl font-bold text-indigo-600">
+                    <span className="text-xl font-bold font-mono text-blue-600">
                       {c.assessment?.score?.compositeScore?.toFixed(1) ?? "--"}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-center">
                     <span
-                      className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${statusColor(c.status)}`}
+                      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColor(c.status)}`}
                     >
                       {c.status}
                     </span>
@@ -202,9 +214,10 @@ export default function AdminResultsPage() {
                   <td className="px-4 py-3 text-center">
                     <Link
                       href={`/admin/results/${c.id}`}
-                      className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
+                      className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors duration-150"
                     >
                       View Detail
+                      <ArrowRight size={14} />
                     </Link>
                   </td>
                 </tr>

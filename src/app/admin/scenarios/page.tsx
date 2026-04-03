@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { TENET_LABELS, type Tenet } from "@/types";
+import { Sparkles, ChevronRight } from "lucide-react";
 
 interface Scenario {
   id: string;
@@ -23,6 +24,12 @@ const STAGE_FILTERS = [
   { label: "Stage 2: Build", value: "2" },
   { label: "Stage 3: Grow", value: "3" },
 ];
+
+const STAGE_BADGE: Record<number, string> = {
+  1: "bg-indigo-100 text-indigo-700",
+  2: "bg-amber-100 text-amber-700",
+  3: "bg-green-100 text-green-700",
+};
 
 const DEFAULT_TENETS: Tenet[] = [
   "clientFocused",
@@ -101,25 +108,29 @@ export default function AdminScenariosPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">Scenarios</h2>
+        <h2 className="text-2xl font-bold font-[family-name:var(--font-heading)] text-slate-800">
+          Scenarios
+        </h2>
         <button
           onClick={handleAIGenerate}
           disabled={generating}
-          className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 transition"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 disabled:opacity-50 transition-colors duration-150"
         >
-          {generating ? "Generating..." : "AI Generate Scenario"}
+          <Sparkles size={16} />
+          {generating ? "Generating..." : "AI Generate"}
         </button>
       </div>
 
+      {/* Filter tabs */}
       <div className="flex gap-2 mb-6">
         {STAGE_FILTERS.map((sf) => (
           <button
             key={sf.value}
             onClick={() => setStageFilter(sf.value)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-150 ${
               stageFilter === sf.value
                 ? "bg-blue-600 text-white"
-                : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
+                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
             {sf.label}
@@ -128,10 +139,10 @@ export default function AdminScenariosPage() {
       </div>
 
       {loading ? (
-        <p className="text-gray-500">Loading scenarios...</p>
+        <p className="text-slate-400 text-sm">Loading scenarios...</p>
       ) : scenarios.length === 0 ? (
-        <p className="text-gray-500">
-          No scenarios found. Use &quot;AI Generate Scenario&quot; to create one.
+        <p className="text-slate-400 text-sm">
+          No scenarios found. Use &quot;AI Generate&quot; to create one.
         </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -139,42 +150,54 @@ export default function AdminScenariosPage() {
             <Link
               key={s.id}
               href={`/admin/scenarios/${s.id}`}
-              className="block bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition p-5"
+              className="group block bg-white rounded-xl border border-slate-200 hover:border-blue-500 transition-colors duration-150 p-5"
             >
               <div className="flex items-start justify-between mb-3">
-                <h3 className="font-semibold text-lg leading-snug">
+                <h3 className="font-semibold text-base text-slate-800 leading-snug pr-2">
                   {s.title}
                 </h3>
+                <ChevronRight
+                  size={18}
+                  className="text-slate-300 group-hover:text-blue-500 transition-colors duration-150 shrink-0 mt-0.5"
+                />
+              </div>
+
+              <div className="flex flex-wrap gap-2 text-xs mb-3">
                 <span
-                  className={`ml-2 shrink-0 text-xs font-medium px-2 py-1 rounded-full ${
+                  className={`px-2.5 py-1 rounded-full font-medium ${STAGE_BADGE[s.stage] ?? "bg-slate-100 text-slate-600"}`}
+                >
+                  Stage {s.stage}
+                </span>
+                <span
+                  className={`px-2.5 py-1 rounded-full font-medium ${
+                    s.type === "core"
+                      ? "bg-blue-100 text-blue-700"
+                      : "bg-purple-100 text-purple-700"
+                  }`}
+                >
+                  {s.type}
+                </span>
+                {s.roleType && (
+                  <span className="px-2.5 py-1 rounded-full font-medium bg-orange-100 text-orange-700">
+                    {s.roleType}
+                  </span>
+                )}
+                <span
+                  className={`px-2.5 py-1 rounded-full font-medium ${
                     s.isPublished
                       ? "bg-green-100 text-green-700"
-                      : "bg-gray-100 text-gray-500"
+                      : "bg-slate-100 text-slate-500"
                   }`}
                 >
                   {s.isPublished ? "Published" : "Draft"}
                 </span>
               </div>
 
-              <div className="flex flex-wrap gap-2 text-xs mb-3">
-                <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded">
-                  Stage {s.stage}
-                </span>
-                <span className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded">
-                  {s.type}
-                </span>
-                {s.roleType && (
-                  <span className="px-2 py-1 bg-orange-100 text-orange-700 rounded">
-                    {s.roleType}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap gap-1.5">
                 {(s.tenets as string[]).map((t) => (
                   <span
                     key={t}
-                    className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded"
+                    className="text-xs px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full"
                   >
                     {TENET_LABELS[t as Tenet] || t}
                   </span>
