@@ -8,6 +8,7 @@ import { OddOneOut } from "@/components/games/OddOneOut";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Timer } from "@/components/ui/Timer";
 import { StageTransition } from "@/components/ui/StageTransition";
+import { Sparkles, AlertCircle } from "lucide-react";
 import type { BehavioralSignal, Stage1Result } from "@/types";
 
 type GameType = "priority-snap" | "value-match" | "odd-one-out";
@@ -110,22 +111,58 @@ export default function Stage1Page() {
     setShowTransition(true);
   }
 
+  /* ---------- Loading ---------- */
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-pulse text-gray-500 text-lg">Loading Stage 1...</div>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: "var(--bg-primary)" }}
+      >
+        <div className="text-center space-y-4 animate-pulse">
+          <div
+            className="w-12 h-12 rounded-xl mx-auto flex items-center justify-center"
+            style={{ background: "#EEF2FF" }}
+          >
+            <Sparkles size={24} style={{ color: "#4F46E5" }} />
+          </div>
+          <p style={{ color: "var(--text-secondary)" }}>Loading Stage 1...</p>
+        </div>
       </div>
     );
   }
 
+  /* ---------- Error ---------- */
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-red-600">{error}</p>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: "var(--bg-primary)" }}
+      >
+        <div
+          className="max-w-md w-full mx-4 text-center rounded-2xl p-8"
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border-light)",
+          }}
+        >
+          <div
+            className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
+            style={{ background: "#FEF2F2" }}
+          >
+            <AlertCircle size={28} style={{ color: "var(--nymbl-error)" }} />
+          </div>
+          <p className="font-semibold mb-1" style={{ color: "var(--text-primary)" }}>
+            Something went wrong
+          </p>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            {error}
+          </p>
+        </div>
       </div>
     );
   }
 
+  /* ---------- Transition ---------- */
   if (showTransition) {
     return (
       <StageTransition
@@ -136,11 +173,15 @@ export default function Stage1Page() {
     );
   }
 
+  /* ---------- No scenarios ---------- */
   const currentScenario = scenarios[currentGameIndex];
   if (!currentScenario) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-gray-500">No scenarios available.</p>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: "var(--bg-primary)" }}
+      >
+        <p style={{ color: "var(--text-secondary)" }}>No scenarios available.</p>
       </div>
     );
   }
@@ -148,49 +189,77 @@ export default function Stage1Page() {
   const gameType = currentScenario.tree.type;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
+    <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
+      {/* Fixed top bar */}
+      <div
+        className="sticky top-0 z-20 px-4 py-3"
+        style={{
+          background: "var(--bg-card)",
+          borderBottom: "1px solid var(--border-light)",
+        }}
+      >
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center justify-between mb-3">
+            {/* Stage pill badge */}
+            <span
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
+              style={{ background: "#EEF2FF", color: "#4F46E5" }}
+            >
+              <Sparkles size={14} />
+              Stage 1 &mdash; Learn
+            </span>
+            <div className="flex-shrink-0">
+              <Timer durationMs={180000} onExpire={handleTimerExpire} />
+            </div>
+          </div>
           <ProgressBar
             current={currentGameIndex}
             total={scenarios.length}
             label="Stage 1 — Quick-Fire Games"
           />
-          <div className="ml-4 flex-shrink-0">
-            <Timer durationMs={180000} onExpire={handleTimerExpire} />
-          </div>
         </div>
+      </div>
 
-        {gameType === "priority-snap" && currentScenario.tree.items && (
-          <PrioritySnap
-            items={currentScenario.tree.items}
-            onComplete={handlePrioritySnapComplete}
-          />
-        )}
-
-        {gameType === "value-match" &&
-          currentScenario.tree.values &&
-          currentScenario.tree.situations &&
-          currentScenario.scoringRubric.correctMatches && (
-            <ValueMatch
-              values={currentScenario.tree.values}
-              situations={currentScenario.tree.situations}
-              correctMatches={currentScenario.scoringRubric.correctMatches}
-              onComplete={handleValueMatchComplete}
+      {/* Game content */}
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        <div
+          className="rounded-2xl p-6"
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border-light)",
+          }}
+        >
+          {gameType === "priority-snap" && currentScenario.tree.items && (
+            <PrioritySnap
+              items={currentScenario.tree.items}
+              onComplete={handlePrioritySnapComplete}
             />
           )}
 
-        {gameType === "odd-one-out" &&
-          currentScenario.tree.rounds &&
-          currentScenario.scoringRubric.rounds && (
-            <OddOneOut
-              rounds={currentScenario.tree.rounds}
-              correctAnswers={Object.fromEntries(
-                currentScenario.scoringRubric.rounds.map((r) => [r.roundId, r.correctId]),
-              )}
-              onComplete={handleOddOneOutComplete}
-            />
-          )}
+          {gameType === "value-match" &&
+            currentScenario.tree.values &&
+            currentScenario.tree.situations &&
+            currentScenario.scoringRubric.correctMatches && (
+              <ValueMatch
+                values={currentScenario.tree.values}
+                situations={currentScenario.tree.situations}
+                correctMatches={currentScenario.scoringRubric.correctMatches}
+                onComplete={handleValueMatchComplete}
+              />
+            )}
+
+          {gameType === "odd-one-out" &&
+            currentScenario.tree.rounds &&
+            currentScenario.scoringRubric.rounds && (
+              <OddOneOut
+                rounds={currentScenario.tree.rounds}
+                correctAnswers={Object.fromEntries(
+                  currentScenario.scoringRubric.rounds.map((r) => [r.roundId, r.correctId]),
+                )}
+                onComplete={handleOddOneOutComplete}
+              />
+            )}
+        </div>
       </div>
     </div>
   );

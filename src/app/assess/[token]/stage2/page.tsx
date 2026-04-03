@@ -6,6 +6,7 @@ import { BranchingScenario } from "@/components/scenarios/BranchingScenario";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Timer } from "@/components/ui/Timer";
 import { StageTransition } from "@/components/ui/StageTransition";
+import { Brain, AlertCircle } from "lucide-react";
 import type { ScenarioTree, BehavioralSignal, Stage2Result } from "@/types";
 
 interface ScenarioData {
@@ -94,22 +95,58 @@ export default function Stage2Page() {
     }
   }
 
+  /* ---------- Loading ---------- */
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-pulse text-gray-500 text-lg">Loading Stage 2...</div>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: "var(--bg-primary)" }}
+      >
+        <div className="text-center space-y-4 animate-pulse">
+          <div
+            className="w-12 h-12 rounded-xl mx-auto flex items-center justify-center"
+            style={{ background: "#FFFBEB" }}
+          >
+            <Brain size={24} style={{ color: "#D97706" }} />
+          </div>
+          <p style={{ color: "var(--text-secondary)" }}>Loading Stage 2...</p>
+        </div>
       </div>
     );
   }
 
+  /* ---------- Error ---------- */
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-red-600">{error}</p>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: "var(--bg-primary)" }}
+      >
+        <div
+          className="max-w-md w-full mx-4 text-center rounded-2xl p-8"
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border-light)",
+          }}
+        >
+          <div
+            className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
+            style={{ background: "#FEF2F2" }}
+          >
+            <AlertCircle size={28} style={{ color: "var(--nymbl-error)" }} />
+          </div>
+          <p className="font-semibold mb-1" style={{ color: "var(--text-primary)" }}>
+            Something went wrong
+          </p>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            {error}
+          </p>
+        </div>
       </div>
     );
   }
 
+  /* ---------- Transition ---------- */
   if (showTransition) {
     return (
       <StageTransition
@@ -120,38 +157,103 @@ export default function Stage2Page() {
     );
   }
 
+  /* ---------- No scenarios ---------- */
   const currentScenario = scenarios[currentIndex];
   if (!currentScenario) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-gray-500">No scenarios available.</p>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: "var(--bg-primary)" }}
+      >
+        <p style={{ color: "var(--text-secondary)" }}>No scenarios available.</p>
       </div>
     );
   }
 
+  /* ---------- Step dots ---------- */
+  const stepDots = Array.from({ length: scenarios.length }, (_, i) => i);
+
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
+    <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
+      {/* Fixed top bar */}
+      <div
+        className="sticky top-0 z-20 px-4 py-3"
+        style={{
+          background: "var(--bg-card)",
+          borderBottom: "1px solid var(--border-light)",
+        }}
+      >
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center justify-between mb-3">
+            {/* Stage pill badge */}
+            <span
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
+              style={{ background: "#FEF3C7", color: "#92400E" }}
+            >
+              <Brain size={14} />
+              Stage 2 &mdash; Build
+            </span>
+            <div className="flex-shrink-0">
+              <Timer durationMs={300000} onExpire={handleTimerExpire} />
+            </div>
+          </div>
           <ProgressBar
             current={currentIndex}
             total={scenarios.length}
             label="Stage 2 — Workplace Scenarios"
           />
-          <div className="ml-4 flex-shrink-0">
-            <Timer durationMs={300000} onExpire={handleTimerExpire} />
+        </div>
+      </div>
+
+      {/* Scenario content */}
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        {/* Scenario counter + step dots */}
+        <div className="flex items-center justify-between mb-6">
+          <p
+            className="text-sm font-medium"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Scenario {currentIndex + 1} of {scenarios.length}
+          </p>
+          <div className="flex items-center gap-2">
+            {stepDots.map((i) => (
+              <div
+                key={i}
+                className="w-2.5 h-2.5 rounded-full"
+                style={{
+                  background:
+                    i <= currentIndex
+                      ? "var(--nymbl-primary)"
+                      : "var(--border-light)",
+                  transition: "var(--transition-fast)",
+                }}
+              />
+            ))}
           </div>
         </div>
 
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        {/* Scenario title */}
+        <h2
+          className="text-xl font-bold mb-5"
+          style={{ color: "var(--text-primary)" }}
+        >
           {currentScenario.title}
         </h2>
 
-        <BranchingScenario
-          key={currentScenario.id}
-          tree={currentScenario.tree}
-          onComplete={handleScenarioComplete}
-        />
+        {/* Scenario card */}
+        <div
+          className="rounded-2xl p-6"
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border-light)",
+          }}
+        >
+          <BranchingScenario
+            key={currentScenario.id}
+            tree={currentScenario.tree}
+            onComplete={handleScenarioComplete}
+          />
+        </div>
       </div>
     </div>
   );
