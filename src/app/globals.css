@@ -2,8 +2,7 @@
 
 /* Nymbl Ascent Design System */
 /* Style: Flat Design | Fonts: Poppins + Open Sans | Colors: Professional Blue + CTA Orange */
-
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+/* Fonts loaded via <link> in layout.tsx */
 
 :root {
   /* Brand Colors */

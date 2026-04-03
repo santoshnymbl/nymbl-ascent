@@ -23,7 +23,14 @@ import type {
 import { TENETS } from "@/types";
 
 export async function POST(request: NextRequest) {
-  const { candidateId } = await request.json();
+  let candidateId: string;
+  try {
+    ({ candidateId } = await request.json());
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
+  try {
 
   const candidate = await prisma.candidate.findUnique({
     where: { id: candidateId },
@@ -72,28 +79,32 @@ export async function POST(request: NextRequest) {
   // -------------------------------------------------------------------------
   let aiResult: { tenets: TenetScores; analysis: string } | null = null;
   if (stage2) {
-    const scenarios = await prisma.scenario.findMany({
-      where: { id: { in: stage2.scenarios.map((s) => s.scenarioId) } },
-    });
-    const decisionPaths = stage2.scenarios.map((played) => {
-      const scenario = scenarios.find((s) => s.id === played.scenarioId);
-      const tree = scenario ? JSON.parse(scenario.tree) : null;
-      const choices = played.path.map((p) => {
-        if (!tree?.nodes?.[p.nodeId]) return p.choiceId;
-        const node = tree.nodes[p.nodeId];
-        const option = node.options?.find(
-          (o: { id: string }) => o.id === p.choiceId,
-        );
-        return option?.text || p.choiceId;
+    try {
+      const scenarios = await prisma.scenario.findMany({
+        where: { id: { in: stage2.scenarios.map((s) => s.scenarioId) } },
       });
-      return { scenarioTitle: scenario?.title || "Unknown", choices };
-    });
+      const decisionPaths = stage2.scenarios.map((played) => {
+        const scenario = scenarios.find((s) => s.id === played.scenarioId);
+        const tree = scenario ? JSON.parse(scenario.tree) : null;
+        const choices = played.path.map((p) => {
+          if (!tree?.nodes?.[p.nodeId]) return p.choiceId;
+          const node = tree.nodes[p.nodeId];
+          const option = node.options?.find(
+            (o: { id: string }) => o.id === p.choiceId,
+          );
+          return option?.text || p.choiceId;
+        });
+        return { scenarioTitle: scenario?.title || "Unknown", choices };
+      });
 
-    aiResult = await scoreWithAi({
-      candidateName: candidate.name,
-      roleName: candidate.role.name,
-      decisionPaths,
-    });
+      aiResult = await scoreWithAi({
+        candidateName: candidate.name,
+        roleName: candidate.role.name,
+        decisionPaths,
+      });
+    } catch (aiErr) {
+      console.error("AI scoring failed (continuing with rule-based scoring):", aiErr);
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -227,4 +238,8 @@ export async function POST(request: NextRequest) {
   }
 
   return NextResponse.json({ ok: true, compositeScore });
+  } catch (err) {
+    console.error("Scoring failed:", err);
+    return NextResponse.json({ error: "Scoring failed", details: String(err) }, { status: 500 });
+  }
 }
