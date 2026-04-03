@@ -78,10 +78,10 @@ export function PrioritySnap({ items, onComplete }: PrioritySnapProps) {
             className="flex items-center gap-3 px-4 py-3 rounded-[10px] cursor-grab active:cursor-grabbing select-none"
             style={{
               backgroundColor: "var(--bg-card)",
+              borderTop: dragIndex === index ? "2px solid var(--nymbl-primary)" : "1px solid var(--border-light)",
+              borderRight: dragIndex === index ? "2px solid var(--nymbl-primary)" : "1px solid var(--border-light)",
+              borderBottom: dragIndex === index ? "2px solid var(--nymbl-primary)" : "1px solid var(--border-light)",
               borderLeft: "4px solid var(--nymbl-primary)",
-              border: dragIndex === index ? "2px solid var(--nymbl-primary)" : undefined,
-              borderLeftWidth: "4px",
-              borderLeftColor: "var(--nymbl-primary)",
               boxShadow:
                 dragIndex === index
                   ? "0 0 0 3px rgba(37, 99, 235, 0.15)"

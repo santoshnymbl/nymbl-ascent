@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { BranchingScenario } from "@/components/scenarios/BranchingScenario";
 
 const mockTree = {
@@ -34,9 +34,11 @@ describe("BranchingScenario", () => {
     expect(screen.getByText("Wait and see")).toBeInTheDocument();
   });
 
-  it("advances to consequence after choosing", () => {
+  it("advances to consequence after choosing", async () => {
     render(<BranchingScenario tree={mockTree} onComplete={jest.fn()} />);
     fireEvent.click(screen.getByText("Wait and see"));
-    expect(screen.getByText("It got worse.")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("It got worse.")).toBeInTheDocument();
+    });
   });
 });

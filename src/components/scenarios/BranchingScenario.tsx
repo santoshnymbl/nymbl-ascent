@@ -128,11 +128,11 @@ export function BranchingScenario({ tree, onComplete }: BranchingScenarioProps) 
             <div
               className="rounded-[10px] p-6 mb-6"
               style={{
-                backgroundColor: "#FFFBEB", // amber-50
-                borderLeft: "4px solid #F59E0B", // amber-500
-                border: "1px solid #FDE68A", // amber-200
-                borderLeftWidth: "4px",
-                borderLeftColor: "#F59E0B",
+                backgroundColor: "#FFFBEB",
+                borderTop: "1px solid #FDE68A",
+                borderRight: "1px solid #FDE68A",
+                borderBottom: "1px solid #FDE68A",
+                borderLeft: "4px solid #F59E0B",
               }}
             >
               <p
