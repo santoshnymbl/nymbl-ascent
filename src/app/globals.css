@@ -135,26 +135,24 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
 }
 
-/* ---- Glass Card Utility ---- */
+/* ---- Card System ---- */
 .glass-card {
-  background: var(--bg-surface);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: var(--glass-border);
+  background: var(--bg-surface-solid);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  transition: box-shadow var(--transition-base), border-color var(--transition-base), transform var(--transition-base);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 250ms var(--ease-spring), border-color 250ms var(--ease-spring), transform 250ms var(--ease-spring);
 }
 .glass-card:hover {
-  box-shadow: var(--shadow-lg);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
 }
 
 .glass-card-solid {
   background: var(--bg-surface-solid);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
-  transition: box-shadow var(--transition-base), border-color var(--transition-base);
 }
 
 /* ---- Button Utilities ---- */
@@ -314,20 +312,20 @@ h1, h2, h3, h4, h5, h6 {
   animation: meshFloat 20s ease-in-out infinite alternate;
 }
 .ambient-mesh::before {
-  width: 600px;
-  height: 600px;
+  width: 700px;
+  height: 700px;
   background: var(--accent);
-  top: -200px;
-  right: -100px;
-  opacity: 0.07;
+  top: -250px;
+  right: -150px;
+  opacity: 0.12;
 }
 .ambient-mesh::after {
-  width: 500px;
-  height: 500px;
+  width: 600px;
+  height: 600px;
   background: var(--cta);
-  bottom: -150px;
-  left: 10%;
-  opacity: 0.05;
+  bottom: -200px;
+  left: 5%;
+  opacity: 0.08;
   animation-delay: -10s;
 }
 @keyframes meshFloat {
@@ -371,12 +369,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ---- Stat Card ---- */
 .stat-card {
-  background: var(--bg-surface);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: var(--glass-border);
+  background: var(--bg-surface-solid);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
-  padding: 24px;
+  padding: 20px;
   transition: all 250ms var(--ease-spring);
   position: relative;
   overflow: hidden;
@@ -387,15 +383,15 @@ h1, h2, h3, h4, h5, h6 {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light), var(--cta));
   opacity: 0;
-  transition: opacity 250ms ease;
+  transition: opacity 200ms ease;
 }
 .stat-card:hover {
-  border-color: rgba(129, 140, 248, 0.25);
-  box-shadow: var(--shadow-glow);
-  transform: translateY(-3px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 .stat-card:hover::before {
   opacity: 1;
