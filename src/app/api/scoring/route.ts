@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import {
-  computeStage1Scores,
+  computeStage1ScoresFromRubrics,
   computeStage2Scores,
   computeBehavioralScore,
   computeCompositeScore,
@@ -19,8 +19,29 @@ import type {
   Stage3Result,
   ScenarioRubric,
   TenetScores,
+  TriageTowerItem,
+  TradeOffPair,
+  SignalSortMessage,
+  ResourceRouletteCard,
 } from "@/types";
 import { TENETS } from "@/types";
+
+function pearsonCorrelation(x: number[], y: number[]): number {
+  const n = x.length;
+  if (n === 0) return 0;
+  const meanX = x.reduce((a, b) => a + b, 0) / n;
+  const meanY = y.reduce((a, b) => a + b, 0) / n;
+  let num = 0, denX = 0, denY = 0;
+  for (let i = 0; i < n; i++) {
+    const dx = x[i] - meanX;
+    const dy = y[i] - meanY;
+    num += dx * dy;
+    denX += dx * dx;
+    denY += dy * dy;
+  }
+  const den = Math.sqrt(denX * denY);
+  return den === 0 ? 0 : num / den;
+}
 
 export async function POST(request: NextRequest) {
   let candidateId: string;
@@ -58,7 +79,30 @@ export async function POST(request: NextRequest) {
   // -------------------------------------------------------------------------
   // Compute rule-based scores
   // -------------------------------------------------------------------------
-  const stage1Scores = stage1 ? computeStage1Scores(stage1) : null;
+  // Fetch Stage 1 scenarios to get rubric data
+  let stage1Scores = null;
+  if (stage1) {
+    const stage1Scenarios = await prisma.scenario.findMany({
+      where: { stage: 1, type: "core" },
+    });
+
+    // Build rubrics from scenario tree data
+    const rubrics: any = {};
+    for (const s of stage1Scenarios) {
+      const tree = JSON.parse(s.tree);
+      if (tree.type === "triage-tower") {
+        rubrics.triageTower = { items: tree.items };
+      } else if (tree.type === "trade-off-tiles") {
+        rubrics.tradeOffTiles = { pairs: tree.pairs };
+      } else if (tree.type === "signal-sort") {
+        rubrics.signalSort = { messages: tree.messages };
+      } else if (tree.type === "resource-roulette") {
+        rubrics.resourceRoulette = { cards: tree.cards };
+      }
+    }
+
+    stage1Scores = computeStage1ScoresFromRubrics(stage1, rubrics);
+  }
 
   // Get scenario rubrics for stage 2
   let stage2Scores: TenetScores | null = null;
@@ -136,6 +180,18 @@ export async function POST(request: NextRequest) {
     ...(stage2?.signals || []),
     ...(stage3?.signals || []),
   ];
+
+  if (stage1Scores && stage2Scores) {
+    const s1Values = TENETS.map(t => stage1Scores![t]);
+    const s2Values = TENETS.map(t => stage2Scores![t]);
+    const correlation = pearsonCorrelation(s1Values, s2Values);
+    allSignals.push({
+      event: "cross_stage_consistency",
+      timestamp: Date.now(),
+      data: { correlation },
+    });
+  }
+
   const behavioralScore = computeBehavioralScore(allSignals);
 
   // Stage 3 role fit scoring
