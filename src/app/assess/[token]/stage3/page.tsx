@@ -174,14 +174,17 @@ export default function Stage3Page() {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ background: "var(--bg-primary)" }}
+        style={{ background: "var(--bg-base)" }}
       >
         <div className="text-center space-y-4 animate-pulse">
           <div
-            className="w-12 h-12 rounded-xl mx-auto flex items-center justify-center"
-            style={{ background: "#F0FDF4" }}
+            className="w-12 h-12 mx-auto flex items-center justify-center"
+            style={{
+              background: "var(--success-surface)",
+              borderRadius: "var(--radius-lg)",
+            }}
           >
-            <Target size={24} style={{ color: "#16A34A" }} />
+            <Target size={24} style={{ color: "var(--success)" }} />
           </div>
           <p style={{ color: "var(--text-secondary)" }}>Loading Stage 3...</p>
         </div>
@@ -194,20 +197,17 @@ export default function Stage3Page() {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ background: "var(--bg-primary)" }}
+        style={{ background: "var(--bg-base)" }}
       >
-        <div
-          className="max-w-md w-full mx-4 text-center rounded-2xl p-8"
-          style={{
-            background: "var(--bg-card)",
-            border: "1px solid var(--border-light)",
-          }}
-        >
+        <div className="glass-card max-w-md w-full mx-4 text-center p-8">
           <div
-            className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
-            style={{ background: "#FEF2F2" }}
+            className="w-14 h-14 flex items-center justify-center mx-auto mb-4"
+            style={{
+              background: "var(--error-surface)",
+              borderRadius: "var(--radius-full)",
+            }}
           >
-            <AlertCircle size={28} style={{ color: "var(--nymbl-error)" }} />
+            <AlertCircle size={28} style={{ color: "var(--error)" }} />
           </div>
           <p className="font-semibold mb-1" style={{ color: "var(--text-primary)" }}>
             Something went wrong
@@ -225,7 +225,7 @@ export default function Stage3Page() {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ background: "var(--bg-primary)" }}
+        style={{ background: "var(--bg-base)" }}
       >
         <p style={{ color: "var(--text-secondary)" }}>No challenge available.</p>
       </div>
@@ -237,13 +237,15 @@ export default function Stage3Page() {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ background: "var(--bg-primary)" }}
+        style={{ background: "var(--bg-base)" }}
       >
         <div className="text-center space-y-4">
-          <div className="w-10 h-10 rounded-full mx-auto animate-spin"
+          <div
+            className="w-10 h-10 mx-auto animate-spin"
             style={{
-              border: "3px solid var(--border-light)",
-              borderTopColor: "var(--nymbl-primary)",
+              borderRadius: "var(--radius-full)",
+              border: "3px solid var(--border-default)",
+              borderTopColor: "var(--accent)",
             }}
           />
           <p style={{ color: "var(--text-secondary)" }}>
@@ -259,21 +261,26 @@ export default function Stage3Page() {
   const branchingTree = !isDebug ? (scenario.tree as BranchingTree) : null;
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
-      {/* Fixed top bar */}
+    <div className="min-h-screen" style={{ background: "var(--bg-base)" }}>
+      {/* Sticky top bar */}
       <div
-        className="sticky top-0 z-20 px-4 py-3"
+        className="glass-card sticky top-0 z-20 px-4 py-3"
         style={{
-          background: "var(--bg-card)",
-          borderBottom: "1px solid var(--border-light)",
+          borderRadius: 0,
+          borderLeft: "none",
+          borderRight: "none",
+          borderTop: "none",
         }}
       >
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-3">
-            {/* Stage pill badge */}
+            {/* Stage badge */}
             <span
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
-              style={{ background: "#DCFCE7", color: "#166534" }}
+              className="badge gap-1.5 px-3 py-1"
+              style={{
+                background: "var(--success-surface)",
+                color: "var(--success)",
+              }}
             >
               <Target size={14} />
               Stage 3 &mdash; Grow
@@ -297,19 +304,13 @@ export default function Stage3Page() {
           <div>
             <h2
               className="text-2xl font-bold mb-5"
-              style={{ color: "var(--text-primary)" }}
+              style={{ color: "var(--text-primary)", fontFamily: "var(--font-heading)" }}
             >
               {scenario.title}
             </h2>
 
             {/* Problem card */}
-            <div
-              className="rounded-2xl p-6 mb-6"
-              style={{
-                background: "var(--bg-card)",
-                border: "1px solid var(--border-light)",
-              }}
-            >
+            <div className="glass-card p-6 mb-6">
               <p
                 className="leading-relaxed mb-5"
                 style={{ color: "var(--text-secondary)" }}
@@ -317,22 +318,25 @@ export default function Stage3Page() {
                 {debugTree.problem}
               </p>
 
-              {/* Code block with syntax-highlight look */}
+              {/* Code block */}
               <div
-                className="rounded-xl overflow-hidden"
-                style={{ border: "1px solid #1E293B" }}
+                className="overflow-hidden"
+                style={{
+                  borderRadius: "var(--radius-md)",
+                  border: "1px solid var(--border-default)",
+                }}
               >
                 {/* Code header bar */}
                 <div
                   className="flex items-center gap-1.5 px-4 py-2"
-                  style={{ background: "#1E293B" }}
+                  style={{ background: "var(--bg-surface-solid)" }}
                 >
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#EF4444" }} />
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#F59E0B" }} />
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#22C55E" }} />
+                  <div className="w-2.5 h-2.5" style={{ borderRadius: "var(--radius-full)", background: "var(--error)" }} />
+                  <div className="w-2.5 h-2.5" style={{ borderRadius: "var(--radius-full)", background: "var(--warning)" }} />
+                  <div className="w-2.5 h-2.5" style={{ borderRadius: "var(--radius-full)", background: "var(--success)" }} />
                   <span
                     className="ml-2 text-xs font-mono"
-                    style={{ color: "#94A3B8" }}
+                    style={{ color: "var(--text-muted)" }}
                   >
                     code
                   </span>
@@ -341,8 +345,8 @@ export default function Stage3Page() {
                 <pre
                   className="p-4 overflow-x-auto text-sm font-mono leading-relaxed"
                   style={{
-                    background: "#0F172A",
-                    color: "#4ADE80",
+                    background: "var(--bg-surface-solid)",
+                    color: "var(--success)",
                     margin: 0,
                   }}
                 >
@@ -357,37 +361,37 @@ export default function Stage3Page() {
                 <button
                   key={opt.id}
                   onClick={() => handleAnswerSelect(opt.id)}
-                  className="w-full p-4 rounded-xl text-left cursor-pointer"
+                  className="glass-card w-full p-4 text-left cursor-pointer"
                   style={{
                     background:
-                      selectedAnswer === opt.id ? "#EFF6FF" : "var(--bg-card)",
+                      selectedAnswer === opt.id ? "var(--accent-surface)" : "var(--bg-surface)",
                     border:
                       selectedAnswer === opt.id
-                        ? "2px solid var(--nymbl-primary)"
-                        : "1px solid var(--border-light)",
-                    color: "var(--text-primary)",
-                    transition: "var(--transition-fast)",
+                        ? "2px solid var(--accent)"
+                        : "var(--glass-border)",
+                    transition: "all var(--transition-fast)",
                   }}
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center"
+                      className="w-5 h-5 flex-shrink-0 flex items-center justify-center"
                       style={{
+                        borderRadius: "var(--radius-full)",
                         border:
                           selectedAnswer === opt.id
-                            ? "2px solid var(--nymbl-primary)"
+                            ? "2px solid var(--accent)"
                             : "2px solid var(--border-default)",
                         background:
                           selectedAnswer === opt.id
-                            ? "var(--nymbl-primary)"
+                            ? "var(--accent)"
                             : "transparent",
                       }}
                     >
                       {selectedAnswer === opt.id && (
-                        <CheckCircle2 size={14} className="text-white" />
+                        <CheckCircle2 size={14} style={{ color: "var(--text-inverse)" }} />
                       )}
                     </div>
-                    <span className="text-sm">{opt.text}</span>
+                    <span className="text-sm" style={{ color: "var(--text-primary)" }}>{opt.text}</span>
                   </div>
                 </button>
               ))}
@@ -396,12 +400,9 @@ export default function Stage3Page() {
             <button
               onClick={handleAnswerSubmit}
               disabled={!selectedAnswer}
-              className="w-full py-3.5 rounded-xl font-semibold text-white cursor-pointer"
+              className="btn-primary w-full py-3.5"
               style={{
-                background: selectedAnswer
-                  ? "var(--nymbl-primary)"
-                  : "var(--border-default)",
-                transition: "var(--transition-fast)",
+                borderRadius: "var(--radius-lg)",
                 opacity: selectedAnswer ? 1 : 0.5,
                 cursor: selectedAnswer ? "pointer" : "not-allowed",
               }}
@@ -416,18 +417,12 @@ export default function Stage3Page() {
           <div>
             <h2
               className="text-2xl font-bold mb-5"
-              style={{ color: "var(--text-primary)" }}
+              style={{ color: "var(--text-primary)", fontFamily: "var(--font-heading)" }}
             >
               Follow-Up
             </h2>
 
-            <div
-              className="rounded-2xl p-6 mb-6"
-              style={{
-                background: "var(--bg-card)",
-                border: "1px solid var(--border-light)",
-              }}
-            >
+            <div className="glass-card p-6 mb-6">
               <p
                 className="text-lg leading-relaxed"
                 style={{ color: "var(--text-primary)" }}
@@ -441,37 +436,37 @@ export default function Stage3Page() {
                 <button
                   key={opt.id}
                   onClick={() => handleFollowUpSelect(opt.id)}
-                  className="w-full p-4 rounded-xl text-left cursor-pointer"
+                  className="glass-card w-full p-4 text-left cursor-pointer"
                   style={{
                     background:
-                      selectedFollowUp === opt.id ? "#EFF6FF" : "var(--bg-card)",
+                      selectedFollowUp === opt.id ? "var(--accent-surface)" : "var(--bg-surface)",
                     border:
                       selectedFollowUp === opt.id
-                        ? "2px solid var(--nymbl-primary)"
-                        : "1px solid var(--border-light)",
-                    color: "var(--text-primary)",
-                    transition: "var(--transition-fast)",
+                        ? "2px solid var(--accent)"
+                        : "var(--glass-border)",
+                    transition: "all var(--transition-fast)",
                   }}
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center"
+                      className="w-5 h-5 flex-shrink-0 flex items-center justify-center"
                       style={{
+                        borderRadius: "var(--radius-full)",
                         border:
                           selectedFollowUp === opt.id
-                            ? "2px solid var(--nymbl-primary)"
+                            ? "2px solid var(--accent)"
                             : "2px solid var(--border-default)",
                         background:
                           selectedFollowUp === opt.id
-                            ? "var(--nymbl-primary)"
+                            ? "var(--accent)"
                             : "transparent",
                       }}
                     >
                       {selectedFollowUp === opt.id && (
-                        <CheckCircle2 size={14} className="text-white" />
+                        <CheckCircle2 size={14} style={{ color: "var(--text-inverse)" }} />
                       )}
                     </div>
-                    <span className="text-sm">{opt.text}</span>
+                    <span className="text-sm" style={{ color: "var(--text-primary)" }}>{opt.text}</span>
                   </div>
                 </button>
               ))}
@@ -480,12 +475,9 @@ export default function Stage3Page() {
             <button
               onClick={handleFollowUpSubmit}
               disabled={!selectedFollowUp}
-              className="w-full py-3.5 rounded-xl font-semibold text-white cursor-pointer"
+              className="btn-cta w-full py-3.5"
               style={{
-                background: selectedFollowUp
-                  ? "var(--nymbl-cta)"
-                  : "var(--border-default)",
-                transition: "var(--transition-fast)",
+                borderRadius: "var(--radius-lg)",
                 opacity: selectedFollowUp ? 1 : 0.5,
                 cursor: selectedFollowUp ? "pointer" : "not-allowed",
               }}
@@ -500,17 +492,11 @@ export default function Stage3Page() {
           <div>
             <h2
               className="text-xl font-bold mb-5"
-              style={{ color: "var(--text-primary)" }}
+              style={{ color: "var(--text-primary)", fontFamily: "var(--font-heading)" }}
             >
               {scenario.title}
             </h2>
-            <div
-              className="rounded-2xl p-6"
-              style={{
-                background: "var(--bg-card)",
-                border: "1px solid var(--border-light)",
-              }}
-            >
+            <div className="glass-card p-6">
               <BranchingScenario
                 tree={branchingTree}
                 onComplete={handleBranchingComplete}

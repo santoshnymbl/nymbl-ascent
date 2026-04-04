@@ -116,14 +116,17 @@ export default function Stage1Page() {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ background: "var(--bg-primary)" }}
+        style={{ background: "var(--bg-base)" }}
       >
         <div className="text-center space-y-4 animate-pulse">
           <div
-            className="w-12 h-12 rounded-xl mx-auto flex items-center justify-center"
-            style={{ background: "#EEF2FF" }}
+            className="w-12 h-12 mx-auto flex items-center justify-center"
+            style={{
+              background: "var(--accent-surface)",
+              borderRadius: "var(--radius-lg)",
+            }}
           >
-            <Sparkles size={24} style={{ color: "#4F46E5" }} />
+            <Sparkles size={24} style={{ color: "var(--accent)" }} />
           </div>
           <p style={{ color: "var(--text-secondary)" }}>Loading Stage 1...</p>
         </div>
@@ -136,20 +139,17 @@ export default function Stage1Page() {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ background: "var(--bg-primary)" }}
+        style={{ background: "var(--bg-base)" }}
       >
-        <div
-          className="max-w-md w-full mx-4 text-center rounded-2xl p-8"
-          style={{
-            background: "var(--bg-card)",
-            border: "1px solid var(--border-light)",
-          }}
-        >
+        <div className="glass-card max-w-md w-full mx-4 text-center p-8">
           <div
-            className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
-            style={{ background: "#FEF2F2" }}
+            className="w-14 h-14 flex items-center justify-center mx-auto mb-4"
+            style={{
+              background: "var(--error-surface)",
+              borderRadius: "var(--radius-full)",
+            }}
           >
-            <AlertCircle size={28} style={{ color: "var(--nymbl-error)" }} />
+            <AlertCircle size={28} style={{ color: "var(--error)" }} />
           </div>
           <p className="font-semibold mb-1" style={{ color: "var(--text-primary)" }}>
             Something went wrong
@@ -179,7 +179,7 @@ export default function Stage1Page() {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ background: "var(--bg-primary)" }}
+        style={{ background: "var(--bg-base)" }}
       >
         <p style={{ color: "var(--text-secondary)" }}>No scenarios available.</p>
       </div>
@@ -189,21 +189,26 @@ export default function Stage1Page() {
   const gameType = currentScenario.tree.type;
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
-      {/* Fixed top bar */}
+    <div className="min-h-screen" style={{ background: "var(--bg-base)" }}>
+      {/* Sticky top bar */}
       <div
-        className="sticky top-0 z-20 px-4 py-3"
+        className="glass-card sticky top-0 z-20 px-4 py-3"
         style={{
-          background: "var(--bg-card)",
-          borderBottom: "1px solid var(--border-light)",
+          borderRadius: 0,
+          borderLeft: "none",
+          borderRight: "none",
+          borderTop: "none",
         }}
       >
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-3">
-            {/* Stage pill badge */}
+            {/* Stage badge */}
             <span
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
-              style={{ background: "#EEF2FF", color: "#4F46E5" }}
+              className="badge gap-1.5 px-3 py-1"
+              style={{
+                background: "var(--accent-surface)",
+                color: "var(--accent)",
+              }}
             >
               <Sparkles size={14} />
               Stage 1 &mdash; Learn
@@ -222,13 +227,7 @@ export default function Stage1Page() {
 
       {/* Game content */}
       <div className="max-w-2xl mx-auto px-4 py-8">
-        <div
-          className="rounded-2xl p-6"
-          style={{
-            background: "var(--bg-card)",
-            border: "1px solid var(--border-light)",
-          }}
-        >
+        <div className="glass-card p-6">
           {gameType === "priority-snap" && currentScenario.tree.items && (
             <PrioritySnap
               items={currentScenario.tree.items}

@@ -16,10 +16,10 @@ export default function CompletePage() {
     <div
       className="min-h-screen flex items-center justify-center relative overflow-hidden"
       style={{
-        background: "linear-gradient(180deg, #F0FDF4 0%, #FFFFFF 50%, var(--bg-primary) 100%)",
+        background: "linear-gradient(180deg, color-mix(in srgb, var(--success) 5%, transparent) 0%, var(--bg-base) 50%)",
       }}
     >
-      {/* Sparkle accents — subtle animated dots */}
+      {/* Floating sparkle dots */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         {[
           { top: "12%", left: "18%", delay: "0s", size: 6 },
@@ -33,13 +33,14 @@ export default function CompletePage() {
         ].map((dot, i) => (
           <div
             key={i}
-            className="absolute rounded-full"
+            className="absolute"
             style={{
               top: dot.top,
               left: dot.left,
               width: dot.size,
               height: dot.size,
-              background: i % 2 === 0 ? "var(--nymbl-success)" : "var(--nymbl-cta)",
+              borderRadius: "var(--radius-full)",
+              background: i % 2 === 0 ? "var(--accent)" : "var(--cta)",
               opacity: 0.3,
               animation: `sparkle-float 3s ease-in-out ${dot.delay} infinite`,
             }}
@@ -56,26 +57,27 @@ export default function CompletePage() {
           transition: "opacity 600ms ease, transform 600ms ease",
         }}
       >
-        {/* Animated checkmark */}
+        {/* Animated checkmark — 80px */}
         <div
-          className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8"
+          className="w-20 h-20 flex items-center justify-center mx-auto mb-8"
           style={{
-            background: "#F0FDF4",
-            border: "3px solid var(--nymbl-success)",
+            background: "var(--success-surface)",
+            border: "3px solid var(--success)",
+            borderRadius: "var(--radius-full)",
             animation: mounted ? "check-pop 500ms ease 300ms both" : "none",
           }}
         >
           <CheckCircle2
             size={44}
             strokeWidth={2}
-            style={{ color: "var(--nymbl-success)" }}
+            style={{ color: "var(--success)" }}
           />
         </div>
 
         {/* Heading */}
         <h1
           className="text-3xl sm:text-4xl font-bold mb-3"
-          style={{ color: "var(--text-primary)" }}
+          style={{ color: "var(--text-primary)", fontFamily: "var(--font-heading)" }}
         >
           Assessment Complete!
         </h1>
@@ -102,21 +104,21 @@ export default function CompletePage() {
         {/* Divider */}
         <div
           className="w-12 h-px mx-auto mb-6"
-          style={{ background: "var(--border-light)" }}
+          style={{ background: "var(--border-default)" }}
         />
 
-        {/* Branding */}
+        {/* Nymbl branding */}
         <div className="flex items-center justify-center gap-1.5">
           <Sparkles size={14} style={{ color: "var(--text-muted)" }} />
           <span
             className="text-sm font-semibold tracking-tight"
-            style={{ fontFamily: "var(--font-heading)", color: "var(--nymbl-primary)" }}
+            style={{ fontFamily: "var(--font-heading)", color: "var(--accent)" }}
           >
             nymbl
           </span>
           <span
             className="text-sm font-semibold tracking-tight"
-            style={{ fontFamily: "var(--font-heading)", color: "var(--nymbl-cta)" }}
+            style={{ fontFamily: "var(--font-heading)", color: "var(--cta)" }}
           >
             ascent
           </span>

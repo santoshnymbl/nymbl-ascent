@@ -65,27 +65,39 @@ export default function WelcomePage() {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ background: "var(--bg-primary)" }}
+        style={{ background: "var(--bg-base)" }}
       >
-        <div className="max-w-xl w-full px-6 space-y-6 animate-pulse">
+        <div className="max-w-lg w-full px-6 space-y-6 animate-pulse">
           {/* Skeleton: logo */}
-          <div className="h-8 w-48 rounded-lg mx-auto" style={{ background: "var(--border-light)" }} />
+          <div
+            className="h-8 w-48 mx-auto"
+            style={{ background: "var(--bg-elevated)", borderRadius: "var(--radius-md)" }}
+          />
           {/* Skeleton: heading */}
-          <div className="h-10 w-72 rounded-lg mx-auto" style={{ background: "var(--border-light)" }} />
+          <div
+            className="h-10 w-72 mx-auto"
+            style={{ background: "var(--bg-elevated)", borderRadius: "var(--radius-md)" }}
+          />
           {/* Skeleton: badge */}
-          <div className="h-7 w-36 rounded-full mx-auto" style={{ background: "var(--border-light)" }} />
+          <div
+            className="h-7 w-36 mx-auto"
+            style={{ background: "var(--bg-elevated)", borderRadius: "var(--radius-full)" }}
+          />
           {/* Skeleton: 3 cards */}
           <div className="grid grid-cols-3 gap-4 pt-4">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-36 rounded-xl"
-                style={{ background: "var(--border-light)" }}
+                className="h-36"
+                style={{ background: "var(--bg-elevated)", borderRadius: "var(--radius-lg)" }}
               />
             ))}
           </div>
           {/* Skeleton: button */}
-          <div className="h-14 rounded-xl" style={{ background: "var(--border-light)" }} />
+          <div
+            className="h-14"
+            style={{ background: "var(--bg-elevated)", borderRadius: "var(--radius-lg)" }}
+          />
         </div>
       </div>
     );
@@ -96,20 +108,19 @@ export default function WelcomePage() {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ background: "var(--bg-primary)" }}
+        style={{ background: "var(--bg-base)" }}
       >
         <div
-          className="max-w-md w-full mx-4 text-center rounded-2xl p-8"
-          style={{
-            background: "var(--bg-card)",
-            border: "1px solid var(--border-light)",
-          }}
+          className="glass-card max-w-md w-full mx-4 text-center p-8"
         >
           <div
-            className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
-            style={{ background: "#FEF2F2" }}
+            className="w-16 h-16 flex items-center justify-center mx-auto mb-5"
+            style={{
+              background: "var(--error-surface)",
+              borderRadius: "var(--radius-full)",
+            }}
           >
-            <AlertCircle size={32} style={{ color: "var(--nymbl-error)" }} />
+            <AlertCircle size={32} style={{ color: "var(--error)" }} />
           </div>
           <h1
             className="text-2xl font-bold mb-2"
@@ -130,20 +141,19 @@ export default function WelcomePage() {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ background: "var(--bg-primary)" }}
+        style={{ background: "var(--bg-base)" }}
       >
         <div
-          className="max-w-md w-full mx-4 text-center rounded-2xl p-8"
-          style={{
-            background: "var(--bg-card)",
-            border: "1px solid var(--border-light)",
-          }}
+          className="glass-card max-w-md w-full mx-4 text-center p-8"
         >
           <div
-            className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
-            style={{ background: "#F0FDF4" }}
+            className="w-16 h-16 flex items-center justify-center mx-auto mb-5"
+            style={{
+              background: "var(--success-surface)",
+              borderRadius: "var(--radius-full)",
+            }}
           >
-            <CheckCircle2 size={32} style={{ color: "var(--nymbl-success)" }} />
+            <CheckCircle2 size={32} style={{ color: "var(--success)" }} />
           </div>
           <h1
             className="text-2xl font-bold mb-2"
@@ -166,44 +176,46 @@ export default function WelcomePage() {
       name: "Learn",
       description: "Quick-fire games to see how you prioritize, match values, and spot patterns.",
       time: "~3 min",
-      bgColor: "#EEF2FF",
-      iconColor: "#4F46E5",
+      bgToken: "var(--accent-surface)",
+      iconToken: "var(--accent)",
     },
     {
       icon: Brain,
       name: "Build",
       description: "Navigate realistic workplace scenarios and make decisions under pressure.",
       time: "~5 min",
-      bgColor: "#FFFBEB",
-      iconColor: "#D97706",
+      bgToken: "var(--warning-surface)",
+      iconToken: "var(--warning)",
     },
     {
       icon: Target,
       name: "Grow",
       description: "A challenge tailored to your role. Show us your skills.",
       time: "~5 min",
-      bgColor: "#F0FDF4",
-      iconColor: "#16A34A",
+      bgToken: "var(--success-surface)",
+      iconToken: "var(--success)",
     },
   ];
 
   return (
     <div
       className="min-h-screen flex items-center justify-center py-12 px-4"
-      style={{ background: "var(--bg-primary)" }}
+      style={{ background: "var(--bg-base)" }}
     >
-      <div className="max-w-xl w-full text-center">
+      <div
+        className="glass-card max-w-lg w-full text-center p-8 sm:p-10"
+      >
         {/* Logo / Wordmark */}
         <div className="mb-8">
           <span
             className="text-2xl font-bold tracking-tight"
-            style={{ fontFamily: "var(--font-heading)", color: "var(--nymbl-primary)" }}
+            style={{ fontFamily: "var(--font-heading)", color: "var(--accent)" }}
           >
             nymbl
           </span>
           <span
             className="text-2xl font-bold tracking-tight ml-1"
-            style={{ fontFamily: "var(--font-heading)", color: "var(--nymbl-cta)" }}
+            style={{ fontFamily: "var(--font-heading)", color: "var(--cta)" }}
           >
             ascent
           </span>
@@ -220,35 +232,33 @@ export default function WelcomePage() {
         {/* Role Badge */}
         <div className="mb-10">
           <span
-            className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold"
+            className="badge px-4 py-1.5 text-sm"
             style={{
-              background: "#EFF6FF",
-              color: "var(--nymbl-primary)",
+              background: "var(--accent-surface)",
+              color: "var(--accent)",
             }}
           >
             {data.roleName}
           </span>
         </div>
 
-        {/* Stage Preview Cards */}
+        {/* Stage Preview Cards — horizontal row */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           {stages.map((stage, idx) => {
             const Icon = stage.icon;
             return (
               <div
                 key={idx}
-                className="rounded-xl p-5 text-left"
-                style={{
-                  background: "var(--bg-card)",
-                  border: "1px solid var(--border-light)",
-                  transition: "var(--transition-base)",
-                }}
+                className="glass-card p-5 text-left"
               >
                 <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center mb-3"
-                  style={{ background: stage.bgColor }}
+                  className="w-10 h-10 flex items-center justify-center mb-3"
+                  style={{
+                    background: stage.bgToken,
+                    borderRadius: "var(--radius-md)",
+                  }}
                 >
-                  <Icon size={20} style={{ color: stage.iconColor }} />
+                  <Icon size={20} style={{ color: stage.iconToken }} />
                 </div>
                 <p
                   className="font-semibold text-sm mb-1"
@@ -273,7 +283,7 @@ export default function WelcomePage() {
           })}
         </div>
 
-        {/* Info Line */}
+        {/* Meta Line */}
         <div
           className="flex items-center justify-center gap-5 mb-8 text-sm"
           style={{ color: "var(--text-secondary)" }}
@@ -291,17 +301,8 @@ export default function WelcomePage() {
         {/* CTA Button */}
         <button
           onClick={handleBegin}
-          className="w-full py-4 rounded-xl font-semibold text-lg text-white flex items-center justify-center gap-2 cursor-pointer"
-          style={{
-            background: "var(--nymbl-cta)",
-            transition: "var(--transition-fast)",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.background = "var(--nymbl-cta-hover)")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.background = "var(--nymbl-cta)")
-          }
+          className="btn-cta w-full py-4 text-lg flex items-center justify-center gap-2"
+          style={{ borderRadius: "var(--radius-lg)" }}
         >
           {data.status === "in_progress" ? "Resume Assessment" : "Begin Assessment"}
           <ArrowRight size={20} />

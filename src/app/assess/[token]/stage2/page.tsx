@@ -100,14 +100,17 @@ export default function Stage2Page() {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ background: "var(--bg-primary)" }}
+        style={{ background: "var(--bg-base)" }}
       >
         <div className="text-center space-y-4 animate-pulse">
           <div
-            className="w-12 h-12 rounded-xl mx-auto flex items-center justify-center"
-            style={{ background: "#FFFBEB" }}
+            className="w-12 h-12 mx-auto flex items-center justify-center"
+            style={{
+              background: "var(--warning-surface)",
+              borderRadius: "var(--radius-lg)",
+            }}
           >
-            <Brain size={24} style={{ color: "#D97706" }} />
+            <Brain size={24} style={{ color: "var(--warning)" }} />
           </div>
           <p style={{ color: "var(--text-secondary)" }}>Loading Stage 2...</p>
         </div>
@@ -120,20 +123,17 @@ export default function Stage2Page() {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ background: "var(--bg-primary)" }}
+        style={{ background: "var(--bg-base)" }}
       >
-        <div
-          className="max-w-md w-full mx-4 text-center rounded-2xl p-8"
-          style={{
-            background: "var(--bg-card)",
-            border: "1px solid var(--border-light)",
-          }}
-        >
+        <div className="glass-card max-w-md w-full mx-4 text-center p-8">
           <div
-            className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
-            style={{ background: "#FEF2F2" }}
+            className="w-14 h-14 flex items-center justify-center mx-auto mb-4"
+            style={{
+              background: "var(--error-surface)",
+              borderRadius: "var(--radius-full)",
+            }}
           >
-            <AlertCircle size={28} style={{ color: "var(--nymbl-error)" }} />
+            <AlertCircle size={28} style={{ color: "var(--error)" }} />
           </div>
           <p className="font-semibold mb-1" style={{ color: "var(--text-primary)" }}>
             Something went wrong
@@ -163,7 +163,7 @@ export default function Stage2Page() {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ background: "var(--bg-primary)" }}
+        style={{ background: "var(--bg-base)" }}
       >
         <p style={{ color: "var(--text-secondary)" }}>No scenarios available.</p>
       </div>
@@ -174,21 +174,26 @@ export default function Stage2Page() {
   const stepDots = Array.from({ length: scenarios.length }, (_, i) => i);
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
-      {/* Fixed top bar */}
+    <div className="min-h-screen" style={{ background: "var(--bg-base)" }}>
+      {/* Sticky top bar */}
       <div
-        className="sticky top-0 z-20 px-4 py-3"
+        className="glass-card sticky top-0 z-20 px-4 py-3"
         style={{
-          background: "var(--bg-card)",
-          borderBottom: "1px solid var(--border-light)",
+          borderRadius: 0,
+          borderLeft: "none",
+          borderRight: "none",
+          borderTop: "none",
         }}
       >
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-3">
-            {/* Stage pill badge */}
+            {/* Stage badge */}
             <span
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
-              style={{ background: "#FEF3C7", color: "#92400E" }}
+              className="badge gap-1.5 px-3 py-1"
+              style={{
+                background: "var(--warning-surface)",
+                color: "var(--warning)",
+              }}
             >
               <Brain size={14} />
               Stage 2 &mdash; Build
@@ -219,12 +224,13 @@ export default function Stage2Page() {
             {stepDots.map((i) => (
               <div
                 key={i}
-                className="w-2.5 h-2.5 rounded-full"
+                className="w-2.5 h-2.5"
                 style={{
+                  borderRadius: "var(--radius-full)",
                   background:
                     i <= currentIndex
-                      ? "var(--nymbl-primary)"
-                      : "var(--border-light)",
+                      ? "var(--accent)"
+                      : "var(--border-default)",
                   transition: "var(--transition-fast)",
                 }}
               />
@@ -235,19 +241,13 @@ export default function Stage2Page() {
         {/* Scenario title */}
         <h2
           className="text-xl font-bold mb-5"
-          style={{ color: "var(--text-primary)" }}
+          style={{ color: "var(--text-primary)", fontFamily: "var(--font-heading)" }}
         >
           {currentScenario.title}
         </h2>
 
         {/* Scenario card */}
-        <div
-          className="rounded-2xl p-6"
-          style={{
-            background: "var(--bg-card)",
-            border: "1px solid var(--border-light)",
-          }}
-        >
+        <div className="glass-card p-6">
           <BranchingScenario
             key={currentScenario.id}
             tree={currentScenario.tree}
