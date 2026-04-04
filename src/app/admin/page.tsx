@@ -18,31 +18,40 @@ interface CandidateData { id: string; name: string; email: string; status: strin
 
 const STORAGE_KEY = "nymbl-dashboard-layouts";
 
-const DEFAULT_LAYOUTS: { lg: Layout[] } = {
-  lg: [
-    { i: "stat-roles",     x: 0, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
-    { i: "stat-candidates", x: 3, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
-    { i: "stat-pending",   x: 6, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
-    { i: "stat-today",     x: 9, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
-    { i: "candidates",     x: 0, y: 2, w: 8, h: 5, minW: 4, minH: 3 },
-    { i: "pipeline",       x: 8, y: 2, w: 4, h: 5, minW: 3, minH: 3 },
-    { i: "getting-started", x: 0, y: 7, w: 8, h: 3, minW: 4, minH: 2 },
-    { i: "roles",          x: 8, y: 7, w: 4, h: 3, minW: 3, minH: 2 },
-  ],
-};
+function buildLayouts(isLocked: boolean): { lg: Layout[] } {
+  return {
+    lg: [
+      { i: "stat-roles",     x: 0, y: 0, w: 3, h: 2, minW: 2, minH: 2, static: isLocked },
+      { i: "stat-candidates", x: 3, y: 0, w: 3, h: 2, minW: 2, minH: 2, static: isLocked },
+      { i: "stat-pending",   x: 6, y: 0, w: 3, h: 2, minW: 2, minH: 2, static: isLocked },
+      { i: "stat-today",     x: 9, y: 0, w: 3, h: 2, minW: 2, minH: 2, static: isLocked },
+      { i: "candidates",     x: 0, y: 2, w: 8, h: 5, minW: 4, minH: 3, static: isLocked },
+      { i: "pipeline",       x: 8, y: 2, w: 4, h: 5, minW: 3, minH: 3, static: isLocked },
+      { i: "getting-started", x: 0, y: 7, w: 8, h: 3, minW: 4, minH: 2, static: isLocked },
+      { i: "roles",          x: 8, y: 7, w: 4, h: 3, minW: 3, minH: 2, static: isLocked },
+    ],
+  };
+}
 
 export default function AdminDashboard() {
   const [roles, setRoles] = useState<RoleData[]>([]);
   const [candidates, setCandidates] = useState<CandidateData[]>([]);
   const [loading, setLoading] = useState(true);
   const [locked, setLocked] = useState(true);
-  const [layouts, setLayouts] = useState(DEFAULT_LAYOUTS);
+  const [layouts, setLayouts] = useState(() => buildLayouts(true));
   const { width: containerWidth, containerRef } = useContainerWidth({ initialWidth: 1000 });
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) setLayouts(JSON.parse(saved));
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Apply static flag based on current lock state
+        if (parsed.lg) {
+          parsed.lg = parsed.lg.map((item: Layout) => ({ ...item, static: true }));
+        }
+        setLayouts(parsed);
+      }
     } catch {}
   }, []);
 
@@ -55,13 +64,26 @@ export default function AdminDashboard() {
 
   const onLayoutChange = useCallback((_: Layout[], allLayouts: { [key: string]: Layout[] }) => {
     if (!locked) {
-      setLayouts(allLayouts as typeof DEFAULT_LAYOUTS);
+      setLayouts(allLayouts as ReturnType<typeof buildLayouts>);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(allLayouts));
     }
   }, [locked]);
 
+  function toggleLock() {
+    const next = !locked;
+    setLocked(next);
+    // Update static flag on every item
+    setLayouts((prev) => {
+      const updated = { ...prev };
+      if (updated.lg) {
+        updated.lg = updated.lg.map((item) => ({ ...item, static: next }));
+      }
+      return { ...updated };
+    });
+  }
+
   function resetLayout() {
-    setLayouts(DEFAULT_LAYOUTS);
+    setLayouts(buildLayouts(locked));
     localStorage.removeItem(STORAGE_KEY);
   }
 
@@ -113,7 +135,7 @@ export default function AdminDashboard() {
           </div>
           <Tooltip content={locked ? "Unlock to drag & resize widgets" : "Lock layout"} position="bottom">
             <button
-              onClick={() => setLocked(!locked)}
+              onClick={toggleLock}
               style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: "var(--radius-md)", background: locked ? "transparent" : "var(--accent-surface)", border: `1px solid ${locked ? "var(--border-default)" : "var(--accent)"}`, color: locked ? "var(--text-muted)" : "var(--accent)", cursor: "pointer", fontSize: "0.72rem", fontWeight: 600, transition: "all 150ms ease" }}
             >
               {locked ? <Lock size={13}/> : <Unlock size={13}/>}
