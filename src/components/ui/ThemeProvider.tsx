@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useCallback, useEffect, useState, useSyncExternalStore } from "react";
 
 type Theme = "light" | "dark";
 
@@ -18,44 +18,27 @@ export function useTheme() {
   return useContext(ThemeContext);
 }
 
+function getStoredTheme(): Theme {
+  if (typeof window === "undefined") return "dark";
+  return (localStorage.getItem("nymbl-theme") as Theme) || "dark";
+}
+
+function applyTheme(theme: Theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
-  const [mounted, setMounted] = useState(false);
+  const [theme, setTheme] = useState<Theme>(getStoredTheme);
 
+  // Apply on mount and whenever theme changes
   useEffect(() => {
-    const saved = localStorage.getItem("nymbl-theme") as Theme | null;
-    if (saved) {
-      setTheme(saved);
-    }
-    setMounted(true);
-  }, []);
+    applyTheme(theme);
+    localStorage.setItem("nymbl-theme", theme);
+  }, [theme]);
 
-  useEffect(() => {
-    if (mounted) {
-      document.documentElement.setAttribute("data-theme", theme);
-      localStorage.setItem("nymbl-theme", theme);
-    }
-  }, [theme, mounted]);
-
-  function toggleTheme() {
+  const toggleTheme = useCallback(() => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  }
-
-  // Prevent flash of wrong theme
-  if (!mounted) {
-    return (
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            (function() {
-              var t = localStorage.getItem('nymbl-theme') || 'dark';
-              document.documentElement.setAttribute('data-theme', t);
-            })();
-          `,
-        }}
-      />
-    );
-  }
+  }, []);
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
