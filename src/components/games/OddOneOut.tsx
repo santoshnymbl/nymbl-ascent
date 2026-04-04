@@ -73,26 +73,26 @@ export function OddOneOut({
         {rounds.map((_, i) => (
           <div
             key={i}
-            className="rounded-full"
             style={{
               width: 10,
               height: 10,
+              borderRadius: "var(--radius-full)",
               backgroundColor:
                 i < currentRound
-                  ? "var(--nymbl-primary)"
+                  ? "var(--accent)"
                   : i === currentRound
-                    ? "var(--nymbl-primary)"
-                    : "var(--border-light)",
+                    ? "var(--accent)"
+                    : "var(--border-default)",
               border:
                 i === currentRound
-                  ? "2px solid var(--nymbl-primary)"
+                  ? "2px solid var(--accent)"
                   : "2px solid transparent",
               boxShadow:
                 i === currentRound
-                  ? "0 0 0 3px rgba(37, 99, 235, 0.2)"
+                  ? "0 0 0 3px var(--accent-glow)"
                   : "none",
               opacity: i < currentRound ? 1 : i === currentRound ? 1 : 0.5,
-              transition: "all 200ms ease",
+              transition: `all var(--transition-base)`,
             }}
             aria-hidden="true"
           />
@@ -107,16 +107,15 @@ export function OddOneOut({
 
       {/* Question prompt card */}
       <div
-        className="rounded-[10px] px-5 py-4 mb-6 flex items-start gap-3"
+        className="glass-card px-5 py-4 mb-6 flex items-start gap-3"
         style={{
-          backgroundColor: "#EFF6FF", // primary-50
-          border: "1px solid var(--border-light)",
+          backgroundColor: "var(--accent-surface)",
         }}
       >
         <HelpCircle
           size={20}
           className="mt-0.5 shrink-0"
-          style={{ color: "var(--nymbl-primary)" }}
+          style={{ color: "var(--accent)" }}
           aria-hidden="true"
         />
         <p
@@ -136,28 +135,30 @@ export function OddOneOut({
               key={opt.id}
               onClick={() => handlePick(opt.id)}
               disabled={!!flashedId}
-              className="w-full px-5 py-4 rounded-[10px] text-left text-base font-medium cursor-pointer"
+              className="glass-card w-full px-5 py-4 text-left text-base font-medium cursor-pointer"
               style={{
                 backgroundColor: isFlashed
-                  ? "var(--nymbl-primary)"
-                  : "var(--bg-card)",
-                color: isFlashed ? "#FFFFFF" : "var(--text-primary)",
-                border: isFlashed
-                  ? "2px solid var(--nymbl-primary)"
-                  : "2px solid var(--border-light)",
-                transition:
-                  "background-color 150ms ease, border-color 150ms ease, color 150ms ease, transform 150ms ease",
+                  ? "var(--accent)"
+                  : undefined,
+                color: isFlashed ? "var(--text-inverse)" : "var(--text-primary)",
+                borderColor: isFlashed
+                  ? "var(--accent)"
+                  : undefined,
+                boxShadow: isFlashed ? "var(--shadow-glow)" : undefined,
+                transition: `background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast)`,
               }}
               onMouseEnter={(e) => {
                 if (!flashedId) {
-                  e.currentTarget.style.borderColor = "var(--nymbl-primary)";
-                  e.currentTarget.style.backgroundColor = "#EFF6FF";
+                  e.currentTarget.style.borderColor = "var(--accent)";
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                  e.currentTarget.style.boxShadow = "var(--shadow-lg)";
                 }
               }}
               onMouseLeave={(e) => {
                 if (!flashedId && !isFlashed) {
-                  e.currentTarget.style.borderColor = "var(--border-light)";
-                  e.currentTarget.style.backgroundColor = "var(--bg-card)";
+                  e.currentTarget.style.borderColor = "";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "";
                 }
               }}
             >

@@ -12,17 +12,24 @@ export function ProgressBar({ current, total, label }: ProgressBarProps) {
     <div className="w-full">
       {label && (
         <div className="flex justify-between items-center text-sm mb-2">
-          <span className="font-medium" style={{ color: "var(--text-primary)" }}>
+          <span className="font-medium" style={{ color: "var(--text-secondary)" }}>
             Stage {current} of {total}
           </span>
-          <span className="font-semibold" style={{ color: "var(--nymbl-primary)" }}>
+          <span className="font-semibold" style={{ color: "var(--accent)" }}>
             {pct}%
           </span>
         </div>
       )}
       <div
-        className="w-full h-3 rounded-full overflow-hidden"
-        style={{ backgroundColor: "var(--border-light)" }}
+        className="w-full overflow-hidden"
+        style={{
+          height: 8,
+          borderRadius: "var(--radius-full)",
+          background: "var(--bg-surface)",
+          backdropFilter: "blur(var(--glass-blur))",
+          WebkitBackdropFilter: "blur(var(--glass-blur))",
+          border: "var(--glass-border)",
+        }}
         role="progressbar"
         aria-valuenow={pct}
         aria-valuemin={0}
@@ -30,11 +37,14 @@ export function ProgressBar({ current, total, label }: ProgressBarProps) {
         aria-label={label || `Progress: ${pct}%`}
       >
         <div
-          className="h-3 rounded-full relative overflow-hidden"
+          className="relative overflow-hidden"
           style={{
             width: `${pct}%`,
-            background: "linear-gradient(90deg, var(--nymbl-primary), var(--nymbl-primary-light))",
-            transition: "width 500ms cubic-bezier(0.4, 0, 0.2, 1)",
+            height: "100%",
+            borderRadius: "var(--radius-full)",
+            background: "linear-gradient(90deg, var(--accent), var(--accent-light))",
+            boxShadow: "0 0 12px var(--accent-glow)",
+            transition: "width 500ms var(--ease-spring)",
           }}
         >
           {/* Animated shimmer overlay */}
@@ -43,14 +53,14 @@ export function ProgressBar({ current, total, label }: ProgressBarProps) {
             style={{
               background:
                 "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)",
-              animation: "shimmer 2s ease-in-out infinite",
+              animation: "progressShimmer 2s ease-in-out infinite",
             }}
           />
         </div>
       </div>
 
       <style>{`
-        @keyframes shimmer {
+        @keyframes progressShimmer {
           0% { transform: translateX(-100%); }
           100% { transform: translateX(100%); }
         }

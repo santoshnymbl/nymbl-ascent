@@ -94,32 +94,35 @@ export function ValueMatch({
                 key={v.id}
                 onClick={() => handleValueClick(v.id)}
                 disabled={isMatched}
-                className="w-full px-4 py-3 rounded-full text-left font-medium text-sm cursor-pointer"
+                className="w-full px-4 py-3 text-left font-medium text-sm"
                 style={{
+                  borderRadius: "var(--radius-full)",
                   backgroundColor: isMatched
                     ? "transparent"
                     : isSelected
-                      ? "var(--nymbl-primary)"
-                      : "transparent",
+                      ? "var(--accent)"
+                      : "var(--bg-surface)",
+                  backdropFilter: !isSelected && !isMatched ? "blur(var(--glass-blur))" : undefined,
+                  WebkitBackdropFilter: !isSelected && !isMatched ? "blur(var(--glass-blur))" : undefined,
                   color: isMatched
-                    ? "var(--nymbl-success)"
+                    ? "var(--success)"
                     : isSelected
-                      ? "#FFFFFF"
-                      : "var(--nymbl-primary)",
+                      ? "var(--text-inverse)"
+                      : "var(--accent)",
                   border: isMatched
-                    ? "2px solid var(--nymbl-success)"
+                    ? "2px solid var(--success)"
                     : isSelected
-                      ? "2px solid var(--nymbl-primary)"
-                      : "2px solid var(--nymbl-primary)",
+                      ? "2px solid var(--accent)"
+                      : "2px solid var(--accent)",
                   opacity: isMatched ? 0.8 : 1,
-                  transition:
-                    "background-color 150ms ease, color 150ms ease, border-color 150ms ease",
+                  transition: `background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast)`,
                   cursor: isMatched ? "default" : "pointer",
+                  boxShadow: isSelected ? "var(--shadow-glow)" : "none",
                 }}
               >
                 <span className="flex items-center gap-2">
                   {isMatched && (
-                    <Check size={16} aria-hidden="true" style={{ color: "var(--nymbl-success)" }} />
+                    <Check size={16} aria-hidden="true" style={{ color: "var(--success)" }} />
                   )}
                   {v.label}
                 </span>
@@ -146,39 +149,37 @@ export function ValueMatch({
                 key={s.id}
                 onClick={() => handleSituationClick(s.id)}
                 disabled={isMatched || !selectedValue}
-                className="w-full px-4 py-3 rounded-[10px] text-left text-sm"
+                className="glass-card w-full px-4 py-3 text-left text-sm"
                 style={{
-                  backgroundColor: isMatched ? "#F0FDF4" : "var(--bg-card)",
                   borderLeft: isMatched
-                    ? "4px solid var(--nymbl-success)"
-                    : "4px solid var(--border-light)",
-                  borderTop: "1px solid var(--border-light)",
-                  borderRight: "1px solid var(--border-light)",
-                  borderBottom: "1px solid var(--border-light)",
+                    ? "4px solid var(--success)"
+                    : "4px solid var(--border-subtle)",
+                  backgroundColor: isMatched ? "var(--success-surface)" : undefined,
                   color: isMatched
-                    ? "var(--nymbl-success)"
+                    ? "var(--success)"
                     : "var(--text-primary)",
                   opacity: !selectedValue && !isMatched ? 0.5 : 1,
                   cursor: isClickable ? "pointer" : "default",
-                  transition:
-                    "border-color 150ms ease, background-color 150ms ease, transform 150ms ease, opacity 150ms ease",
+                  transition: `border-color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast), opacity var(--transition-fast)`,
                 }}
                 onMouseEnter={(e) => {
                   if (isClickable) {
-                    e.currentTarget.style.borderLeftColor = "var(--nymbl-primary)";
-                    e.currentTarget.style.transform = "translateY(-1px)";
+                    e.currentTarget.style.borderLeftColor = "var(--accent)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "var(--shadow-lg)";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (isClickable) {
-                    e.currentTarget.style.borderLeftColor = "var(--border-light)";
+                    e.currentTarget.style.borderLeftColor = "var(--border-subtle)";
                     e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "var(--shadow-md)";
                   }
                 }}
               >
                 <span className="flex items-center gap-2">
                   {isMatched && (
-                    <Check size={16} aria-hidden="true" style={{ color: "var(--nymbl-success)" }} />
+                    <Check size={16} aria-hidden="true" style={{ color: "var(--success)" }} />
                   )}
                   {s.text}
                 </span>

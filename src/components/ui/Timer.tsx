@@ -33,34 +33,49 @@ export function Timer({ durationMs, onExpire, className }: TimerProps) {
   const isCritical = remainingSec < 30;
   const isWarning = remainingSec < 60 && !isCritical;
 
-  let bgColor = "var(--bg-elevated)";
-  let textColor = "var(--text-primary)";
+  let bgColor = "var(--bg-surface)";
+  let textColor = "var(--text-secondary)";
   let iconColor = "var(--text-secondary)";
+  let borderColor = "var(--border-subtle)";
 
   if (isCritical) {
-    bgColor = "#FEF2F2"; // red-50
-    textColor = "var(--nymbl-error)";
-    iconColor = "var(--nymbl-error)";
+    bgColor = "var(--error-surface)";
+    textColor = "var(--error)";
+    iconColor = "var(--error)";
+    borderColor = "var(--error)";
   } else if (isWarning) {
-    bgColor = "#FFFBEB"; // amber-50
-    textColor = "#F59E0B"; // amber-500
-    iconColor = "#F59E0B";
+    bgColor = "var(--warning-surface)";
+    textColor = "var(--warning)";
+    iconColor = "var(--warning)";
+    borderColor = "var(--warning)";
   }
 
   return (
     <span
-      className={`inline-flex items-center gap-2 px-4 py-2 rounded-full font-mono text-lg font-semibold select-none ${className || ""}`}
+      className={`inline-flex items-center gap-2 px-4 py-2 text-lg font-semibold select-none ${className || ""}`}
       style={{
+        borderRadius: "var(--radius-full)",
         backgroundColor: bgColor,
+        backdropFilter: "blur(var(--glass-blur))",
+        WebkitBackdropFilter: "blur(var(--glass-blur))",
+        border: `1px solid ${borderColor}`,
         color: textColor,
-        transition: "background-color 200ms ease, color 200ms ease",
+        fontVariantNumeric: "tabular-nums",
+        transition: "background-color var(--transition-base), color var(--transition-base), border-color var(--transition-base)",
         animation: isCritical ? "timerPulse 1.5s ease-in-out infinite" : "none",
       }}
       role="timer"
       aria-live="polite"
       aria-label={`${minutes} minutes ${seconds} seconds remaining`}
     >
-      <Clock size={18} style={{ color: iconColor, transition: "color 200ms ease" }} aria-hidden="true" />
+      <Clock
+        size={18}
+        style={{
+          color: iconColor,
+          transition: "color var(--transition-base)",
+        }}
+        aria-hidden="true"
+      />
       {minutes}:{seconds.toString().padStart(2, "0")}
 
       <style>{`

@@ -75,27 +75,26 @@ export function PrioritySnap({ items, onComplete }: PrioritySnapProps) {
             onDragStart={() => handleDragStart(index)}
             onDragOver={(e) => handleDragOver(e, index)}
             onDragEnd={handleDragEnd}
-            className="flex items-center gap-3 px-4 py-3 rounded-[10px] cursor-grab active:cursor-grabbing select-none"
+            className="glass-card flex items-center gap-3 px-4 py-3 cursor-grab active:cursor-grabbing select-none"
             style={{
-              backgroundColor: "var(--bg-card)",
-              borderTop: dragIndex === index ? "2px solid var(--nymbl-primary)" : "1px solid var(--border-light)",
-              borderRight: dragIndex === index ? "2px solid var(--nymbl-primary)" : "1px solid var(--border-light)",
-              borderBottom: dragIndex === index ? "2px solid var(--nymbl-primary)" : "1px solid var(--border-light)",
-              borderLeft: "4px solid var(--nymbl-primary)",
+              borderLeft: `4px solid var(--accent)`,
               boxShadow:
                 dragIndex === index
-                  ? "0 0 0 3px rgba(37, 99, 235, 0.15)"
-                  : "none",
-              transition: "box-shadow 150ms ease, transform 150ms ease",
-              transform: dragIndex === index ? "translateY(-1px)" : "none",
+                  ? "var(--shadow-glow)"
+                  : "var(--shadow-md)",
+              transform: dragIndex === index ? "scale(1.02)" : "scale(1)",
+              borderColor:
+                dragIndex === index ? "var(--accent)" : undefined,
+              transition: "box-shadow var(--transition-fast), transform var(--transition-fast)",
             }}
           >
             {/* Number badge */}
             <span
-              className="flex items-center justify-center w-7 h-7 rounded-full text-sm font-bold shrink-0"
+              className="flex items-center justify-center w-7 h-7 text-sm font-bold shrink-0"
               style={{
-                backgroundColor: "var(--nymbl-primary)",
-                color: "#FFFFFF",
+                borderRadius: "var(--radius-full)",
+                backgroundColor: "var(--accent)",
+                color: "var(--text-inverse)",
               }}
             >
               {index + 1}
@@ -117,13 +116,8 @@ export function PrioritySnap({ items, onComplete }: PrioritySnapProps) {
       </div>
       <button
         onClick={handleSubmit}
-        className="w-full py-3 rounded-full font-bold text-white text-base cursor-pointer"
-        style={{
-          backgroundColor: "var(--nymbl-cta)",
-          transition: "background-color 150ms ease",
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--nymbl-cta-hover)")}
-        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--nymbl-cta)")}
+        className="btn-cta w-full py-3 text-base font-bold"
+        style={{ borderRadius: "var(--radius-full)" }}
       >
         Lock In Order
       </button>

@@ -60,20 +60,16 @@ export function BranchingScenario({ tree, onComplete }: BranchingScenarioProps) 
         style={{
           opacity: transitioning ? 0 : 1,
           transform: transitioning ? "translateY(8px)" : "translateY(0)",
-          transition: "opacity 200ms ease, transform 200ms ease",
+          transition: `opacity var(--transition-base), transform var(--transition-base)`,
         }}
       >
         {phase === "question" && (
           <>
             {/* Scenario text card with top accent border */}
             <div
-              className="rounded-[10px] p-6 mb-6"
+              className="glass-card p-6 mb-6"
               style={{
-                backgroundColor: "var(--bg-card)",
-                borderTop: "4px solid var(--nymbl-primary)",
-                border: "1px solid var(--border-light)",
-                borderTopWidth: "4px",
-                borderTopColor: "var(--nymbl-primary)",
+                borderTop: "4px solid var(--accent)",
               }}
             >
               <p className="text-lg leading-relaxed" style={{ color: "var(--text-primary)" }}>
@@ -87,28 +83,31 @@ export function BranchingScenario({ tree, onComplete }: BranchingScenarioProps) 
                 <button
                   key={option.id}
                   onClick={() => handleChoice(option)}
-                  className="w-full flex items-center gap-4 px-4 py-4 rounded-[10px] text-left cursor-pointer"
+                  className="glass-card w-full flex items-center gap-4 px-4 py-4 text-left cursor-pointer"
                   style={{
-                    backgroundColor: "var(--bg-card)",
-                    border: "1px solid var(--border-light)",
-                    transition:
-                      "background-color 150ms ease, border-color 150ms ease",
+                    transition: `background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast)`,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "#EFF6FF";
-                    e.currentTarget.style.borderColor = "var(--nymbl-primary)";
+                    e.currentTarget.style.backgroundColor = "var(--accent-surface)";
+                    e.currentTarget.style.borderColor = "var(--accent)";
+                    e.currentTarget.style.boxShadow = "var(--shadow-glow)";
+                    e.currentTarget.style.transform = "translateY(-1px)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "var(--bg-card)";
-                    e.currentTarget.style.borderColor = "var(--border-light)";
+                    e.currentTarget.style.backgroundColor = "";
+                    e.currentTarget.style.borderColor = "";
+                    e.currentTarget.style.boxShadow = "";
+                    e.currentTarget.style.transform = "";
                   }}
                 >
                   {/* Letter badge */}
                   <span
-                    className="flex items-center justify-center w-9 h-9 rounded-full text-sm font-bold shrink-0"
+                    className="flex items-center justify-center w-9 h-9 text-sm font-bold shrink-0"
                     style={{
-                      backgroundColor: "#DBEAFE", // primary-100
-                      color: "var(--nymbl-primary)",
+                      borderRadius: "var(--radius-full)",
+                      backgroundColor: "var(--accent-surface)",
+                      color: "var(--accent)",
+                      border: "1px solid var(--accent-glow)",
                     }}
                   >
                     {optionLetters[i] || option.label}
@@ -124,20 +123,17 @@ export function BranchingScenario({ tree, onComplete }: BranchingScenarioProps) 
 
         {phase === "consequence" && selectedOption && (
           <>
-            {/* Consequence card with amber/orange accent */}
+            {/* Consequence card with warning accent */}
             <div
-              className="rounded-[10px] p-6 mb-6"
+              className="glass-card p-6 mb-6"
               style={{
-                backgroundColor: "#FFFBEB",
-                borderTop: "1px solid #FDE68A",
-                borderRight: "1px solid #FDE68A",
-                borderBottom: "1px solid #FDE68A",
-                borderLeft: "4px solid #F59E0B",
+                backgroundColor: "var(--warning-surface)",
+                borderLeft: "4px solid var(--warning)",
               }}
             >
               <p
                 className="text-sm font-semibold mb-2"
-                style={{ color: "#B45309" }}
+                style={{ color: "var(--warning)" }}
               >
                 What happened:
               </p>
@@ -150,13 +146,8 @@ export function BranchingScenario({ tree, onComplete }: BranchingScenarioProps) 
             {selectedOption.nextNodeId ? (
               <button
                 onClick={handleContinue}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-[10px] font-bold text-base text-white cursor-pointer"
-                style={{
-                  backgroundColor: "var(--nymbl-primary)",
-                  transition: "background-color 150ms ease",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--nymbl-primary-dark)")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--nymbl-primary)")}
+                className="btn-primary w-full flex items-center justify-center gap-2 py-3 text-base font-bold"
+                style={{ borderRadius: "var(--radius-md)" }}
               >
                 Continue
                 <ArrowRight size={18} aria-hidden="true" />
@@ -164,13 +155,8 @@ export function BranchingScenario({ tree, onComplete }: BranchingScenarioProps) 
             ) : (
               <button
                 onClick={handleContinue}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-[10px] font-bold text-base text-white cursor-pointer"
-                style={{
-                  backgroundColor: "var(--nymbl-cta)",
-                  transition: "background-color 150ms ease",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--nymbl-cta-hover)")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--nymbl-cta)")}
+                className="btn-cta w-full flex items-center justify-center gap-2 py-3 text-base font-bold"
+                style={{ borderRadius: "var(--radius-md)" }}
               >
                 <CheckCircle size={18} aria-hidden="true" />
                 Finish Scenario

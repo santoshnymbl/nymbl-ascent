@@ -27,10 +27,10 @@ export function StageTransition({
     <div
       className="fixed inset-0 z-50 flex flex-col items-center justify-center"
       style={{
-        background: "linear-gradient(135deg, var(--nymbl-primary) 0%, var(--nymbl-primary-dark) 100%)",
+        background: "linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 60%, black) 100%)",
         opacity: visible ? 1 : 0,
-        transform: visible ? "scale(1)" : "scale(0.95)",
-        transition: "opacity 700ms ease, transform 700ms cubic-bezier(0.4, 0, 0.2, 1)",
+        transform: visible ? "scale(1)" : "scale(0.9)",
+        transition: `opacity 700ms var(--ease-spring), transform 700ms var(--ease-spring)`,
       }}
       role="status"
       aria-live="assertive"
@@ -41,8 +41,9 @@ export function StageTransition({
         style={{
           width: 120,
           height: 120,
-          borderRadius: "50%",
-          border: "2px solid rgba(255,255,255,0.2)",
+          borderRadius: "var(--radius-full)",
+          border: "2px solid var(--accent-light)",
+          opacity: 0.3,
           animation: "expandRing 2s ease-out infinite",
         }}
         aria-hidden="true"
@@ -52,23 +53,27 @@ export function StageTransition({
         style={{
           width: 120,
           height: 120,
-          borderRadius: "50%",
-          border: "2px solid rgba(255,255,255,0.15)",
+          borderRadius: "var(--radius-full)",
+          border: "2px solid var(--accent-light)",
+          opacity: 0.2,
           animation: "expandRing 2s ease-out infinite 0.6s",
         }}
         aria-hidden="true"
       />
 
       <h1
-        className="text-4xl md:text-5xl font-bold text-white mb-4 text-center px-6 relative z-10"
-        style={{ fontFamily: "'Poppins', system-ui, sans-serif" }}
+        className="text-4xl md:text-5xl font-bold mb-4 text-center px-6 relative z-10"
+        style={{
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          color: "var(--text-inverse)",
+        }}
       >
         {message}
       </h1>
       {subMessage && (
         <p
           className="text-lg md:text-xl text-center px-6 relative z-10"
-          style={{ color: "rgba(255,255,255,0.7)" }}
+          style={{ color: "var(--text-inverse)", opacity: 0.7 }}
         >
           {subMessage}
         </p>
