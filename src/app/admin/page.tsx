@@ -121,7 +121,7 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div ref={containerRef} style={{ minHeight: "calc(100vh - 48px)" }}>
+    <div ref={containerRef} style={{ minHeight: "calc(100vh - 48px)", width: "100%" }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, padding: "0 4px" }}>
         <div>
