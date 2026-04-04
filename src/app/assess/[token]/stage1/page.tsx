@@ -228,8 +228,6 @@ export default function Stage1Page() {
 
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 20, fontSize: "0.78rem", color: "var(--text-muted)" }}>
               <span style={{ display: "flex", alignItems: "center", gap: 4 }}><Clock size={14} /> ~3 minutes total</span>
-              <span style={{ width: 3, height: 3, borderRadius: "50%", background: "var(--text-muted)" }} />
-              <span>All click-based, no typing</span>
             </div>
 
             <button
@@ -309,7 +307,7 @@ export default function Stage1Page() {
       </div>
 
       {/* Game content */}
-      <div className="max-w-2xl mx-auto px-4 py-8">
+      <div className="max-w-2xl mx-auto px-4" style={{ paddingTop: 24, paddingBottom: 24, minHeight: "calc(100vh - 100px)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
         <div className="glass-card p-6">
           {gameType === "triage-tower" && currentScenario.tree.items && (
             <TriageTower
