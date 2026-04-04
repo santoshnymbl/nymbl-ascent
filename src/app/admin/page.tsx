@@ -140,6 +140,8 @@ export default function AdminDashboard() {
         rowHeight={40}
         isDraggable={!locked}
         isResizable={!locked}
+        compactType={locked ? "vertical" : null}
+        preventCollision={!locked}
         onLayoutChange={onLayoutChange}
         draggableHandle=".drag-handle"
         margin={[12, 12]}
