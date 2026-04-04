@@ -2,34 +2,49 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { PrioritySnap } from "@/components/games/PrioritySnap";
-import { ValueMatch } from "@/components/games/ValueMatch";
-import { OddOneOut } from "@/components/games/OddOneOut";
+import { TriageTower } from "@/components/games/TriageTower";
+import { TradeOffTiles } from "@/components/games/TradeOffTiles";
+import { SignalSort } from "@/components/games/SignalSort";
+import { ResourceRoulette } from "@/components/games/ResourceRoulette";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Timer } from "@/components/ui/Timer";
 import { StageTransition } from "@/components/ui/StageTransition";
 import { Sparkles, AlertCircle } from "lucide-react";
-import type { BehavioralSignal, Stage1Result } from "@/types";
+import type {
+  BehavioralSignal,
+  Stage1Result,
+  TriageTowerItem,
+  TradeOffPair,
+  SignalSortMessage,
+  ResourceRouletteCard,
+  TriageTowerResult,
+  TradeOffTilesResult,
+  SignalSortResult,
+  ResourceRouletteResult,
+} from "@/types";
 
-type GameType = "priority-snap" | "value-match" | "odd-one-out";
+type GameType = "triage-tower" | "trade-off-tiles" | "signal-sort" | "resource-roulette";
 
 interface ScenarioData {
   id: string;
   tree: {
     type: GameType;
-    items?: { id: string; label: string; weight: number }[];
-    values?: { id: string; label: string }[];
-    situations?: { id: string; text: string }[];
-    rounds?: { id: string; prompt: string; options: { id: string; text: string }[] }[];
+    items?: TriageTowerItem[];
+    pairs?: TradeOffPair[];
+    messages?: SignalSortMessage[];
+    cards?: ResourceRouletteCard[];
+    totalTokens?: number;
+    curveball?: { text: string; affectedCardId: string };
   };
-  scoringRubric: {
-    correctOrder?: string[];
-    correctMatches?: Record<string, string>;
-    rounds?: { roundId: string; correctId: string }[];
-  };
+  scoringRubric: Record<string, unknown>;
 }
 
-const GAME_ORDER: GameType[] = ["priority-snap", "value-match", "odd-one-out"];
+const GAME_ORDER: GameType[] = [
+  "triage-tower",
+  "trade-off-tiles",
+  "signal-sort",
+  "resource-roulette",
+];
 
 export default function Stage1Page() {
   const params = useParams();
@@ -87,27 +102,35 @@ export default function Stage1Page() {
     setShowTransition(true);
   }, [result, signals, saveProgress]);
 
-  function handlePrioritySnapComplete(gameResult: Stage1Result["prioritySnap"]) {
-    const updated = { ...result, prioritySnap: gameResult };
+  function handleTriageTowerComplete(gameResult: TriageTowerResult) {
+    const updated = { ...result, triageTower: gameResult };
     setResult(updated);
     saveProgress(updated);
-    signals.push({ event: "priority-snap-complete", timestamp: Date.now(), data: gameResult });
+    signals.push({ event: "triage-tower-complete", timestamp: Date.now(), data: gameResult as unknown as Record<string, unknown> });
     setCurrentGameIndex(1);
   }
 
-  function handleValueMatchComplete(gameResult: Stage1Result["valueMatch"]) {
-    const updated = { ...result, valueMatch: gameResult };
+  function handleTradeOffComplete(gameResult: TradeOffTilesResult) {
+    const updated = { ...result, tradeOffTiles: gameResult };
     setResult(updated);
     saveProgress(updated);
-    signals.push({ event: "value-match-complete", timestamp: Date.now(), data: gameResult });
+    signals.push({ event: "trade-off-tiles-complete", timestamp: Date.now(), data: gameResult as unknown as Record<string, unknown> });
     setCurrentGameIndex(2);
   }
 
-  function handleOddOneOutComplete(gameResult: Stage1Result["oddOneOut"]) {
-    const updated = { ...result, oddOneOut: gameResult, signals };
+  function handleSignalSortComplete(gameResult: SignalSortResult) {
+    const updated = { ...result, signalSort: gameResult };
     setResult(updated);
     saveProgress(updated);
-    signals.push({ event: "odd-one-out-complete", timestamp: Date.now(), data: gameResult });
+    signals.push({ event: "signal-sort-complete", timestamp: Date.now(), data: gameResult as unknown as Record<string, unknown> });
+    setCurrentGameIndex(3);
+  }
+
+  function handleResourceComplete(gameResult: ResourceRouletteResult) {
+    const updated = { ...result, resourceRoulette: gameResult, signals };
+    setResult(updated);
+    saveProgress(updated);
+    signals.push({ event: "resource-roulette-complete", timestamp: Date.now(), data: gameResult as unknown as Record<string, unknown> });
     setShowTransition(true);
   }
 
@@ -219,7 +242,7 @@ export default function Stage1Page() {
           </div>
           <ProgressBar
             current={currentGameIndex}
-            total={scenarios.length}
+            total={4}
             label="Stage 1 — Quick-Fire Games"
           />
         </div>
@@ -228,34 +251,35 @@ export default function Stage1Page() {
       {/* Game content */}
       <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="glass-card p-6">
-          {gameType === "priority-snap" && currentScenario.tree.items && (
-            <PrioritySnap
+          {gameType === "triage-tower" && currentScenario.tree.items && (
+            <TriageTower
               items={currentScenario.tree.items}
-              onComplete={handlePrioritySnapComplete}
+              onComplete={handleTriageTowerComplete}
             />
           )}
 
-          {gameType === "value-match" &&
-            currentScenario.tree.values &&
-            currentScenario.tree.situations &&
-            currentScenario.scoringRubric.correctMatches && (
-              <ValueMatch
-                values={currentScenario.tree.values}
-                situations={currentScenario.tree.situations}
-                correctMatches={currentScenario.scoringRubric.correctMatches}
-                onComplete={handleValueMatchComplete}
-              />
-            )}
+          {gameType === "trade-off-tiles" && currentScenario.tree.pairs && (
+            <TradeOffTiles
+              pairs={currentScenario.tree.pairs}
+              onComplete={handleTradeOffComplete}
+            />
+          )}
 
-          {gameType === "odd-one-out" &&
-            currentScenario.tree.rounds &&
-            currentScenario.scoringRubric.rounds && (
-              <OddOneOut
-                rounds={currentScenario.tree.rounds}
-                correctAnswers={Object.fromEntries(
-                  currentScenario.scoringRubric.rounds.map((r) => [r.roundId, r.correctId]),
-                )}
-                onComplete={handleOddOneOutComplete}
+          {gameType === "signal-sort" && currentScenario.tree.messages && (
+            <SignalSort
+              messages={currentScenario.tree.messages}
+              onComplete={handleSignalSortComplete}
+            />
+          )}
+
+          {gameType === "resource-roulette" &&
+            currentScenario.tree.cards &&
+            currentScenario.tree.curveball && (
+              <ResourceRoulette
+                cards={currentScenario.tree.cards}
+                totalTokens={currentScenario.tree.totalTokens ?? 10}
+                curveball={currentScenario.tree.curveball}
+                onComplete={handleResourceComplete}
               />
             )}
         </div>
