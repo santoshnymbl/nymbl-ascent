@@ -19,6 +19,7 @@
     "nodemailer": "^8.0.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-grid-layout": "^2.2.3",
     "uuid": "^13.0.0"
   },
   "prisma": {
@@ -34,6 +35,7 @@
     "@types/nodemailer": "^7.0.11",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-grid-layout": "^1.3.6",
     "@types/uuid": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.2",

@@ -459,3 +459,39 @@ h1, h2, h3, h4, h5, h6 {
 .table-modern tbody tr:hover {
   background: var(--bg-elevated);
 }
+
+/* ---- React Grid Layout Overrides ---- */
+.react-grid-item {
+  transition: all 200ms var(--ease-spring) !important;
+}
+.react-grid-item.react-grid-placeholder {
+  background: var(--accent-surface) !important;
+  border: 2px dashed var(--accent) !important;
+  border-radius: var(--radius-lg) !important;
+  opacity: 0.4 !important;
+}
+.react-grid-item > .react-resizable-handle {
+  background: none !important;
+  width: 16px !important;
+  height: 16px !important;
+}
+.react-grid-item > .react-resizable-handle::after {
+  content: "" !important;
+  position: absolute !important;
+  right: 4px !important;
+  bottom: 4px !important;
+  width: 8px !important;
+  height: 8px !important;
+  border-right: 2px solid var(--text-muted) !important;
+  border-bottom: 2px solid var(--text-muted) !important;
+  opacity: 0.5 !important;
+}
+.react-grid-item:hover > .react-resizable-handle::after {
+  opacity: 1 !important;
+  border-color: var(--accent) !important;
+}
+.react-grid-item.react-draggable-dragging {
+  box-shadow: var(--shadow-lg) !important;
+  z-index: 100 !important;
+  opacity: 0.9 !important;
+}
