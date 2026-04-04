@@ -50,7 +50,7 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 14, minHeight: "calc(100vh - 48px)" }}>
 
       {/* ─── Header ─── */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -74,8 +74,8 @@ export default function AdminDashboard() {
         ].map(s => {
           const I = s.icon;
           return (
-            <Tooltip key={s.t} content={s.tip}>
-              <div className="stat-card">
+            <Tooltip key={s.t} content={s.tip} fill>
+              <div className="stat-card" style={{ flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
                   <span style={{ fontSize: "0.7rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-muted)" }}>{s.t}</span>
                   <div style={{ width: 32, height: 32, borderRadius: "var(--radius-md)", background: s.bg, color: s.c, display: "flex", alignItems: "center", justifyContent: "center" }}><I size={16}/></div>
@@ -88,7 +88,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* ─── Bento Grid ─── */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gridTemplateRows: "auto auto", gap: 12, alignItems: "start" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 280px", gridTemplateRows: "1fr auto", gap: 12, alignItems: "start", flex: 1 }}>
 
         {/* Recent Candidates (spans 2 cols) */}
         <div className="glass-card" style={{ gridColumn: "1 / 3", padding: 0, overflow: "hidden" }}>
@@ -160,7 +160,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Getting Started / Quick Actions */}
-        <div className="glass-card" style={{ gridColumn: "1 / 3", padding: 0, overflow: "hidden" }}>
+        <div className="glass-card" style={{ gridColumn: "1 / 3", padding: 0, overflow: "hidden", alignSelf: "start" }}>
           <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", gap: 8 }}>
             <Sparkles size={15} style={{ color: "var(--cta)" }}/>
             <h3 style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Space Grotesk', sans-serif", margin: 0 }}>Getting Started</h3>

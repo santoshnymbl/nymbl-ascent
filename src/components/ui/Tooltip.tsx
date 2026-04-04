@@ -6,15 +6,17 @@ interface TooltipProps {
   content: string;
   children: React.ReactNode;
   position?: "top" | "bottom" | "left" | "right";
+  /** Set true when Tooltip is a direct child of a CSS grid so it fills the cell */
+  fill?: boolean;
 }
 
-export function Tooltip({ content, children, position = "top" }: TooltipProps) {
+export function Tooltip({ content, children, position = "top", fill }: TooltipProps) {
   const [visible, setVisible] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   function show() {
     clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setVisible(true), 200);
+    timeoutRef.current = setTimeout(() => setVisible(true), 300);
   }
 
   function hide() {
@@ -30,36 +32,37 @@ export function Tooltip({ content, children, position = "top" }: TooltipProps) {
   };
 
   return (
-    <span
-      style={{ position: "relative", display: "inline-flex" }}
+    <div
+      style={{ position: "relative", display: fill ? "flex" : "inline-flex", flexDirection: "column", minWidth: 0 }}
       onMouseEnter={show}
       onMouseLeave={hide}
       onFocus={show}
       onBlur={hide}
     >
       {children}
-      <span
-        role="tooltip"
-        style={{
-          position: "absolute",
-          ...positionStyles[position],
-          background: "var(--bg-surface-solid)",
-          color: "var(--text-primary)",
-          border: "1px solid var(--border-default)",
-          borderRadius: "var(--radius-sm)",
-          padding: "6px 12px",
-          fontSize: 12,
-          fontFamily: "'DM Sans', system-ui, sans-serif",
-          whiteSpace: "nowrap",
-          pointerEvents: "none",
-          opacity: visible ? 1 : 0,
-          zIndex: 1000,
-          boxShadow: "var(--shadow-md)",
-          transition: "opacity 150ms ease, transform 150ms ease",
-        }}
-      >
-        {content}
-      </span>
-    </span>
+      {visible && (
+        <div
+          role="tooltip"
+          style={{
+            position: "absolute",
+            ...positionStyles[position],
+            background: "var(--bg-surface-solid)",
+            color: "var(--text-primary)",
+            border: "1px solid var(--border-default)",
+            borderRadius: "var(--radius-sm)",
+            padding: "6px 12px",
+            fontSize: 12,
+            fontFamily: "'DM Sans', system-ui, sans-serif",
+            whiteSpace: "nowrap",
+            pointerEvents: "none",
+            zIndex: 1000,
+            boxShadow: "var(--shadow-md)",
+            animation: "tooltipIn 150ms ease forwards",
+          }}
+        >
+          {content}
+        </div>
+      )}
+    </div>
   );
 }
