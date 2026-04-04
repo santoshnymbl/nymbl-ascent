@@ -1,6 +1,17 @@
 "use client";
 
-import { TENETS, TENET_LABELS, Tenet } from "@/types";
+import { TENETS, Tenet } from "@/types";
+
+/** Short labels that fit comfortably inside the radar chart SVG */
+const RADAR_LABELS: Record<Tenet, string> = {
+  clientFocused: "Client",
+  empowering: "Empower",
+  productive: "Productive",
+  balanced: "Balanced",
+  reliable: "Reliable",
+  improving: "Improving",
+  transparent: "Transparent",
+};
 
 interface RadarChartProps {
   scores: Record<Tenet, number>;
@@ -8,9 +19,12 @@ interface RadarChartProps {
 }
 
 export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
-  const cx = size / 2;
-  const cy = size / 2;
-  const radius = size * 0.38;
+  /* Pad the SVG so labels are never clipped */
+  const pad = 48;
+  const svgSize = size + pad * 2;
+  const cx = svgSize / 2;
+  const cy = svgSize / 2;
+  const radius = size * 0.36;
   const rings = [20, 40, 60, 80, 100];
   const count = TENETS.length;
   const angleStep = (2 * Math.PI) / count;
@@ -40,10 +54,10 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
 
   return (
     <svg
-      width={size}
-      height={size}
-      viewBox={`0 0 ${size} ${size}`}
-      style={{ userSelect: "none" }}
+      width={svgSize}
+      height={svgSize}
+      viewBox={`0 0 ${svgSize} ${svgSize}`}
+      style={{ userSelect: "none", maxWidth: "100%" }}
     >
       {/* Grid rings */}
       {rings.map((value) => (
@@ -96,7 +110,7 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
       {/* Labels */}
       {TENETS.map((t, i) => {
         const angle = startAngle + i * angleStep;
-        const labelR = radius + 22;
+        const labelR = radius + 32;
         const [x, y] = polarToXY(angle, labelR);
         let anchor: "middle" | "end" | "start" = "middle";
         if (x < cx - 5) anchor = "end";
@@ -113,7 +127,7 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
             fontFamily="var(--font-heading), 'Space Grotesk', sans-serif"
             fontWeight={500}
           >
-            {TENET_LABELS[t]}
+            {RADAR_LABELS[t]}
           </text>
         );
       })}

@@ -174,7 +174,7 @@ export default function WelcomePage() {
     {
       icon: Sparkles,
       name: "Learn",
-      description: "Quick-fire games to see how you prioritize, match values, and spot patterns.",
+      description: "Quick-fire games to test your instincts",
       time: "~3 min",
       bgToken: "var(--accent-surface)",
       iconToken: "var(--accent)",
@@ -182,7 +182,7 @@ export default function WelcomePage() {
     {
       icon: Brain,
       name: "Build",
-      description: "Navigate realistic workplace scenarios and make decisions under pressure.",
+      description: "Navigate real workplace decisions",
       time: "~5 min",
       bgToken: "var(--warning-surface)",
       iconToken: "var(--warning)",
@@ -190,7 +190,7 @@ export default function WelcomePage() {
     {
       icon: Target,
       name: "Grow",
-      description: "A challenge tailored to your role. Show us your skills.",
+      description: "A challenge tailored to your role",
       time: "~5 min",
       bgToken: "var(--success-surface)",
       iconToken: "var(--success)",
@@ -203,7 +203,8 @@ export default function WelcomePage() {
       style={{ background: "var(--bg-base)" }}
     >
       <div
-        className="glass-card max-w-lg w-full text-center p-8 sm:p-10"
+        className="glass-card w-full text-center p-8 sm:p-10"
+        style={{ maxWidth: 620 }}
       >
         {/* Logo / Wordmark */}
         <div className="mb-8">
@@ -243,38 +244,65 @@ export default function WelcomePage() {
         </div>
 
         {/* Stage Preview Cards — horizontal row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 16,
+            marginBottom: 32,
+          }}
+        >
           {stages.map((stage, idx) => {
             const Icon = stage.icon;
             return (
               <div
                 key={idx}
-                className="glass-card p-5 text-left"
+                className="glass-card"
+                style={{ padding: 20, textAlign: "left" }}
               >
                 <div
-                  className="w-10 h-10 flex items-center justify-center mb-3"
                   style={{
+                    width: 44,
+                    height: 44,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 12,
                     background: stage.bgToken,
-                    borderRadius: "var(--radius-md)",
+                    borderRadius: "var(--radius-full)",
                   }}
                 >
-                  <Icon size={20} style={{ color: stage.iconToken }} />
+                  <Icon size={22} style={{ color: stage.iconToken }} />
                 </div>
                 <p
-                  className="font-semibold text-sm mb-1"
-                  style={{ color: "var(--text-primary)" }}
+                  style={{
+                    fontWeight: 600,
+                    fontSize: "0.875rem",
+                    color: "var(--text-primary)",
+                    marginBottom: 4,
+                    whiteSpace: "nowrap",
+                  }}
                 >
                   Stage {idx + 1} &mdash; {stage.name}
                 </p>
                 <p
-                  className="text-xs leading-relaxed mb-2"
-                  style={{ color: "var(--text-secondary)" }}
+                  style={{
+                    fontSize: "0.75rem",
+                    lineHeight: 1.5,
+                    color: "var(--text-secondary)",
+                    marginBottom: 10,
+                  }}
                 >
                   {stage.description}
                 </p>
                 <span
-                  className="text-xs font-medium"
-                  style={{ color: "var(--text-muted)" }}
+                  className="badge"
+                  style={{
+                    fontSize: "0.6875rem",
+                    padding: "2px 8px",
+                    background: "var(--bg-elevated)",
+                    color: "var(--text-muted)",
+                  }}
                 >
                   {stage.time}
                 </span>

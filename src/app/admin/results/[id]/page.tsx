@@ -225,10 +225,11 @@ export default function CandidateDetailPage() {
               gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
               gap: 24,
               marginBottom: 24,
+              alignItems: "stretch",
             }}
           >
             {/* Composite Score & Weights */}
-            <div className="glass-card" style={{ padding: 24 }}>
+            <div className="glass-card" style={{ padding: 24, display: "flex", flexDirection: "column" }}>
               <h3
                 style={{
                   fontSize: "1rem",
@@ -443,6 +444,7 @@ export default function CandidateDetailPage() {
                     <span
                       style={{
                         width: 48,
+                        flexShrink: 0,
                         fontSize: "0.875rem",
                         fontFamily: "monospace",
                         fontWeight: 600,
