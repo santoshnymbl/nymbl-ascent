@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
-import { Responsive, useContainerWidth } from "react-grid-layout";
-import type { Layout } from "react-grid-layout";
+import { Responsive, WidthProvider } from "react-grid-layout/legacy";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type RGLLayouts = { lg: any[] };
 import {
   Briefcase, Users, Clock, Zap, ArrowRight, UserPlus,
   GitBranch, TrendingUp, Activity, Sparkles, BookOpen, Target,
@@ -13,12 +14,14 @@ import { Tooltip } from "@/components/ui/Tooltip";
 
 import "react-grid-layout/css/styles.css";
 
+const ResponsiveGrid = WidthProvider(Responsive);
+
 interface RoleData { id: string; name: string; _count: { candidates: number; roleScenarios: number }; }
 interface CandidateData { id: string; name: string; email: string; status: string; createdAt: string; role: { name: string }; assessment: { score: { compositeScore: number } | null } | null; }
 
 const STORAGE_KEY = "nymbl-dashboard-layouts";
 
-function buildLayouts(isLocked: boolean): { lg: Layout[] } {
+function buildLayouts(isLocked: boolean) {
   return {
     lg: [
       { i: "stat-roles",     x: 0, y: 0, w: 3, h: 2, minW: 2, minH: 2, static: isLocked },
@@ -39,7 +42,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [locked, setLocked] = useState(true);
   const [layouts, setLayouts] = useState(() => buildLayouts(true));
-  const { width: containerWidth, containerRef } = useContainerWidth({ initialWidth: 1000 });
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
@@ -48,7 +51,7 @@ export default function AdminDashboard() {
         const parsed = JSON.parse(saved);
         // Apply static flag based on current lock state
         if (parsed.lg) {
-          parsed.lg = parsed.lg.map((item: Layout) => ({ ...item, static: true }));
+          parsed.lg = parsed.lg.map((item: any) => ({ ...item, static: true }));
         }
         setLayouts(parsed);
       }
@@ -62,9 +65,9 @@ export default function AdminDashboard() {
     ]).then(([r, c]) => { setRoles(r); setCandidates(c); setLoading(false); }).catch(() => setLoading(false));
   }, []);
 
-  const onLayoutChange = useCallback((_: Layout[], allLayouts: { [key: string]: Layout[] }) => {
+  const onLayoutChange = useCallback((_: any, allLayouts: any) => {
     if (!locked) {
-      setLayouts(allLayouts as ReturnType<typeof buildLayouts>);
+      setLayouts(allLayouts);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(allLayouts));
     }
   }, [locked]);
@@ -153,9 +156,8 @@ export default function AdminDashboard() {
       </div>
 
       {/* Grid */}
-      <Responsive
+      <ResponsiveGrid
         className="layout"
-        width={containerWidth || 1000}
         layouts={layouts}
         breakpoints={{ lg: 900, md: 600, sm: 0 }}
         cols={{ lg: 12, md: 8, sm: 4 }}
@@ -326,7 +328,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-      </Responsive>
+      </ResponsiveGrid>
     </div>
   );
 }

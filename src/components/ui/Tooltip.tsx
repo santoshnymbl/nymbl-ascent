@@ -12,7 +12,7 @@ interface TooltipProps {
 
 export function Tooltip({ content, children, position = "top", fill }: TooltipProps) {
   const [visible, setVisible] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   function show() {
     clearTimeout(timeoutRef.current);
