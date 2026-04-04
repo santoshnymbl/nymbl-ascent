@@ -140,7 +140,7 @@ export default function RolesPage() {
             color: "var(--text-primary)",
           }}
         >
-          Roles
+          Roles{!loading && ` (${roles.length})`}
         </h2>
         <button
           onClick={showForm ? closeForm : openAdd}
@@ -303,45 +303,75 @@ export default function RolesPage() {
       )}
 
       {loading ? (
-        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
-          Loading roles...
-        </p>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+            gap: 16,
+          }}
+        >
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="skeleton-pulse"
+              style={{
+                height: 180,
+                borderRadius: "var(--radius-lg)",
+              }}
+            />
+          ))}
+        </div>
       ) : roles.length === 0 ? (
         <div
           className="glass-card"
-          style={{ textAlign: "center", padding: "48px 24px" }}
+          style={{ textAlign: "center", padding: "64px 24px" }}
         >
           <Briefcase
-            size={40}
+            size={48}
             style={{
-              margin: "0 auto 12px",
+              margin: "0 auto 16px",
               color: "var(--text-muted)",
               display: "block",
             }}
           />
           <p
             style={{
-              color: "var(--text-muted)",
+              color: "var(--text-primary)",
               fontSize: "1.125rem",
+              fontWeight: 600,
+              fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
             }}
           >
-            No roles yet.
+            No roles yet
           </p>
           <p
             style={{
               color: "var(--text-muted)",
               fontSize: "0.875rem",
-              marginTop: 4,
+              marginTop: 8,
+              marginBottom: 24,
             }}
           >
-            Click &quot;Add Role&quot; to create one.
+            Create your first role to start inviting candidates.
           </p>
+          <button
+            onClick={openAdd}
+            className="btn-cta"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <Plus size={16} />
+            Create your first role
+          </button>
         </div>
       ) : (
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
             gap: 16,
           }}
         >

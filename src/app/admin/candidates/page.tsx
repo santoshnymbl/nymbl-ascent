@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import CsvUpload from "@/components/admin/CsvUpload";
-import { UserPlus, AlertCircle, CheckCircle2 } from "lucide-react";
+import { UserPlus, AlertCircle, CheckCircle2, ChevronDown, ChevronUp, Users } from "lucide-react";
 import { Tooltip } from "@/components/ui/Tooltip";
 
 /* ---------- types ---------- */
@@ -64,6 +64,7 @@ export default function AdminCandidatesPage() {
   const [roles, setRoles] = useState<Role[]>([]);
   const [filterRoleId, setFilterRoleId] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showInvite, setShowInvite] = useState(false);
 
   /* invite form state */
   const [inviteName, setInviteName] = useState("");
@@ -195,156 +196,120 @@ export default function AdminCandidatesPage() {
         >
           Candidates
         </h2>
-      </div>
-
-      {/* ---- Invite Section ---- */}
-      <div
-        className="glass-card"
-        style={{ padding: 24, marginBottom: 32 }}
-      >
-        <div
+        <button
+          onClick={() => setShowInvite(!showInvite)}
+          className="btn-cta"
           style={{
-            display: "flex",
+            display: "inline-flex",
             alignItems: "center",
             gap: 8,
-            marginBottom: 16,
           }}
         >
-          <UserPlus size={20} style={{ color: "var(--cta)" }} />
-          <h3
-            style={{
-              fontSize: "1.125rem",
-              fontWeight: 600,
-              fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
-              color: "var(--text-primary)",
-            }}
-          >
-            Invite Candidates
-          </h3>
-        </div>
+          <UserPlus size={16} />
+          Invite Candidates
+          {showInvite ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        </button>
+      </div>
 
-        {/* Role select shared by single & bulk */}
-        <div style={{ marginBottom: 16, maxWidth: 320 }}>
-          <label
-            style={{
-              display: "block",
-              fontSize: "0.875rem",
-              fontWeight: 500,
-              color: "var(--text-secondary)",
-              marginBottom: 4,
-            }}
-          >
-            Role
-          </label>
-          <select
-            value={inviteRoleId}
-            onChange={(e) => setInviteRoleId(e.target.value)}
-            className="input-field"
-            style={{ width: "100%" }}
-          >
-            <option value="">Select role...</option>
-            {roles.map((r) => (
-              <option key={r.id} value={r.id}>
-                {r.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
+      {/* ---- Collapsible Invite Section ---- */}
+      {showInvite && (
         <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: 24,
-          }}
+          className="glass-card"
+          style={{ padding: 24, marginBottom: 32 }}
         >
-          {/* Single invite */}
           <div
             style={{
-              border: "1px solid var(--border-default)",
-              borderRadius: "var(--radius-lg)",
-              padding: 20,
-              background: "var(--bg-surface)",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 16,
             }}
           >
-            <p
+            <UserPlus size={20} style={{ color: "var(--cta)" }} />
+            <h3
               style={{
-                fontSize: "0.875rem",
+                fontSize: "1.125rem",
                 fontWeight: 600,
-                color: "var(--text-secondary)",
-                marginBottom: 12,
+                fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+                color: "var(--text-primary)",
               }}
             >
-              Single Invite
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <input
-                type="text"
-                placeholder="Name"
-                value={inviteName}
-                onChange={(e) => setInviteName(e.target.value)}
-                className="input-field"
-                style={{ width: "100%" }}
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                value={inviteEmail}
-                onChange={(e) => setInviteEmail(e.target.value)}
-                className="input-field"
-                style={{ width: "100%" }}
-              />
-              <button
-                onClick={handleSingleInvite}
-                disabled={inviting}
-                className="btn-cta"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  opacity: inviting ? 0.5 : 1,
-                  width: "fit-content",
-                }}
-              >
-                <UserPlus size={16} />
-                {inviting ? "Sending..." : "Send Invite"}
-              </button>
-            </div>
+              Invite Candidates
+            </h3>
           </div>
 
-          {/* Bulk CSV upload */}
-          <div
-            style={{
-              border: "1px solid var(--border-default)",
-              borderRadius: "var(--radius-lg)",
-              padding: 20,
-              background: "var(--bg-surface)",
-            }}
-          >
-            <p
+          {/* Role select shared by single & bulk */}
+          <div style={{ marginBottom: 16, maxWidth: 320 }}>
+            <label
               style={{
+                display: "block",
                 fontSize: "0.875rem",
-                fontWeight: 600,
+                fontWeight: 500,
                 color: "var(--text-secondary)",
-                marginBottom: 12,
+                marginBottom: 4,
               }}
             >
-              Bulk Upload
-            </p>
-            <CsvUpload onParsed={(parsed) => setCsvCandidates(parsed)} />
-            {csvCandidates.length > 0 && (
-              <div style={{ marginTop: 12 }}>
-                <p
-                  style={{
-                    fontSize: "0.875rem",
-                    color: "var(--text-secondary)",
-                    marginBottom: 8,
-                  }}
-                >
-                  {csvCandidates.length} candidate(s) ready
-                </p>
+              Role
+            </label>
+            <select
+              value={inviteRoleId}
+              onChange={(e) => setInviteRoleId(e.target.value)}
+              className="select-field"
+            >
+              <option value="">Select role...</option>
+              {roles.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gap: 24,
+            }}
+          >
+            {/* Single invite */}
+            <div
+              style={{
+                border: "1px solid var(--border-default)",
+                borderRadius: "var(--radius-lg)",
+                padding: 20,
+                background: "var(--bg-surface)",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "0.875rem",
+                  fontWeight: 600,
+                  color: "var(--text-secondary)",
+                  marginBottom: 12,
+                }}
+              >
+                Single Invite
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={inviteName}
+                  onChange={(e) => setInviteName(e.target.value)}
+                  className="input-field"
+                  style={{ width: "100%" }}
+                />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={inviteEmail}
+                  onChange={(e) => setInviteEmail(e.target.value)}
+                  className="input-field"
+                  style={{ width: "100%" }}
+                />
                 <button
-                  onClick={handleBulkInvite}
+                  onClick={handleSingleInvite}
                   disabled={inviting}
                   className="btn-cta"
                   style={{
@@ -352,47 +317,97 @@ export default function AdminCandidatesPage() {
                     alignItems: "center",
                     gap: 8,
                     opacity: inviting ? 0.5 : 1,
+                    width: "fit-content",
                   }}
                 >
                   <UserPlus size={16} />
-                  {inviting ? "Sending..." : "Send All Invites"}
+                  {inviting ? "Sending..." : "Send Invite"}
                 </button>
               </div>
-            )}
-          </div>
-        </div>
+            </div>
 
-        {/* Invite feedback */}
-        {inviteMsg && (
-          <div
-            style={{
-              marginTop: 16,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              fontSize: "0.875rem",
-              color:
-                inviteMsg.type === "success"
-                  ? "var(--success)"
-                  : "var(--error)",
-            }}
-          >
-            {inviteMsg.type === "success" ? (
-              <CheckCircle2 size={16} />
-            ) : (
-              <AlertCircle size={16} />
-            )}
-            {inviteMsg.text}
+            {/* Bulk CSV upload */}
+            <div
+              style={{
+                border: "1px solid var(--border-default)",
+                borderRadius: "var(--radius-lg)",
+                padding: 20,
+                background: "var(--bg-surface)",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "0.875rem",
+                  fontWeight: 600,
+                  color: "var(--text-secondary)",
+                  marginBottom: 12,
+                }}
+              >
+                Bulk Upload
+              </p>
+              <CsvUpload onParsed={(parsed) => setCsvCandidates(parsed)} />
+              {csvCandidates.length > 0 && (
+                <div style={{ marginTop: 12 }}>
+                  <p
+                    style={{
+                      fontSize: "0.875rem",
+                      color: "var(--text-secondary)",
+                      marginBottom: 8,
+                    }}
+                  >
+                    {csvCandidates.length} candidate(s) ready
+                  </p>
+                  <button
+                    onClick={handleBulkInvite}
+                    disabled={inviting}
+                    className="btn-cta"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                      opacity: inviting ? 0.5 : 1,
+                    }}
+                  >
+                    <UserPlus size={16} />
+                    {inviting ? "Sending..." : "Send All Invites"}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </div>
+
+          {/* Invite feedback */}
+          {inviteMsg && (
+            <div
+              style={{
+                marginTop: 16,
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                fontSize: "0.875rem",
+                color:
+                  inviteMsg.type === "success"
+                    ? "var(--success)"
+                    : "var(--error)",
+              }}
+            >
+              {inviteMsg.type === "success" ? (
+                <CheckCircle2 size={16} />
+              ) : (
+                <AlertCircle size={16} />
+              )}
+              {inviteMsg.text}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ---- Filter ---- */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          gap: 16,
+          gap: 12,
           marginBottom: 16,
         }}
       >
@@ -401,14 +416,16 @@ export default function AdminCandidatesPage() {
             fontSize: "0.875rem",
             fontWeight: 500,
             color: "var(--text-secondary)",
+            whiteSpace: "nowrap",
           }}
         >
-          Filter by role:
+          Filter by role
         </label>
         <select
           value={filterRoleId}
           onChange={(e) => setFilterRoleId(e.target.value)}
-          className="input-field"
+          className="select-field"
+          style={{ maxWidth: 280 }}
         >
           <option value="">All roles</option>
           {roles.map((r) => (
@@ -421,13 +438,101 @@ export default function AdminCandidatesPage() {
 
       {/* ---- Table ---- */}
       {loading ? (
-        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
-          Loading candidates...
-        </p>
+        <div
+          className="glass-card"
+          style={{ padding: 0, overflow: "hidden" }}
+        >
+          <div style={{ overflowX: "auto" }}>
+            <table
+              style={{
+                width: "100%",
+                fontSize: "0.875rem",
+                borderCollapse: "collapse",
+              }}
+            >
+              <thead>
+                <tr
+                  style={{
+                    borderBottom: "1px solid var(--border-default)",
+                    background: "var(--bg-elevated)",
+                    textAlign: "left",
+                    fontSize: "0.75rem",
+                    textTransform: "uppercase",
+                    color: "var(--text-muted)",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>Name</th>
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>Email</th>
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>Role</th>
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>Status</th>
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>Composite Score</th>
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <tr key={i} style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+                    {[1, 2, 3, 4, 5, 6].map((j) => (
+                      <td key={j} style={{ padding: "12px 16px" }}>
+                        <div
+                          className="skeleton-pulse"
+                          style={{ height: 16, width: j === 4 ? 70 : j === 5 ? 40 : "80%", borderRadius: "var(--radius-sm)" }}
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       ) : candidates.length === 0 ? (
-        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
-          No candidates found.
-        </p>
+        <div
+          className="glass-card"
+          style={{ textAlign: "center", padding: "64px 24px" }}
+        >
+          <Users
+            size={48}
+            style={{
+              margin: "0 auto 16px",
+              color: "var(--text-muted)",
+              display: "block",
+            }}
+          />
+          <p
+            style={{
+              color: "var(--text-primary)",
+              fontSize: "1.125rem",
+              fontWeight: 600,
+              fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+            }}
+          >
+            No candidates found
+          </p>
+          <p
+            style={{
+              color: "var(--text-muted)",
+              fontSize: "0.875rem",
+              marginTop: 8,
+              marginBottom: 24,
+            }}
+          >
+            Invite your first candidate to get started.
+          </p>
+          <button
+            onClick={() => setShowInvite(true)}
+            className="btn-cta"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <UserPlus size={16} />
+            Invite Candidates
+          </button>
+        </div>
       ) : (
         <div
           className="glass-card"

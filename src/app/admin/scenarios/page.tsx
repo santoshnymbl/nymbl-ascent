@@ -176,9 +176,25 @@ export default function AdminScenariosPage() {
       </div>
 
       {loading ? (
-        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
-          Loading scenarios...
-        </p>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: 16,
+            minHeight: "calc(100vh - 200px)",
+          }}
+        >
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div
+              key={i}
+              className="skeleton-pulse"
+              style={{
+                height: 180,
+                borderRadius: "var(--radius-lg)",
+              }}
+            />
+          ))}
+        </div>
       ) : scenarios.length === 0 ? (
         <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
           No scenarios found. Use &quot;AI Generate&quot; to create one.
@@ -189,6 +205,7 @@ export default function AdminScenariosPage() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
             gap: 16,
+            minHeight: "calc(100vh - 200px)",
           }}
         >
           {scenarios.map((s) => (
@@ -201,6 +218,7 @@ export default function AdminScenariosPage() {
                 padding: 20,
                 textDecoration: "none",
                 transition: "box-shadow var(--transition-fast)",
+                alignSelf: "start",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.boxShadow = "var(--shadow-glow)";
