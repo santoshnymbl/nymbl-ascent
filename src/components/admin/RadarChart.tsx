@@ -43,7 +43,7 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
       width={size}
       height={size}
       viewBox={`0 0 ${size} ${size}`}
-      className="select-none"
+      style={{ userSelect: "none" }}
     >
       {/* Grid rings */}
       {rings.map((value) => (
@@ -51,7 +51,7 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
           key={value}
           points={ringPolygon(value)}
           fill="none"
-          stroke="#e2e8f0"
+          stroke="var(--border-subtle)"
           strokeWidth={1}
         />
       ))}
@@ -67,7 +67,7 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
             y1={cy}
             x2={x}
             y2={y}
-            stroke="#e2e8f0"
+            stroke="var(--border-subtle)"
             strokeWidth={1}
           />
         );
@@ -76,9 +76,9 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
       {/* Data polygon */}
       <polygon
         points={dataPolygon}
-        fill="rgb(37 99 235)"
+        fill="var(--accent)"
         fillOpacity={0.15}
-        stroke="rgb(37 99 235)"
+        stroke="var(--accent)"
         strokeWidth={2.5}
       />
 
@@ -89,7 +89,7 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
           cx={x}
           cy={y}
           r={5}
-          fill="rgb(37 99 235)"
+          fill="var(--accent)"
         />
       ))}
 
@@ -108,9 +108,9 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
             y={y}
             textAnchor={anchor}
             dominantBaseline="middle"
-            fill="#64748b"
+            fill="var(--text-secondary)"
             fontSize={12}
-            fontFamily="var(--font-heading), Poppins, sans-serif"
+            fontFamily="var(--font-heading), 'Space Grotesk', sans-serif"
             fontWeight={500}
           >
             {TENET_LABELS[t]}

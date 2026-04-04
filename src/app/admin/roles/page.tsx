@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Plus, Briefcase, Pencil, Trash2, X, AlertCircle } from "lucide-react";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 interface Role {
   id: string;
@@ -123,17 +124,32 @@ export default function RolesPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold font-[family-name:var(--font-heading)] text-slate-800">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 24,
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: 700,
+            fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+            color: "var(--text-primary)",
+          }}
+        >
           Roles
         </h2>
         <button
           onClick={showForm ? closeForm : openAdd}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 ${
-            showForm
-              ? "bg-slate-100 text-slate-700 hover:bg-slate-200"
-              : "bg-blue-600 text-white hover:bg-blue-700"
-          }`}
+          className={showForm ? "btn-ghost" : "btn-primary"}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+          }}
         >
           {showForm ? (
             <>
@@ -150,8 +166,21 @@ export default function RolesPage() {
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm flex items-center gap-2">
-          <AlertCircle size={16} className="shrink-0" />
+        <div
+          style={{
+            marginBottom: 16,
+            padding: 12,
+            background: "var(--error-surface)",
+            border: "1px solid var(--error)",
+            color: "var(--error)",
+            borderRadius: "var(--radius-md)",
+            fontSize: "0.875rem",
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          <AlertCircle size={16} style={{ flexShrink: 0 }} />
           {error}
         </div>
       )}
@@ -159,27 +188,59 @@ export default function RolesPage() {
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="mb-6 bg-white rounded-xl border border-slate-200 p-6"
+          className="glass-card"
+          style={{ marginBottom: 24, padding: 24 }}
         >
-          <h3 className="text-lg font-semibold font-[family-name:var(--font-heading)] text-slate-800 mb-4">
+          <h3
+            style={{
+              fontSize: "1.125rem",
+              fontWeight: 600,
+              fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+              color: "var(--text-primary)",
+              marginBottom: 16,
+            }}
+          >
             {editingId ? "Edit Role" : "New Role"}
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: 16,
+            }}
+          >
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                  color: "var(--text-secondary)",
+                  marginBottom: 4,
+                }}
+              >
                 Name
               </label>
               <input
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150"
+                className="input-field"
                 placeholder="e.g. Frontend Engineer"
                 required
+                style={{ width: "100%" }}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                  color: "var(--text-secondary)",
+                  marginBottom: 4,
+                }}
+              >
                 Description
               </label>
               <input
@@ -188,14 +249,31 @@ export default function RolesPage() {
                 onChange={(e) =>
                   setForm({ ...form, description: e.target.value })
                 }
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150"
+                className="input-field"
                 placeholder="Brief description"
+                style={{ width: "100%" }}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Core Pool Size
-              </label>
+              <Tooltip
+                content="Number of core scenarios randomly assigned per candidate"
+                position="top"
+              >
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "0.875rem",
+                    fontWeight: 500,
+                    color: "var(--text-secondary)",
+                    marginBottom: 4,
+                    cursor: "help",
+                    borderBottom: "1px dashed var(--border-default)",
+                    width: "fit-content",
+                  }}
+                >
+                  Core Pool Size
+                </label>
+              </Tooltip>
               <input
                 type="number"
                 min={1}
@@ -203,23 +281,21 @@ export default function RolesPage() {
                 onChange={(e) =>
                   setForm({ ...form, corePoolSize: Number(e.target.value) })
                 }
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150"
+                className="input-field"
+                style={{ width: "100%" }}
               />
             </div>
           </div>
-          <div className="mt-4 flex gap-3">
+          <div style={{ marginTop: 16, display: "flex", gap: 12 }}>
             <button
               type="submit"
               disabled={saving}
-              className="px-5 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors duration-150 disabled:opacity-50"
+              className="btn-primary"
+              style={{ opacity: saving ? 0.5 : 1 }}
             >
               {saving ? "Saving..." : editingId ? "Update Role" : "Create Role"}
             </button>
-            <button
-              type="button"
-              onClick={closeForm}
-              className="px-5 py-2 rounded-lg bg-transparent text-slate-600 text-sm font-medium hover:bg-slate-100 transition-colors duration-150"
-            >
+            <button type="button" onClick={closeForm} className="btn-ghost">
               Cancel
             </button>
           </div>
@@ -227,63 +303,180 @@ export default function RolesPage() {
       )}
 
       {loading ? (
-        <p className="text-slate-400 text-sm">Loading roles...</p>
+        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
+          Loading roles...
+        </p>
       ) : roles.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-xl border border-slate-200">
-          <Briefcase size={40} className="mx-auto text-slate-300 mb-3" />
-          <p className="text-slate-400 text-lg">No roles yet.</p>
-          <p className="text-slate-400 text-sm mt-1">
+        <div
+          className="glass-card"
+          style={{ textAlign: "center", padding: "48px 24px" }}
+        >
+          <Briefcase
+            size={40}
+            style={{
+              margin: "0 auto 12px",
+              color: "var(--text-muted)",
+              display: "block",
+            }}
+          />
+          <p
+            style={{
+              color: "var(--text-muted)",
+              fontSize: "1.125rem",
+            }}
+          >
+            No roles yet.
+          </p>
+          <p
+            style={{
+              color: "var(--text-muted)",
+              fontSize: "0.875rem",
+              marginTop: 4,
+            }}
+          >
             Click &quot;Add Role&quot; to create one.
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: 16,
+          }}
+        >
           {roles.map((role) => (
             <div
               key={role.id}
-              className="bg-white rounded-xl border border-slate-200 p-5 hover:border-blue-500 transition-colors duration-150"
+              className="glass-card"
+              style={{
+                padding: 20,
+                transition: "box-shadow var(--transition-fast)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "var(--shadow-glow)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "var(--shadow-sm)";
+              }}
             >
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 12,
+                  marginBottom: 12,
+                }}
+              >
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: "var(--radius-md)",
+                    background: "var(--accent-surface)",
+                    color: "var(--accent)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
                   <Briefcase size={18} />
                 </div>
-                <div className="min-w-0">
-                  <h3 className="text-base font-semibold text-slate-800 truncate">
+                <div style={{ minWidth: 0 }}>
+                  <h3
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: 600,
+                      color: "var(--text-primary)",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
                     {role.name}
                   </h3>
                   {role.description && (
-                    <p className="text-sm text-slate-500 mt-0.5 line-clamp-2">
+                    <p
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "var(--text-secondary)",
+                        marginTop: 2,
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
+                    >
                       {role.description}
                     </p>
                   )}
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-2 mb-3">
-                <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-slate-100 text-slate-600">
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 8,
+                  marginBottom: 12,
+                }}
+              >
+                <span className="badge" style={{ background: "var(--bg-elevated)", color: "var(--text-secondary)" }}>
                   {role._count.candidates}{" "}
                   {role._count.candidates === 1 ? "candidate" : "candidates"}
                 </span>
-                <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-slate-100 text-slate-600">
+                <span className="badge" style={{ background: "var(--bg-elevated)", color: "var(--text-secondary)" }}>
                   {role._count.roleScenarios}{" "}
                   {role._count.roleScenarios === 1 ? "scenario" : "scenarios"}
                 </span>
-                <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-blue-50 text-blue-600">
-                  Pool: {role.corePoolSize}
-                </span>
+                <Tooltip content="Number of core scenarios randomly assigned per candidate">
+                  <span
+                    className="badge"
+                    style={{
+                      background: "var(--accent-surface)",
+                      color: "var(--accent)",
+                      cursor: "help",
+                    }}
+                  >
+                    Pool: {role.corePoolSize}
+                  </span>
+                </Tooltip>
               </div>
 
-              <div className="flex gap-2 pt-3 border-t border-slate-100">
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  paddingTop: 12,
+                  borderTop: "1px solid var(--border-subtle)",
+                }}
+              >
                 <button
                   onClick={() => openEdit(role)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 text-xs font-medium hover:bg-slate-100 transition-colors duration-150"
+                  className="btn-ghost"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    fontSize: "0.75rem",
+                    padding: "6px 12px",
+                  }}
                 >
                   <Pencil size={14} />
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(role)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-red-600 text-xs font-medium hover:bg-red-50 transition-colors duration-150"
+                  className="btn-ghost"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    fontSize: "0.75rem",
+                    padding: "6px 12px",
+                    color: "var(--error)",
+                  }}
                 >
                   <Trash2 size={14} />
                   Delete

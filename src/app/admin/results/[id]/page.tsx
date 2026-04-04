@@ -6,6 +6,7 @@ import Link from "next/link";
 import { TENETS, TENET_LABELS, Tenet } from "@/types";
 import RadarChart from "@/components/admin/RadarChart";
 import { ArrowLeft, Brain } from "lucide-react";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 interface ScoreData {
   compositeScore: number;
@@ -37,6 +38,16 @@ const WEIGHT_BREAKDOWN = [
   { label: "Behavioral Signals", weight: 15 },
 ];
 
+const TENET_EXPLANATIONS: Record<Tenet, string> = {
+  clientFocused: "Prioritizes client needs and outcomes in decision-making",
+  empowering: "Enables others to grow, lead, and take ownership",
+  productive: "Efficiently delivers results with minimal waste",
+  balanced: "Maintains equilibrium between competing priorities",
+  reliable: "Consistently delivers on promises and commitments",
+  improving: "Continuously seeks growth and better approaches",
+  transparent: "Communicates openly and honestly with stakeholders",
+};
+
 export default function CandidateDetailPage() {
   const params = useParams();
   const candidateId = params.id as string;
@@ -64,16 +75,36 @@ export default function CandidateDetailPage() {
   }, [candidateId]);
 
   if (loading) {
-    return <p className="text-slate-400 text-sm">Loading candidate detail...</p>;
+    return (
+      <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
+        Loading candidate detail...
+      </p>
+    );
   }
 
   if (error || !candidate) {
     return (
       <div>
-        <p className="text-red-600 text-sm mb-4">{error || "Not found."}</p>
+        <p
+          style={{
+            color: "var(--error)",
+            fontSize: "0.875rem",
+            marginBottom: 16,
+          }}
+        >
+          {error || "Not found."}
+        </p>
         <Link
           href="/admin/results"
-          className="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-800 text-sm transition-colors duration-150"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            color: "var(--accent)",
+            fontSize: "0.875rem",
+            textDecoration: "none",
+            transition: "color var(--transition-fast)",
+          }}
         >
           <ArrowLeft size={16} />
           Back to Results
@@ -107,51 +138,150 @@ export default function CandidateDetailPage() {
     <div>
       <Link
         href="/admin/results"
-        className="inline-flex items-center gap-1.5 text-slate-500 hover:text-blue-600 text-sm mb-5 transition-colors duration-150"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 6,
+          color: "var(--text-secondary)",
+          fontSize: "0.875rem",
+          marginBottom: 20,
+          textDecoration: "none",
+          transition: "color var(--transition-fast)",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.color = "var(--accent)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.color = "var(--text-secondary)";
+        }}
       >
         <ArrowLeft size={16} />
         Back to Results
       </Link>
 
       {/* Header */}
-      <div className="bg-white rounded-xl border border-slate-200 p-6 mb-6">
-        <h2 className="text-2xl font-bold font-[family-name:var(--font-heading)] text-slate-800">
+      <div
+        className="glass-card"
+        style={{ padding: 24, marginBottom: 24 }}
+      >
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: 700,
+            fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+            color: "var(--text-primary)",
+          }}
+        >
           {candidate.name}
         </h2>
-        <div className="flex flex-wrap items-center gap-2 mt-2">
-          <span className="text-sm text-slate-500">{candidate.email}</span>
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: 8,
+            marginTop: 8,
+          }}
+        >
+          <span
+            style={{ fontSize: "0.875rem", color: "var(--text-muted)" }}
+          >
+            {candidate.email}
+          </span>
+          <span
+            className="badge"
+            style={{
+              background: "var(--info-surface)",
+              color: "var(--info)",
+            }}
+          >
             {candidate.role.name}
           </span>
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 capitalize">
+          <span
+            className="badge"
+            style={{
+              background: "var(--bg-elevated)",
+              color: "var(--text-secondary)",
+              textTransform: "capitalize",
+            }}
+          >
             {candidate.status}
           </span>
         </div>
       </div>
 
       {!score ? (
-        <div className="bg-white rounded-xl border border-slate-200 p-6">
-          <p className="text-slate-400 text-sm">
+        <div className="glass-card" style={{ padding: 24 }}>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
             This candidate has not been scored yet.
           </p>
         </div>
       ) : (
         <>
           {/* Composite Score + Radar Chart */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+              gap: 24,
+              marginBottom: 24,
+            }}
+          >
             {/* Composite Score & Weights */}
-            <div className="bg-white rounded-xl border border-slate-200 p-6">
-              <h3 className="text-base font-semibold font-[family-name:var(--font-heading)] text-slate-800 mb-4">
-                Composite Score
+            <div className="glass-card" style={{ padding: 24 }}>
+              <h3
+                style={{
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                  fontFamily:
+                    "var(--font-heading), 'Space Grotesk', sans-serif",
+                  color: "var(--text-primary)",
+                  marginBottom: 16,
+                }}
+              >
+                <Tooltip content="Weighted score: 60% tenets + 25% role fit + 15% behavioral">
+                  <span
+                    style={{
+                      cursor: "help",
+                      borderBottom: "1px dashed var(--border-default)",
+                    }}
+                  >
+                    Composite Score
+                  </span>
+                </Tooltip>
               </h3>
-              <div className="text-5xl font-bold font-mono text-blue-600 mb-6">
+              <div
+                style={{
+                  fontSize: "3rem",
+                  fontWeight: 700,
+                  fontFamily: "monospace",
+                  color: "var(--accent)",
+                  marginBottom: 24,
+                  fontVariantNumeric: "tabular-nums",
+                }}
+              >
                 {score.compositeScore.toFixed(1)}
               </div>
 
-              <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+              <h4
+                style={{
+                  fontSize: "0.75rem",
+                  fontWeight: 600,
+                  color: "var(--text-muted)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  marginBottom: 12,
+                }}
+              >
                 Weight Breakdown
               </h4>
-              <div className="space-y-3">
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 12,
+                }}
+              >
                 {WEIGHT_BREAKDOWN.map((item) => {
                   let value = 0;
                   if (item.weight === 60) {
@@ -166,16 +296,43 @@ export default function CandidateDetailPage() {
                   }
                   return (
                     <div key={item.label}>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="text-slate-700">{item.label}</span>
-                        <span className="text-slate-400 font-mono text-xs">
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          fontSize: "0.875rem",
+                          marginBottom: 4,
+                        }}
+                      >
+                        <span style={{ color: "var(--text-secondary)" }}>
+                          {item.label}
+                        </span>
+                        <span
+                          style={{
+                            color: "var(--text-muted)",
+                            fontFamily: "monospace",
+                            fontSize: "0.75rem",
+                          }}
+                        >
                           {item.weight}% &middot; {value.toFixed(1)}
                         </span>
                       </div>
-                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                      <div
+                        style={{
+                          height: 8,
+                          background: "var(--bg-elevated)",
+                          borderRadius: "var(--radius-full)",
+                          overflow: "hidden",
+                        }}
+                      >
                         <div
-                          className="h-full bg-blue-500 rounded-full transition-all duration-200"
-                          style={{ width: `${Math.min(100, value)}%` }}
+                          style={{
+                            height: "100%",
+                            background: "var(--accent)",
+                            borderRadius: "var(--radius-full)",
+                            transition: "width 0.3s ease",
+                            width: `${Math.min(100, value)}%`,
+                          }}
                         />
                       </div>
                     </div>
@@ -185,8 +342,26 @@ export default function CandidateDetailPage() {
             </div>
 
             {/* Radar Chart */}
-            <div className="bg-white rounded-xl border border-slate-200 p-6 flex flex-col items-center justify-center">
-              <h3 className="text-base font-semibold font-[family-name:var(--font-heading)] text-slate-800 mb-4">
+            <div
+              className="glass-card"
+              style={{
+                padding: 24,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <h3
+                style={{
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                  fontFamily:
+                    "var(--font-heading), 'Space Grotesk', sans-serif",
+                  color: "var(--text-primary)",
+                  marginBottom: 16,
+                }}
+              >
                 Tenet Profile
               </h3>
               <RadarChart scores={tenetScores} size={300} />
@@ -194,27 +369,88 @@ export default function CandidateDetailPage() {
           </div>
 
           {/* Per-Tenet Horizontal Bar Chart */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6 mb-6">
-            <h3 className="text-base font-semibold font-[family-name:var(--font-heading)] text-slate-800 mb-4">
+          <div
+            className="glass-card"
+            style={{ padding: 24, marginBottom: 24 }}
+          >
+            <h3
+              style={{
+                fontSize: "1rem",
+                fontWeight: 600,
+                fontFamily:
+                  "var(--font-heading), 'Space Grotesk', sans-serif",
+                color: "var(--text-primary)",
+                marginBottom: 16,
+              }}
+            >
               Tenet Scores
             </h3>
-            <div className="space-y-3">
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+              }}
+            >
               {TENETS.map((t) => {
                 const val = tenetScores[t];
                 const pct =
                   maxTenetScore > 0 ? (val / maxTenetScore) * 100 : 0;
                 return (
-                  <div key={t} className="flex items-center gap-3">
-                    <span className="w-32 text-sm text-slate-600 text-right shrink-0">
-                      {TENET_LABELS[t]}
-                    </span>
-                    <div className="flex-1 h-6 bg-slate-100 rounded-full overflow-hidden relative">
+                  <div
+                    key={t}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                    }}
+                  >
+                    <Tooltip content={TENET_EXPLANATIONS[t]}>
+                      <span
+                        style={{
+                          width: 128,
+                          fontSize: "0.875rem",
+                          color: "var(--text-secondary)",
+                          textAlign: "right",
+                          flexShrink: 0,
+                          cursor: "help",
+                          borderBottom: "1px dashed var(--border-subtle)",
+                        }}
+                      >
+                        {TENET_LABELS[t]}
+                      </span>
+                    </Tooltip>
+                    <div
+                      style={{
+                        flex: 1,
+                        height: 24,
+                        background: "var(--bg-elevated)",
+                        borderRadius: "var(--radius-full)",
+                        overflow: "hidden",
+                        position: "relative",
+                      }}
+                    >
                       <div
-                        className="h-full bg-blue-500 rounded-full transition-all duration-200"
-                        style={{ width: `${pct}%` }}
+                        style={{
+                          height: "100%",
+                          background: "var(--accent)",
+                          borderRadius: "var(--radius-full)",
+                          transition: "width 0.3s ease",
+                          width: `${pct}%`,
+                        }}
                       />
                     </div>
-                    <span className="w-12 text-sm font-mono font-semibold text-slate-800 text-right">
+                    <span
+                      style={{
+                        width: 48,
+                        fontSize: "0.875rem",
+                        fontFamily: "monospace",
+                        fontWeight: 600,
+                        color: "var(--text-primary)",
+                        textAlign: "right",
+                        fontVariantNumeric: "tabular-nums",
+                      }}
+                    >
                       {val.toFixed(1)}
                     </span>
                   </div>
@@ -225,14 +461,36 @@ export default function CandidateDetailPage() {
 
           {/* AI Analysis */}
           {aiAnalysisText && (
-            <div className="bg-white rounded-xl border border-slate-200 p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Brain size={20} className="text-purple-500" />
-                <h3 className="text-base font-semibold font-[family-name:var(--font-heading)] text-slate-800">
+            <div className="glass-card" style={{ padding: 24 }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 16,
+                }}
+              >
+                <Brain size={20} style={{ color: "var(--accent)" }} />
+                <h3
+                  style={{
+                    fontSize: "1rem",
+                    fontWeight: 600,
+                    fontFamily:
+                      "var(--font-heading), 'Space Grotesk', sans-serif",
+                    color: "var(--text-primary)",
+                  }}
+                >
                   AI Analysis
                 </h3>
               </div>
-              <div className="prose prose-sm max-w-none text-slate-600 whitespace-pre-wrap leading-relaxed">
+              <div
+                style={{
+                  fontSize: "0.875rem",
+                  color: "var(--text-secondary)",
+                  whiteSpace: "pre-wrap",
+                  lineHeight: 1.7,
+                }}
+              >
                 {aiAnalysisText}
               </div>
             </div>

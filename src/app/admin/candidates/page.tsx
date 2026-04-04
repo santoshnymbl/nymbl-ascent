@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import CsvUpload from "@/components/admin/CsvUpload";
 import { UserPlus, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 /* ---------- types ---------- */
 
@@ -26,11 +27,30 @@ interface InviteCandidate {
   email: string;
 }
 
-const STATUS_BADGES: Record<string, string> = {
-  invited: "bg-blue-100 text-blue-700",
-  in_progress: "bg-amber-100 text-amber-700",
-  completed: "bg-orange-100 text-orange-700",
-  scored: "bg-green-100 text-green-700",
+const STATUS_STYLES: Record<
+  string,
+  { bg: string; color: string; tooltip: string }
+> = {
+  invited: {
+    bg: "var(--info-surface)",
+    color: "var(--info)",
+    tooltip: "Candidate has been invited but has not started the assessment",
+  },
+  in_progress: {
+    bg: "var(--warning-surface)",
+    color: "var(--warning)",
+    tooltip: "Candidate is currently taking the assessment",
+  },
+  completed: {
+    bg: "var(--cta-glow)",
+    color: "var(--cta)",
+    tooltip: "Candidate finished the assessment; awaiting scoring",
+  },
+  scored: {
+    bg: "var(--success-surface)",
+    color: "var(--success)",
+    tooltip: "Assessment has been scored by AI",
+  },
 };
 
 function statusLabel(s: string) {
@@ -157,30 +177,70 @@ export default function AdminCandidatesPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold font-[family-name:var(--font-heading)] text-slate-800">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 24,
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: 700,
+            fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+            color: "var(--text-primary)",
+          }}
+        >
           Candidates
         </h2>
       </div>
 
       {/* ---- Invite Section ---- */}
-      <div className="bg-white rounded-xl border border-slate-200 p-6 mb-8">
-        <div className="flex items-center gap-2 mb-4">
-          <UserPlus size={20} className="text-orange-500" />
-          <h3 className="text-lg font-semibold font-[family-name:var(--font-heading)] text-slate-800">
+      <div
+        className="glass-card"
+        style={{ padding: 24, marginBottom: 32 }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            marginBottom: 16,
+          }}
+        >
+          <UserPlus size={20} style={{ color: "var(--cta)" }} />
+          <h3
+            style={{
+              fontSize: "1.125rem",
+              fontWeight: 600,
+              fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+              color: "var(--text-primary)",
+            }}
+          >
             Invite Candidates
           </h3>
         </div>
 
         {/* Role select shared by single & bulk */}
-        <div className="mb-4 max-w-xs">
-          <label className="block text-sm font-medium text-slate-700 mb-1">
+        <div style={{ marginBottom: 16, maxWidth: 320 }}>
+          <label
+            style={{
+              display: "block",
+              fontSize: "0.875rem",
+              fontWeight: 500,
+              color: "var(--text-secondary)",
+              marginBottom: 4,
+            }}
+          >
             Role
           </label>
           <select
             value={inviteRoleId}
             onChange={(e) => setInviteRoleId(e.target.value)}
-            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150 bg-white"
+            className="input-field"
+            style={{ width: "100%" }}
           >
             <option value="">Select role...</option>
             {roles.map((r) => (
@@ -191,31 +251,60 @@ export default function AdminCandidatesPage() {
           </select>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: 24,
+          }}
+        >
           {/* Single invite */}
-          <div className="border border-slate-200 rounded-xl p-5">
-            <p className="text-sm font-semibold text-slate-700 mb-3">
+          <div
+            style={{
+              border: "1px solid var(--border-default)",
+              borderRadius: "var(--radius-lg)",
+              padding: 20,
+              background: "var(--bg-surface)",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "0.875rem",
+                fontWeight: 600,
+                color: "var(--text-secondary)",
+                marginBottom: 12,
+              }}
+            >
               Single Invite
             </p>
-            <div className="space-y-3">
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <input
                 type="text"
                 placeholder="Name"
                 value={inviteName}
                 onChange={(e) => setInviteName(e.target.value)}
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150"
+                className="input-field"
+                style={{ width: "100%" }}
               />
               <input
                 type="email"
                 placeholder="Email"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150"
+                className="input-field"
+                style={{ width: "100%" }}
               />
               <button
                 onClick={handleSingleInvite}
                 disabled={inviting}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 disabled:opacity-50 transition-colors duration-150"
+                className="btn-cta"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  opacity: inviting ? 0.5 : 1,
+                  width: "fit-content",
+                }}
               >
                 <UserPlus size={16} />
                 {inviting ? "Sending..." : "Send Invite"}
@@ -224,22 +313,46 @@ export default function AdminCandidatesPage() {
           </div>
 
           {/* Bulk CSV upload */}
-          <div className="border border-slate-200 rounded-xl p-5">
-            <p className="text-sm font-semibold text-slate-700 mb-3">
+          <div
+            style={{
+              border: "1px solid var(--border-default)",
+              borderRadius: "var(--radius-lg)",
+              padding: 20,
+              background: "var(--bg-surface)",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "0.875rem",
+                fontWeight: 600,
+                color: "var(--text-secondary)",
+                marginBottom: 12,
+              }}
+            >
               Bulk Upload
             </p>
-            <CsvUpload
-              onParsed={(parsed) => setCsvCandidates(parsed)}
-            />
+            <CsvUpload onParsed={(parsed) => setCsvCandidates(parsed)} />
             {csvCandidates.length > 0 && (
-              <div className="mt-3">
-                <p className="text-sm text-slate-600 mb-2">
+              <div style={{ marginTop: 12 }}>
+                <p
+                  style={{
+                    fontSize: "0.875rem",
+                    color: "var(--text-secondary)",
+                    marginBottom: 8,
+                  }}
+                >
                   {csvCandidates.length} candidate(s) ready
                 </p>
                 <button
                   onClick={handleBulkInvite}
                   disabled={inviting}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 disabled:opacity-50 transition-colors duration-150"
+                  className="btn-cta"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    opacity: inviting ? 0.5 : 1,
+                  }}
                 >
                   <UserPlus size={16} />
                   {inviting ? "Sending..." : "Send All Invites"}
@@ -252,9 +365,17 @@ export default function AdminCandidatesPage() {
         {/* Invite feedback */}
         {inviteMsg && (
           <div
-            className={`mt-4 flex items-center gap-2 text-sm ${
-              inviteMsg.type === "success" ? "text-green-700" : "text-red-600"
-            }`}
+            style={{
+              marginTop: 16,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              fontSize: "0.875rem",
+              color:
+                inviteMsg.type === "success"
+                  ? "var(--success)"
+                  : "var(--error)",
+            }}
           >
             {inviteMsg.type === "success" ? (
               <CheckCircle2 size={16} />
@@ -267,14 +388,27 @@ export default function AdminCandidatesPage() {
       </div>
 
       {/* ---- Filter ---- */}
-      <div className="flex items-center gap-4 mb-4">
-        <label className="text-sm font-medium text-slate-700">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
+          marginBottom: 16,
+        }}
+      >
+        <label
+          style={{
+            fontSize: "0.875rem",
+            fontWeight: 500,
+            color: "var(--text-secondary)",
+          }}
+        >
           Filter by role:
         </label>
         <select
           value={filterRoleId}
           onChange={(e) => setFilterRoleId(e.target.value)}
-          className="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150"
+          className="input-field"
         >
           <option value="">All roles</option>
           {roles.map((r) => (
@@ -287,54 +421,144 @@ export default function AdminCandidatesPage() {
 
       {/* ---- Table ---- */}
       {loading ? (
-        <p className="text-slate-400 text-sm">Loading candidates...</p>
+        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
+          Loading candidates...
+        </p>
       ) : candidates.length === 0 ? (
-        <p className="text-slate-400 text-sm">No candidates found.</p>
+        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
+          No candidates found.
+        </p>
       ) : (
-        <div className="bg-white rounded-xl border border-slate-200 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase text-slate-500 tracking-wider">
-                <th className="px-4 py-3 font-medium sticky top-0 bg-slate-50">Name</th>
-                <th className="px-4 py-3 font-medium sticky top-0 bg-slate-50">Email</th>
-                <th className="px-4 py-3 font-medium sticky top-0 bg-slate-50">Role</th>
-                <th className="px-4 py-3 font-medium sticky top-0 bg-slate-50">Status</th>
-                <th className="px-4 py-3 font-medium sticky top-0 bg-slate-50">Composite Score</th>
-                <th className="px-4 py-3 font-medium sticky top-0 bg-slate-50">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {candidates.map((c, i) => (
+        <div
+          className="glass-card"
+          style={{ padding: 0, overflow: "hidden" }}
+        >
+          <div style={{ overflowX: "auto" }}>
+            <table
+              style={{
+                width: "100%",
+                fontSize: "0.875rem",
+                borderCollapse: "collapse",
+              }}
+            >
+              <thead>
                 <tr
-                  key={c.id}
-                  className={`border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors duration-150 ${
-                    i % 2 === 1 ? "bg-slate-50/50" : ""
-                  }`}
+                  style={{
+                    borderBottom: "1px solid var(--border-default)",
+                    background: "var(--bg-elevated)",
+                    textAlign: "left",
+                    fontSize: "0.75rem",
+                    textTransform: "uppercase",
+                    color: "var(--text-muted)",
+                    letterSpacing: "0.05em",
+                  }}
                 >
-                  <td className="px-4 py-3 font-medium text-slate-800">{c.name}</td>
-                  <td className="px-4 py-3 text-slate-500">{c.email}</td>
-                  <td className="px-4 py-3 text-slate-700">{c.role.name}</td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${STATUS_BADGES[c.status] ?? "bg-slate-100 text-slate-600"}`}
-                    >
-                      {statusLabel(c.status)}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="font-mono text-sm font-semibold text-slate-800">
-                      {c.assessment?.score
-                        ? c.assessment.score.compositeScore.toFixed(1)
-                        : "-"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-slate-400 text-xs">
-                    {new Date(c.createdAt).toLocaleDateString()}
-                  </td>
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>Name</th>
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>Email</th>
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>Role</th>
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>Status</th>
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>
+                    Composite Score
+                  </th>
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>Date</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {candidates.map((c) => {
+                  const statusStyle = STATUS_STYLES[c.status] ?? {
+                    bg: "var(--bg-elevated)",
+                    color: "var(--text-secondary)",
+                    tooltip: "Unknown status",
+                  };
+                  return (
+                    <tr
+                      key={c.id}
+                      style={{
+                        borderBottom: "1px solid var(--border-subtle)",
+                        transition: "background var(--transition-fast)",
+                        cursor: "default",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "var(--bg-elevated)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "transparent";
+                      }}
+                    >
+                      <td
+                        style={{
+                          padding: "12px 16px",
+                          fontWeight: 500,
+                          color: "var(--text-primary)",
+                        }}
+                      >
+                        {c.name}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px 16px",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        {c.email}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px 16px",
+                          color: "var(--text-secondary)",
+                        }}
+                      >
+                        {c.role.name}
+                      </td>
+                      <td style={{ padding: "12px 16px" }}>
+                        <Tooltip content={statusStyle.tooltip}>
+                          <span
+                            style={{
+                              display: "inline-block",
+                              padding: "2px 10px",
+                              borderRadius: "var(--radius-full)",
+                              fontSize: "0.75rem",
+                              fontWeight: 500,
+                              textTransform: "capitalize",
+                              background: statusStyle.bg,
+                              color: statusStyle.color,
+                              cursor: "help",
+                            }}
+                          >
+                            {statusLabel(c.status)}
+                          </span>
+                        </Tooltip>
+                      </td>
+                      <td style={{ padding: "12px 16px" }}>
+                        <span
+                          style={{
+                            fontFamily: "monospace",
+                            fontSize: "0.875rem",
+                            fontWeight: 600,
+                            color: "var(--text-primary)",
+                            fontVariantNumeric: "tabular-nums",
+                          }}
+                        >
+                          {c.assessment?.score
+                            ? c.assessment.score.compositeScore.toFixed(1)
+                            : "-"}
+                        </span>
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px 16px",
+                          color: "var(--text-muted)",
+                          fontSize: "0.75rem",
+                        }}
+                      >
+                        {new Date(c.createdAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

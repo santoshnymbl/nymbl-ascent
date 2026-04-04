@@ -96,34 +96,83 @@ export default function CsvUpload({ onParsed }: CsvUploadProps) {
         ref={fileRef}
         type="file"
         accept=".csv"
-        className="hidden"
+        style={{ display: "none" }}
         onChange={handleFileChange}
       />
       <button
         type="button"
         onClick={() => fileRef.current?.click()}
-        className="group flex flex-col items-center justify-center w-full py-6 border-2 border-dashed border-slate-300 rounded-xl text-sm text-slate-500 hover:border-blue-500 hover:text-blue-600 transition-colors duration-150 cursor-pointer"
+        className="glass-card"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          padding: "24px 16px",
+          border: "2px dashed var(--border-default)",
+          fontSize: "0.875rem",
+          color: "var(--text-muted)",
+          cursor: "pointer",
+          transition: "all var(--transition-fast)",
+          background: "var(--bg-surface)",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = "var(--accent)";
+          e.currentTarget.style.color = "var(--accent)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = "var(--border-default)";
+          e.currentTarget.style.color = "var(--text-muted)";
+        }}
       >
         <Upload
           size={24}
-          className="mb-2 text-slate-400 group-hover:text-blue-500 transition-colors duration-150"
+          style={{
+            marginBottom: 8,
+            transition: "color var(--transition-fast)",
+          }}
         />
-        <span className="font-medium">Upload CSV</span>
-        <span className="text-xs text-slate-400 mt-1">
+        <span style={{ fontWeight: 500 }}>Upload CSV</span>
+        <span
+          style={{
+            fontSize: "0.75rem",
+            color: "var(--text-muted)",
+            marginTop: 4,
+          }}
+        >
           Must have &quot;name&quot; and &quot;email&quot; columns
         </span>
       </button>
 
       {fileName && (
-        <div className="mt-2 flex items-center gap-2 text-sm text-green-700">
-          <FileText size={16} className="shrink-0" />
+        <div
+          style={{
+            marginTop: 8,
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            fontSize: "0.875rem",
+            color: "var(--success)",
+          }}
+        >
+          <FileText size={16} style={{ flexShrink: 0 }} />
           {fileName}
         </div>
       )}
 
       {error && (
-        <div className="mt-2 flex items-center gap-2 text-sm text-red-600">
-          <AlertCircle size={16} className="shrink-0" />
+        <div
+          style={{
+            marginTop: 8,
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            fontSize: "0.875rem",
+            color: "var(--error)",
+          }}
+        >
+          <AlertCircle size={16} style={{ flexShrink: 0 }} />
           {error}
         </div>
       )}

@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { TENETS, TENET_LABELS, Tenet } from "@/types";
 import { Download, ArrowRight } from "lucide-react";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 interface RoleOption {
   id: string;
@@ -107,28 +108,34 @@ export default function AdminResultsPage() {
     URL.revokeObjectURL(url);
   }, [sorted]);
 
-  const statusColor = (status: string) => {
-    switch (status) {
-      case "scored":
-        return "bg-green-100 text-green-700";
-      case "completed":
-        return "bg-blue-100 text-blue-700";
-      case "in_progress":
-        return "bg-amber-100 text-amber-700";
-      default:
-        return "bg-slate-100 text-slate-600";
-    }
-  };
-
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold font-[family-name:var(--font-heading)] text-slate-800">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 24,
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: 700,
+            fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+            color: "var(--text-primary)",
+          }}
+        >
           Results
         </h2>
         <button
           onClick={exportCSV}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg text-sm font-medium hover:bg-slate-900 transition-colors duration-150"
+          className="btn-ghost"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+          }}
         >
           <Download size={16} />
           Export CSV
@@ -136,11 +143,11 @@ export default function AdminResultsPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex gap-4 mb-6">
+      <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
-          className="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150"
+          className="input-field"
         >
           <option value="">All Roles</option>
           {roles.map((r) => (
@@ -153,7 +160,7 @@ export default function AdminResultsPage() {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as SortKey)}
-          className="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150"
+          className="input-field"
         >
           <option value="compositeScore">Composite Score</option>
           {TENETS.map((t) => (
@@ -165,56 +172,220 @@ export default function AdminResultsPage() {
       </div>
 
       {loading ? (
-        <p className="text-slate-400 text-sm">Loading results...</p>
+        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
+          Loading results...
+        </p>
       ) : sorted.length === 0 ? (
-        <p className="text-slate-400 text-sm">No completed assessments found.</p>
+        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
+          No completed assessments found.
+        </p>
       ) : (
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-slate-500 uppercase text-xs tracking-wider">
-              <tr>
-                <th className="px-4 py-3 text-left font-medium sticky top-0 bg-slate-50">#</th>
-                <th className="px-4 py-3 text-left font-medium sticky top-0 bg-slate-50">Candidate</th>
-                <th className="px-4 py-3 text-left font-medium sticky top-0 bg-slate-50">Role</th>
-                <th className="px-4 py-3 text-right font-medium sticky top-0 bg-slate-50">Composite Score</th>
-                <th className="px-4 py-3 text-center font-medium sticky top-0 bg-slate-50">Status</th>
-                <th className="px-4 py-3 text-center font-medium sticky top-0 bg-slate-50">Action</th>
+        <div
+          className="glass-card"
+          style={{ padding: 0, overflow: "hidden" }}
+        >
+          <table
+            style={{
+              width: "100%",
+              fontSize: "0.875rem",
+              borderCollapse: "collapse",
+            }}
+          >
+            <thead>
+              <tr
+                style={{
+                  background: "var(--bg-elevated)",
+                  color: "var(--text-muted)",
+                  textTransform: "uppercase",
+                  fontSize: "0.75rem",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                <th
+                  style={{
+                    padding: "12px 16px",
+                    textAlign: "left",
+                    fontWeight: 500,
+                  }}
+                >
+                  #
+                </th>
+                <th
+                  style={{
+                    padding: "12px 16px",
+                    textAlign: "left",
+                    fontWeight: 500,
+                  }}
+                >
+                  Candidate
+                </th>
+                <th
+                  style={{
+                    padding: "12px 16px",
+                    textAlign: "left",
+                    fontWeight: 500,
+                  }}
+                >
+                  Role
+                </th>
+                <th
+                  style={{
+                    padding: "12px 16px",
+                    textAlign: "right",
+                    fontWeight: 500,
+                  }}
+                >
+                  <Tooltip content="Weighted score: 60% tenets + 25% role fit + 15% behavioral">
+                    <span style={{ cursor: "help", borderBottom: "1px dashed var(--border-default)" }}>
+                      Composite Score
+                    </span>
+                  </Tooltip>
+                </th>
+                <th
+                  style={{
+                    padding: "12px 16px",
+                    textAlign: "center",
+                    fontWeight: 500,
+                  }}
+                >
+                  Status
+                </th>
+                <th
+                  style={{
+                    padding: "12px 16px",
+                    textAlign: "center",
+                    fontWeight: 500,
+                  }}
+                >
+                  Action
+                </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody>
               {sorted.map((c, i) => (
                 <tr
                   key={c.id}
-                  className={`hover:bg-slate-50 transition-colors duration-150 ${
-                    i % 2 === 1 ? "bg-slate-50/50" : ""
-                  }`}
+                  style={{
+                    borderBottom: "1px solid var(--border-subtle)",
+                    transition: "background var(--transition-fast)",
+                    cursor: "default",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "var(--bg-elevated)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
+                  }}
                 >
-                  <td className="px-4 py-3">
-                    <span className="w-7 h-7 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold inline-flex items-center justify-center">
+                  <td style={{ padding: "12px 16px" }}>
+                    <span
+                      style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: "var(--radius-full)",
+                        background: "var(--accent)",
+                        color: "#fff",
+                        fontSize: "0.75rem",
+                        fontWeight: 600,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
                       {i + 1}
                     </span>
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="font-semibold text-slate-800">{c.name}</div>
-                    <div className="text-slate-400 text-xs">{c.email}</div>
+                  <td style={{ padding: "12px 16px" }}>
+                    <div
+                      style={{
+                        fontWeight: 600,
+                        color: "var(--text-primary)",
+                      }}
+                    >
+                      {c.name}
+                    </div>
+                    <div
+                      style={{
+                        color: "var(--text-muted)",
+                        fontSize: "0.75rem",
+                      }}
+                    >
+                      {c.email}
+                    </div>
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{c.role.name}</td>
-                  <td className="px-4 py-3 text-right">
-                    <span className="text-xl font-bold font-mono text-blue-600">
-                      {c.assessment?.score?.compositeScore?.toFixed(1) ?? "--"}
-                    </span>
+                  <td
+                    style={{
+                      padding: "12px 16px",
+                      color: "var(--text-secondary)",
+                    }}
+                  >
+                    {c.role.name}
                   </td>
-                  <td className="px-4 py-3 text-center">
+                  <td style={{ padding: "12px 16px", textAlign: "right" }}>
+                    <Tooltip content="Weighted score: 60% tenets + 25% role fit + 15% behavioral">
+                      <span
+                        style={{
+                          fontSize: "1.25rem",
+                          fontWeight: 700,
+                          fontFamily: "monospace",
+                          color: "var(--accent)",
+                          fontVariantNumeric: "tabular-nums",
+                          cursor: "help",
+                        }}
+                      >
+                        {c.assessment?.score?.compositeScore?.toFixed(1) ??
+                          "--"}
+                      </span>
+                    </Tooltip>
+                  </td>
+                  <td style={{ padding: "12px 16px", textAlign: "center" }}>
                     <span
-                      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColor(c.status)}`}
+                      style={{
+                        display: "inline-block",
+                        padding: "2px 10px",
+                        borderRadius: "var(--radius-full)",
+                        fontSize: "0.75rem",
+                        fontWeight: 500,
+                        background:
+                          c.status === "scored"
+                            ? "var(--success-surface)"
+                            : c.status === "completed"
+                              ? "var(--info-surface)"
+                              : c.status === "in_progress"
+                                ? "var(--warning-surface)"
+                                : "var(--bg-elevated)",
+                        color:
+                          c.status === "scored"
+                            ? "var(--success)"
+                            : c.status === "completed"
+                              ? "var(--info)"
+                              : c.status === "in_progress"
+                                ? "var(--warning)"
+                                : "var(--text-secondary)",
+                      }}
                     >
                       {c.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-center">
+                  <td style={{ padding: "12px 16px", textAlign: "center" }}>
                     <Link
                       href={`/admin/results/${c.id}`}
-                      className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors duration-150"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 4,
+                        color: "var(--accent)",
+                        fontSize: "0.875rem",
+                        fontWeight: 500,
+                        textDecoration: "none",
+                        transition: "color var(--transition-fast)",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = "var(--accent-light)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = "var(--accent)";
+                      }}
                     >
                       View Detail
                       <ArrowRight size={14} />

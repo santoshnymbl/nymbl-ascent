@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Briefcase, Users, Clock, CheckCircle2 } from "lucide-react";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 interface RoleData {
   id: string;
@@ -67,63 +68,126 @@ export default function AdminDashboard() {
       title: "Total Roles",
       value: totalRoles,
       icon: Briefcase,
-      iconBg: "bg-blue-100",
-      iconColor: "text-blue-600",
+      circleBg: "var(--accent-surface)",
+      circleColor: "var(--accent)",
+      tooltip: "Total roles configured in the system",
     },
     {
       title: "Total Candidates",
       value: totalCandidates,
       icon: Users,
-      iconBg: "bg-green-100",
-      iconColor: "text-green-600",
+      circleBg: "var(--success-surface)",
+      circleColor: "var(--success)",
+      tooltip: "Total candidates invited across all roles",
     },
     {
       title: "Pending Scoring",
       value: pendingScoring,
       icon: Clock,
-      iconBg: "bg-amber-100",
-      iconColor: "text-amber-600",
+      circleBg: "var(--warning-surface)",
+      circleColor: "var(--warning)",
+      tooltip: "Completed assessments awaiting AI scoring",
     },
     {
       title: "Completed Today",
       value: completedToday,
       icon: CheckCircle2,
-      iconBg: "bg-purple-100",
-      iconColor: "text-purple-600",
+      circleBg: "var(--info-surface)",
+      circleColor: "var(--info)",
+      tooltip: "Assessments completed today",
     },
   ];
 
   return (
     <div>
-      <h2 className="text-2xl font-bold font-[family-name:var(--font-heading)] text-slate-800 mb-6">
+      <h2
+        style={{
+          fontSize: "1.5rem",
+          fontWeight: 700,
+          fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+          color: "var(--text-primary)",
+          marginBottom: 24,
+        }}
+      >
         Dashboard
       </h2>
 
       {loading ? (
-        <p className="text-slate-400 text-sm">Loading stats...</p>
+        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
+          Loading stats...
+        </p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+            gap: 20,
+          }}
+        >
           {cards.map((card) => {
             const Icon = card.icon;
             return (
-              <div
-                key={card.title}
-                className="bg-white rounded-xl border border-slate-200 p-5 hover:border-blue-500 transition-colors duration-150"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-sm text-slate-500">{card.title}</p>
-                    <p className="text-3xl font-bold text-slate-800 mt-1">
-                      {card.value}
-                    </p>
-                  </div>
+              <Tooltip key={card.title} content={card.tooltip}>
+                <div
+                  className="glass-card"
+                  style={{
+                    padding: 20,
+                    cursor: "default",
+                    transition: "box-shadow var(--transition-fast)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = "var(--shadow-glow)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = "var(--shadow-sm)";
+                  }}
+                >
                   <div
-                    className={`w-10 h-10 rounded-full ${card.iconBg} ${card.iconColor} flex items-center justify-center shrink-0`}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "space-between",
+                    }}
                   >
-                    <Icon size={20} />
+                    <div>
+                      <p
+                        style={{
+                          fontSize: "0.875rem",
+                          color: "var(--text-secondary)",
+                        }}
+                      >
+                        {card.title}
+                      </p>
+                      <p
+                        style={{
+                          fontSize: "1.875rem",
+                          fontWeight: 700,
+                          color: "var(--text-primary)",
+                          marginTop: 4,
+                          fontVariantNumeric: "tabular-nums",
+                        }}
+                      >
+                        {card.value}
+                      </p>
+                    </div>
+                    <div
+                      style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: "var(--radius-full)",
+                        background: card.circleBg,
+                        color: card.circleColor,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <Icon size={20} />
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Tooltip>
             );
           })}
         </div>

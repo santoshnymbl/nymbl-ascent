@@ -16,12 +16,6 @@ interface ScenarioData {
   isPublished: boolean;
 }
 
-const STAGE_BADGE: Record<number, string> = {
-  1: "bg-indigo-100 text-indigo-700",
-  2: "bg-amber-100 text-amber-700",
-  3: "bg-green-100 text-green-700",
-};
-
 export default function AdminScenarioEditorPage({
   params,
 }: {
@@ -121,73 +115,150 @@ export default function AdminScenarioEditorPage({
   }
 
   if (loading) {
-    return <p className="text-slate-400 text-sm">Loading scenario...</p>;
+    return (
+      <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
+        Loading scenario...
+      </p>
+    );
   }
 
   if (!scenario) {
-    return <p className="text-red-600 text-sm">Scenario not found.</p>;
+    return (
+      <p style={{ color: "var(--error)", fontSize: "0.875rem" }}>
+        Scenario not found.
+      </p>
+    );
   }
 
   return (
-    <div className="max-w-3xl">
+    <div style={{ maxWidth: 768 }}>
       <button
         onClick={() => router.push("/admin/scenarios")}
-        className="inline-flex items-center gap-1.5 text-slate-500 hover:text-blue-600 text-sm mb-5 transition-colors duration-150"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 6,
+          color: "var(--text-secondary)",
+          fontSize: "0.875rem",
+          marginBottom: 20,
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          padding: 0,
+          transition: "color var(--transition-fast)",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.color = "var(--accent)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.color = "var(--text-secondary)";
+        }}
       >
         <ArrowLeft size={16} />
         Back to Scenarios
       </button>
 
-      <h2 className="text-2xl font-bold font-[family-name:var(--font-heading)] text-slate-800 mb-6">
+      <h2
+        style={{
+          fontSize: "1.5rem",
+          fontWeight: 700,
+          fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+          color: "var(--text-primary)",
+          marginBottom: 24,
+        }}
+      >
         Edit Scenario
       </h2>
 
-      <div className="space-y-6">
+      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
         {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
+          <label
+            style={{
+              display: "block",
+              fontSize: "0.875rem",
+              fontWeight: 500,
+              color: "var(--text-secondary)",
+              marginBottom: 4,
+            }}
+          >
             Title
           </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-150 text-sm"
+            className="input-field"
+            style={{ width: "100%" }}
           />
         </div>
 
         {/* Published toggle */}
-        <div className="flex items-center gap-3">
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <input
             type="checkbox"
             id="published"
             checked={isPublished}
             onChange={(e) => setIsPublished(e.target.checked)}
-            className="h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+            style={{
+              width: 16,
+              height: 16,
+              accentColor: "var(--accent)",
+              cursor: "pointer",
+            }}
           />
-          <label htmlFor="published" className="text-sm font-medium text-slate-700">
+          <label
+            htmlFor="published"
+            style={{
+              fontSize: "0.875rem",
+              fontWeight: 500,
+              color: "var(--text-secondary)",
+              cursor: "pointer",
+            }}
+          >
             Published
           </label>
         </div>
 
         {/* Meta badges */}
-        <div className="flex flex-wrap gap-2 text-xs">
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 8,
+            fontSize: "0.75rem",
+          }}
+        >
           <span
-            className={`px-2.5 py-1 rounded-full font-medium ${STAGE_BADGE[scenario.stage] ?? "bg-slate-100 text-slate-600"}`}
+            className="badge"
+            style={{
+              background: "var(--accent-surface)",
+              color: "var(--accent)",
+            }}
           >
             Stage {scenario.stage}
           </span>
           <span
-            className={`px-2.5 py-1 rounded-full font-medium ${
-              scenario.type === "core"
-                ? "bg-blue-100 text-blue-700"
-                : "bg-purple-100 text-purple-700"
-            }`}
+            className="badge"
+            style={{
+              background:
+                scenario.type === "core"
+                  ? "var(--info-surface)"
+                  : "var(--accent-surface)",
+              color:
+                scenario.type === "core" ? "var(--info)" : "var(--accent)",
+            }}
           >
             {scenario.type}
           </span>
           {scenario.roleType && (
-            <span className="px-2.5 py-1 rounded-full font-medium bg-orange-100 text-orange-700">
+            <span
+              className="badge"
+              style={{
+                background: "var(--warning-surface)",
+                color: "var(--warning)",
+              }}
+            >
               {scenario.roleType}
             </span>
           )}
@@ -195,7 +266,15 @@ export default function AdminScenarioEditorPage({
 
         {/* Tree JSON */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
+          <label
+            style={{
+              display: "block",
+              fontSize: "0.875rem",
+              fontWeight: 500,
+              color: "var(--text-secondary)",
+              marginBottom: 4,
+            }}
+          >
             Scenario Tree (JSON)
           </label>
           <textarea
@@ -205,20 +284,57 @@ export default function AdminScenarioEditorPage({
               setTreeError("");
             }}
             rows={14}
-            className={`w-full px-4 py-3 rounded-xl font-mono text-sm outline-none transition-colors duration-150 bg-slate-900 text-green-400 placeholder-slate-600 ${
-              treeError
-                ? "ring-2 ring-red-500"
-                : "focus:ring-2 focus:ring-blue-500"
-            }`}
+            style={{
+              width: "100%",
+              padding: "12px 16px",
+              borderRadius: "var(--radius-lg)",
+              fontFamily: "monospace",
+              fontSize: "0.875rem",
+              outline: "none",
+              transition: "box-shadow var(--transition-fast)",
+              background: "var(--bg-surface-solid)",
+              color: "var(--accent-light)",
+              border: "1px solid var(--border-default)",
+              boxShadow: treeError
+                ? "0 0 0 2px var(--error)"
+                : "none",
+              resize: "vertical",
+            }}
+            onFocus={(e) => {
+              if (!treeError) {
+                e.currentTarget.style.boxShadow = "0 0 0 2px var(--accent)";
+              }
+            }}
+            onBlur={(e) => {
+              if (!treeError) {
+                e.currentTarget.style.boxShadow = "none";
+              }
+            }}
           />
           {treeError && (
-            <p className="text-red-600 text-xs mt-1">{treeError}</p>
+            <p
+              style={{
+                color: "var(--error)",
+                fontSize: "0.75rem",
+                marginTop: 4,
+              }}
+            >
+              {treeError}
+            </p>
           )}
         </div>
 
         {/* Rubric JSON */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
+          <label
+            style={{
+              display: "block",
+              fontSize: "0.875rem",
+              fontWeight: 500,
+              color: "var(--text-secondary)",
+              marginBottom: 4,
+            }}
+          >
             Scoring Rubric (JSON)
           </label>
           <textarea
@@ -228,23 +344,58 @@ export default function AdminScenarioEditorPage({
               setRubricError("");
             }}
             rows={10}
-            className={`w-full px-4 py-3 rounded-xl font-mono text-sm outline-none transition-colors duration-150 bg-slate-900 text-green-400 placeholder-slate-600 ${
-              rubricError
-                ? "ring-2 ring-red-500"
-                : "focus:ring-2 focus:ring-blue-500"
-            }`}
+            style={{
+              width: "100%",
+              padding: "12px 16px",
+              borderRadius: "var(--radius-lg)",
+              fontFamily: "monospace",
+              fontSize: "0.875rem",
+              outline: "none",
+              transition: "box-shadow var(--transition-fast)",
+              background: "var(--bg-surface-solid)",
+              color: "var(--accent-light)",
+              border: "1px solid var(--border-default)",
+              boxShadow: rubricError
+                ? "0 0 0 2px var(--error)"
+                : "none",
+              resize: "vertical",
+            }}
+            onFocus={(e) => {
+              if (!rubricError) {
+                e.currentTarget.style.boxShadow = "0 0 0 2px var(--accent)";
+              }
+            }}
+            onBlur={(e) => {
+              if (!rubricError) {
+                e.currentTarget.style.boxShadow = "none";
+              }
+            }}
           />
           {rubricError && (
-            <p className="text-red-600 text-xs mt-1">{rubricError}</p>
+            <p
+              style={{
+                color: "var(--error)",
+                fontSize: "0.75rem",
+                marginTop: 4,
+              }}
+            >
+              {rubricError}
+            </p>
           )}
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3 pt-2">
+        <div style={{ display: "flex", gap: 12, paddingTop: 8 }}>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="inline-flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors duration-150"
+            className="btn-primary"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              opacity: saving ? 0.5 : 1,
+            }}
           >
             <Save size={16} />
             {saving ? "Saving..." : "Save"}
@@ -252,7 +403,14 @@ export default function AdminScenarioEditorPage({
           <button
             onClick={handleDelete}
             disabled={deleting}
-            className="inline-flex items-center gap-2 px-6 py-2 border border-red-300 text-red-600 rounded-lg text-sm font-medium hover:bg-red-50 disabled:opacity-50 transition-colors duration-150"
+            className="btn-ghost"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              color: "var(--error)",
+              opacity: deleting ? 0.5 : 1,
+            }}
           >
             <Trash2 size={16} />
             {deleting ? "Deleting..." : "Delete"}

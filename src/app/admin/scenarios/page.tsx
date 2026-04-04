@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { TENET_LABELS, type Tenet } from "@/types";
 import { Sparkles, ChevronRight } from "lucide-react";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 interface Scenario {
   id: string;
@@ -25,10 +26,10 @@ const STAGE_FILTERS = [
   { label: "Stage 3: Grow", value: "3" },
 ];
 
-const STAGE_BADGE: Record<number, string> = {
-  1: "bg-indigo-100 text-indigo-700",
-  2: "bg-amber-100 text-amber-700",
-  3: "bg-green-100 text-green-700",
+const STAGE_TOOLTIP: Record<number, string> = {
+  1: "Stage 1 evaluates quick decisions and instincts",
+  2: "Stage 2 evaluates scenario-based problem solving",
+  3: "Stage 3 evaluates growth mindset under challenge",
 };
 
 const DEFAULT_TENETS: Tenet[] = [
@@ -107,31 +108,67 @@ export default function AdminScenariosPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold font-[family-name:var(--font-heading)] text-slate-800">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 24,
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: 700,
+            fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+            color: "var(--text-primary)",
+          }}
+        >
           Scenarios
         </h2>
         <button
           onClick={handleAIGenerate}
           disabled={generating}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 disabled:opacity-50 transition-colors duration-150"
+          className="btn-primary"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            opacity: generating ? 0.5 : 1,
+          }}
         >
-          <Sparkles size={16} />
+          <Sparkles size={16} style={{ color: "var(--accent-light)" }} />
           {generating ? "Generating..." : "AI Generate"}
         </button>
       </div>
 
       {/* Filter tabs */}
-      <div className="flex gap-2 mb-6">
+      <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
         {STAGE_FILTERS.map((sf) => (
           <button
             key={sf.value}
             onClick={() => setStageFilter(sf.value)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-150 ${
-              stageFilter === sf.value
-                ? "bg-blue-600 text-white"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-            }`}
+            style={{
+              padding: "8px 16px",
+              borderRadius: "var(--radius-full)",
+              fontSize: "0.875rem",
+              fontWeight: 500,
+              border: "1px solid",
+              cursor: "pointer",
+              transition: "all var(--transition-fast)",
+              background:
+                stageFilter === sf.value
+                  ? "var(--accent)"
+                  : "var(--bg-surface)",
+              color:
+                stageFilter === sf.value
+                  ? "#fff"
+                  : "var(--text-secondary)",
+              borderColor:
+                stageFilter === sf.value
+                  ? "var(--accent)"
+                  : "var(--border-default)",
+            }}
           >
             {sf.label}
           </button>
@@ -139,65 +176,155 @@ export default function AdminScenariosPage() {
       </div>
 
       {loading ? (
-        <p className="text-slate-400 text-sm">Loading scenarios...</p>
+        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
+          Loading scenarios...
+        </p>
       ) : scenarios.length === 0 ? (
-        <p className="text-slate-400 text-sm">
+        <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
           No scenarios found. Use &quot;AI Generate&quot; to create one.
         </p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: 16,
+          }}
+        >
           {scenarios.map((s) => (
             <Link
               key={s.id}
               href={`/admin/scenarios/${s.id}`}
-              className="group block bg-white rounded-xl border border-slate-200 hover:border-blue-500 transition-colors duration-150 p-5"
+              className="glass-card"
+              style={{
+                display: "block",
+                padding: 20,
+                textDecoration: "none",
+                transition: "box-shadow var(--transition-fast)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "var(--shadow-glow)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "var(--shadow-sm)";
+              }}
             >
-              <div className="flex items-start justify-between mb-3">
-                <h3 className="font-semibold text-base text-slate-800 leading-snug pr-2">
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  justifyContent: "space-between",
+                  marginBottom: 12,
+                }}
+              >
+                <h3
+                  style={{
+                    fontWeight: 600,
+                    fontSize: "1rem",
+                    color: "var(--text-primary)",
+                    lineHeight: 1.4,
+                    paddingRight: 8,
+                  }}
+                >
                   {s.title}
                 </h3>
                 <ChevronRight
                   size={18}
-                  className="text-slate-300 group-hover:text-blue-500 transition-colors duration-150 shrink-0 mt-0.5"
+                  style={{
+                    color: "var(--text-muted)",
+                    flexShrink: 0,
+                    marginTop: 2,
+                    transition: "color var(--transition-fast)",
+                  }}
                 />
               </div>
 
-              <div className="flex flex-wrap gap-2 text-xs mb-3">
-                <span
-                  className={`px-2.5 py-1 rounded-full font-medium ${STAGE_BADGE[s.stage] ?? "bg-slate-100 text-slate-600"}`}
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 8,
+                  fontSize: "0.75rem",
+                  marginBottom: 12,
+                }}
+              >
+                <Tooltip
+                  content={
+                    STAGE_TOOLTIP[s.stage] || `Stage ${s.stage} scenario`
+                  }
                 >
-                  Stage {s.stage}
-                </span>
+                  <span
+                    className="badge"
+                    style={{
+                      background: "var(--accent-surface)",
+                      color: "var(--accent)",
+                      cursor: "help",
+                    }}
+                  >
+                    Stage {s.stage}
+                  </span>
+                </Tooltip>
                 <span
-                  className={`px-2.5 py-1 rounded-full font-medium ${
-                    s.type === "core"
-                      ? "bg-blue-100 text-blue-700"
-                      : "bg-purple-100 text-purple-700"
-                  }`}
+                  className="badge"
+                  style={{
+                    background:
+                      s.type === "core"
+                        ? "var(--info-surface)"
+                        : "var(--accent-surface)",
+                    color:
+                      s.type === "core" ? "var(--info)" : "var(--accent)",
+                  }}
                 >
                   {s.type}
                 </span>
                 {s.roleType && (
-                  <span className="px-2.5 py-1 rounded-full font-medium bg-orange-100 text-orange-700">
+                  <span
+                    className="badge"
+                    style={{
+                      background: "var(--warning-surface)",
+                      color: "var(--warning)",
+                    }}
+                  >
                     {s.roleType}
                   </span>
                 )}
-                <span
-                  className={`px-2.5 py-1 rounded-full font-medium ${
+                <Tooltip
+                  content={
                     s.isPublished
-                      ? "bg-green-100 text-green-700"
-                      : "bg-slate-100 text-slate-500"
-                  }`}
+                      ? "Visible to candidates"
+                      : "Not visible to candidates"
+                  }
                 >
-                  {s.isPublished ? "Published" : "Draft"}
-                </span>
+                  <span
+                    className="badge"
+                    style={{
+                      background: s.isPublished
+                        ? "var(--success-surface)"
+                        : "var(--bg-elevated)",
+                      color: s.isPublished
+                        ? "var(--success)"
+                        : "var(--text-muted)",
+                      cursor: "help",
+                    }}
+                  >
+                    {s.isPublished ? "Published" : "Draft"}
+                  </span>
+                </Tooltip>
               </div>
 
-              <div className="flex flex-wrap gap-1.5">
+              <div
+                style={{ display: "flex", flexWrap: "wrap", gap: 6 }}
+              >
                 {(s.tenets as string[]).map((t) => (
                   <span
                     key={t}
-                    className="text-xs px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full"
+                    style={{
+                      fontSize: "0.75rem",
+                      padding: "2px 8px",
+                      background: "var(--bg-elevated)",
+                      color: "var(--text-muted)",
+                      borderRadius: "var(--radius-full)",
+                    }}
                   >
                     {TENET_LABELS[t as Tenet] || t}
                   </span>
