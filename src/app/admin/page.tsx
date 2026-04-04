@@ -19,7 +19,7 @@ const ResponsiveGrid = WidthProvider(Responsive);
 interface RoleData { id: string; name: string; _count: { candidates: number; roleScenarios: number }; }
 interface CandidateData { id: string; name: string; email: string; status: string; createdAt: string; role: { name: string }; assessment: { score: { compositeScore: number } | null } | null; }
 
-const STORAGE_KEY = "nymbl-dashboard-layouts";
+const STORAGE_KEY = "nymbl-dashboard-layouts-v2";
 
 function buildLayouts(isLocked: boolean) {
   return {
