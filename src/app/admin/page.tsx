@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
-import { Responsive, WidthProvider, Layout } from "react-grid-layout";
+import { Responsive, useContainerWidth } from "react-grid-layout";
+import type { Layout } from "react-grid-layout";
 import {
   Briefcase, Users, Clock, Zap, ArrowRight, UserPlus,
   GitBranch, TrendingUp, Activity, Sparkles, BookOpen, Target,
@@ -11,8 +12,6 @@ import {
 import { Tooltip } from "@/components/ui/Tooltip";
 
 import "react-grid-layout/css/styles.css";
-
-const ResponsiveGrid = WidthProvider(Responsive);
 
 interface RoleData { id: string; name: string; _count: { candidates: number; roleScenarios: number }; }
 interface CandidateData { id: string; name: string; email: string; status: string; createdAt: string; role: { name: string }; assessment: { score: { compositeScore: number } | null } | null; }
@@ -39,6 +38,7 @@ export default function AdminDashboard() {
   const [locked, setLocked] = useState(true);
   const [layouts, setLayouts] = useState(DEFAULT_LAYOUTS);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth] = useContainerWidth(containerRef);
 
   useEffect(() => {
     try {
@@ -132,8 +132,9 @@ export default function AdminDashboard() {
       </div>
 
       {/* Grid */}
-      <ResponsiveGrid
+      <Responsive
         className="layout"
+        width={containerWidth || 1000}
         layouts={layouts}
         breakpoints={{ lg: 900, md: 600, sm: 0 }}
         cols={{ lg: 12, md: 8, sm: 4 }}
@@ -302,7 +303,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-      </ResponsiveGrid>
+      </Responsive>
     </div>
   );
 }
