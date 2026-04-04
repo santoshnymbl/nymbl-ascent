@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { Responsive, useContainerWidth } from "react-grid-layout";
 import type { Layout } from "react-grid-layout";
@@ -37,8 +37,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [locked, setLocked] = useState(true);
   const [layouts, setLayouts] = useState(DEFAULT_LAYOUTS);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerWidth] = useContainerWidth(containerRef);
+  const { width: containerWidth, containerRef } = useContainerWidth({ initialWidth: 1000 });
 
   useEffect(() => {
     try {

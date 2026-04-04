@@ -21,11 +21,6 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem('nymbl-theme')||'dark';document.documentElement.setAttribute('data-theme',t)})()`,
-          }}
-        />
       </head>
       <body className="min-h-screen antialiased">
         <ThemeProvider>{children}</ThemeProvider>
