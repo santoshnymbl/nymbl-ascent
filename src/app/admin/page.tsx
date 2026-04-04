@@ -11,7 +11,6 @@ import {
 import { Tooltip } from "@/components/ui/Tooltip";
 
 import "react-grid-layout/css/styles.css";
-import "react-grid-layout/css/ReactGridLayout.css";
 
 const ResponsiveGrid = WidthProvider(Responsive);
 
