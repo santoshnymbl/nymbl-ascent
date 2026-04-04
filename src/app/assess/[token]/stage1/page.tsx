@@ -9,7 +9,7 @@ import { ResourceRoulette } from "@/components/games/ResourceRoulette";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Timer } from "@/components/ui/Timer";
 import { StageTransition } from "@/components/ui/StageTransition";
-import { Sparkles, AlertCircle } from "lucide-react";
+import { Sparkles, AlertCircle, Layers, SlidersHorizontal, MessageSquare, Coins, ArrowRight, Clock } from "lucide-react";
 import type {
   BehavioralSignal,
   Stage1Result,
@@ -56,6 +56,7 @@ export default function Stage1Page() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showTransition, setShowTransition] = useState(false);
+  const [started, setStarted] = useState(false);
   const [signals] = useState<BehavioralSignal[]>([]);
   const [result, setResult] = useState<Partial<Stage1Result>>({});
 
@@ -180,6 +181,65 @@ export default function Stage1Page() {
           <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
             {error}
           </p>
+        </div>
+      </div>
+    );
+  }
+
+  /* ---------- Instructions ---------- */
+  if (!started) {
+    const games = [
+      { icon: Layers, name: "Triage Tower", desc: "Sort incoming tasks into priority bins. An urgent interrupt will test your adaptability.", color: "var(--accent)" },
+      { icon: SlidersHorizontal, name: "Trade-Off Tiles", desc: "Choose between two positive workplace behaviors. There are no wrong answers — just priorities.", color: "var(--cta)" },
+      { icon: MessageSquare, name: "Signal Sort", desc: "Categorize team messages as ideal behaviors or areas to improve.", color: "var(--success)" },
+      { icon: Coins, name: "Resource Roulette", desc: "Allocate limited time across competing priorities, then adapt to a curveball.", color: "var(--warning)" },
+    ];
+
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "var(--bg-base)", padding: 16 }}>
+        <div style={{ maxWidth: 560, width: "100%" }}>
+          <div className="glass-card" style={{ padding: 32, textAlign: "center" }}>
+            <div style={{ width: 56, height: 56, borderRadius: "var(--radius-lg)", background: "var(--accent-surface)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
+              <Sparkles size={28} style={{ color: "var(--accent)" }} />
+            </div>
+            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: "var(--text-primary)", margin: "0 0 6px" }}>
+              Stage 1 — Learn
+            </h2>
+            <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: "0 0 24px" }}>
+              4 quick-fire activities that reveal how you prioritize, make trade-offs, and respond under pressure. No right or wrong answers.
+            </p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, textAlign: "left", marginBottom: 24 }}>
+              {games.map((g, i) => {
+                const Icon = g.icon;
+                return (
+                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "10px 12px", borderRadius: "var(--radius-md)", background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}>
+                    <div style={{ width: 32, height: 32, borderRadius: "var(--radius-sm)", background: "var(--bg-surface-solid)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <Icon size={16} style={{ color: g.color }} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--text-primary)" }}>{g.name}</div>
+                      <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", lineHeight: 1.4 }}>{g.desc}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 20, fontSize: "0.78rem", color: "var(--text-muted)" }}>
+              <span style={{ display: "flex", alignItems: "center", gap: 4 }}><Clock size={14} /> ~3 minutes total</span>
+              <span style={{ width: 3, height: 3, borderRadius: "50%", background: "var(--text-muted)" }} />
+              <span>All click-based, no typing</span>
+            </div>
+
+            <button
+              onClick={() => setStarted(true)}
+              className="btn-cta"
+              style={{ width: "100%", padding: "12px 24px", fontSize: "0.95rem", borderRadius: "var(--radius-lg)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+            >
+              Start Games <ArrowRight size={18} />
+            </button>
+          </div>
         </div>
       </div>
     );
