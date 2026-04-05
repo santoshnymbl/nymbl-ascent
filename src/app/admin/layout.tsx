@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, Briefcase, GitBranch, Users, BarChart3, Calculator,
+  LayoutDashboard, Briefcase, GitBranch, Users, BarChart3, Calculator, BookOpen,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
@@ -14,6 +14,7 @@ const navItems = [
   { href: "/admin/candidates", label: "Candidates", icon: Users },
   { href: "/admin/results", label: "Results", icon: BarChart3 },
   { href: "/admin/scoring", label: "Scoring", icon: Calculator },
+  { href: "/admin/guide", label: "How-To", icon: BookOpen },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
