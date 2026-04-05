@@ -110,7 +110,7 @@ export default function ScoringExplanationPage() {
   return (
     <div
       style={{
-        maxWidth: 960,
+        maxWidth: 1200,
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",
@@ -1693,14 +1693,14 @@ export default function ScoringExplanationPage() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-            gap: 16,
+            gridTemplateColumns: "1fr 1fr",
+            gap: 20,
           }}
         >
           {/* Engineering — Debug the Logic */}
           <div
             className="glass-card"
-            style={{ padding: 20 }}
+            style={{ padding: 24 }}
           >
             <div
               style={{
@@ -1836,7 +1836,7 @@ export default function ScoringExplanationPage() {
           {/* Sales — Objection Handler */}
           <div
             className="glass-card"
-            style={{ padding: 20 }}
+            style={{ padding: 24 }}
           >
             <div
               style={{
