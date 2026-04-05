@@ -174,12 +174,19 @@ export function computeStage2Scores(
     if (!rubric) continue;
 
     // Build path key: "root->d->d1" (first node id + all choice ids)
-    const pathKey = [
+    // Try full path first, then progressively shorter (reflection beat adds
+    // an extra entry that may not be in the rubric)
+    const segments = [
       scenario.path[0].nodeId,
       ...scenario.path.map((p) => p.choiceId),
-    ].join("->");
+    ];
 
-    const rawScores = rubric.pathScores[pathKey];
+    let rawScores: Partial<Record<Tenet, number>> | undefined;
+    for (let len = segments.length; len >= 2; len--) {
+      const key = segments.slice(0, len).join("->");
+      rawScores = rubric.pathScores[key];
+      if (rawScores) break;
+    }
     if (!rawScores) continue;
 
     // Normalize 0-10 to 0-100
