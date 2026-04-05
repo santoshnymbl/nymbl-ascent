@@ -181,7 +181,7 @@ export default function AdminScenariosPage() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
             gap: 16,
-            minHeight: "calc(100vh - 200px)",
+            alignContent: "start",
           }}
         >
           {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -205,7 +205,7 @@ export default function AdminScenariosPage() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
             gap: 16,
-            minHeight: "calc(100vh - 200px)",
+            alignContent: "start",
           }}
         >
           {scenarios.map((s) => (
