@@ -10,13 +10,14 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const { name, description, corePoolSize } = await request.json();
+  const { name, description, jobDescription, corePoolSize } = await request.json();
   if (!name)
     return NextResponse.json({ error: "Name required" }, { status: 400 });
   const role = await prisma.role.create({
     data: {
       name,
       description: description || "",
+      jobDescription: jobDescription || "",
       corePoolSize: corePoolSize || 2,
     },
   });
@@ -24,12 +25,12 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const { id, name, description, corePoolSize } = await request.json();
+  const { id, name, description, jobDescription, corePoolSize } = await request.json();
   if (!id)
     return NextResponse.json({ error: "ID required" }, { status: 400 });
   const role = await prisma.role.update({
     where: { id },
-    data: { name, description, corePoolSize },
+    data: { name, description, jobDescription, corePoolSize },
   });
   return NextResponse.json(role);
 }

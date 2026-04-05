@@ -8,14 +8,15 @@ datasource db {
 }
 
 model Role {
-  id             String       @id @default(uuid())
-  name           String       @unique
-  description    String       @default("")
-  corePoolSize   Int          @default(2)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  candidates     Candidate[]
-  roleScenarios  RoleScenario[]
+  id              String       @id @default(uuid())
+  name            String       @unique
+  description     String       @default("")
+  jobDescription  String       @default("") // Full JD text (pasted or uploaded)
+  corePoolSize    Int          @default(2)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  candidates      Candidate[]
+  roleScenarios   RoleScenario[]
 }
 
 model Scenario {
