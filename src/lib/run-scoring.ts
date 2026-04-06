@@ -173,6 +173,15 @@ export async function runScoring(candidateId: string): Promise<{
 
   // Stage 3 role fit
   let roleFitScore = 50;
+  let stage3Detail: {
+    challengeType: string;
+    matched: boolean;
+    matchedKey?: string;
+    pathTenets?: Record<string, number>;
+    rawAvg?: number;
+    timeBonus?: number;
+    timeMs?: number;
+  } | null = null;
   if (stage3) {
     const s3 = stage3 as {
       challengeType: string;
@@ -181,20 +190,27 @@ export async function runScoring(candidateId: string): Promise<{
       skipped?: boolean;
     };
 
+    stage3Detail = { challengeType: s3.challengeType, matched: false, timeMs: s3.timeMs };
     if (s3.skipped) {
       // No Stage 3 attached for this role — neutral score
       roleFitScore = 50;
-    } else if (s3.challengeType === "debug") {
-      const resp = s3.responses as { debugAnswer?: string; followUpAnswer?: string };
+    } else if (s3.challengeType === "debug" || s3.challengeType === "debug-challenge") {
+      // Candidate side saves { answer, followUp } (see stage3/page.tsx handleFollowUpSubmit)
+      const resp = s3.responses as { answer?: string; followUp?: string };
       roleFitScore =
-        (resp.debugAnswer === "off-by-one" ? 60 : 20) +
-        (resp.followUpAnswer === "trace-manually"
+        (resp.answer === "off-by-one" ? 60 : 20) +
+        (resp.followUp === "trace-manually"
           ? 30
-          : resp.followUpAnswer === "read-error-msg"
+          : resp.followUp === "read-error-msg"
             ? 25
             : 20) +
         (s3.timeMs < 180000 ? 10 : 5);
       roleFitScore = Math.min(100, roleFitScore);
+      stage3Detail = {
+        challengeType: "debug",
+        matched: true,
+        timeMs: s3.timeMs,
+      };
     } else if (s3.challengeType === "branching") {
       // Score branching Stage 3 by matching candidate's path against the
       // scenario's rubric — same approach as Stage 2.
@@ -219,6 +235,8 @@ export async function runScoring(candidateId: string): Promise<{
         // until we find one that matches — handles the case where rubric
         // path keys vary slightly).
         let matched = false;
+        let matchedKey = "";
+        let matchedTenets: Record<string, number> = {};
         let pathTenetSum = 0;
         let pathTenetCount = 0;
 
@@ -238,8 +256,10 @@ export async function runScoring(candidateId: string): Promise<{
             const key = segments.slice(0, len).join("->");
             const scores = pathScores[key];
             if (scores) {
-              for (const v of Object.values(scores)) {
+              matchedKey = key;
+              for (const [k, v] of Object.entries(scores)) {
                 if (typeof v === "number") {
+                  matchedTenets[k] = v;
                   pathTenetSum += v;
                   pathTenetCount++;
                 }
@@ -257,6 +277,15 @@ export async function runScoring(candidateId: string): Promise<{
           // Bonus for completing under 4 minutes
           const timeBonus = s3.timeMs < 240000 ? 10 : 0;
           roleFitScore = Math.min(100, Math.round(avg * 10 + timeBonus));
+          stage3Detail = {
+            challengeType: "branching",
+            matched: true,
+            matchedKey,
+            pathTenets: matchedTenets,
+            rawAvg: avg,
+            timeBonus,
+            timeMs: s3.timeMs,
+          };
         } else {
           // Path didn't match any rubric — log and fall back
           console.warn(
@@ -283,6 +312,7 @@ export async function runScoring(candidateId: string): Promise<{
         stage1Scores,
         stage2Scores,
         aiScores: aiResult?.tenets,
+        stage3: stage3Detail,
       }),
       aiAnalysis: aiResult?.analysis || null,
     },
@@ -295,6 +325,7 @@ export async function runScoring(candidateId: string): Promise<{
         stage1Scores,
         stage2Scores,
         aiScores: aiResult?.tenets,
+        stage3: stage3Detail,
       }),
       aiAnalysis: aiResult?.analysis || null,
     },
