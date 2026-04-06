@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import CsvUpload from "@/components/admin/CsvUpload";
 import { UserPlus, AlertCircle, CheckCircle2, ChevronDown, ChevronUp, Users } from "lucide-react";
 import { Tooltip } from "@/components/ui/Tooltip";
+import { Select } from "@/components/ui/Select";
 
 /* ---------- types ---------- */
 
@@ -251,18 +252,12 @@ export default function AdminCandidatesPage() {
             >
               Role
             </label>
-            <select
+            <Select
               value={inviteRoleId}
-              onChange={(e) => setInviteRoleId(e.target.value)}
-              className="select-field"
-            >
-              <option value="">Select role...</option>
-              {roles.map((r) => (
-                <option key={r.id} value={r.id}>
-                  {r.name}
-                </option>
-              ))}
-            </select>
+              onChange={setInviteRoleId}
+              placeholder="Select role..."
+              options={roles.map((r) => ({ value: r.id, label: r.name }))}
+            />
           </div>
 
           <div
@@ -421,19 +416,15 @@ export default function AdminCandidatesPage() {
         >
           Filter by role
         </label>
-        <select
+        <Select
           value={filterRoleId}
-          onChange={(e) => setFilterRoleId(e.target.value)}
-          className="select-field"
-          style={{ maxWidth: 280 }}
-        >
-          <option value="">All roles</option>
-          {roles.map((r) => (
-            <option key={r.id} value={r.id}>
-              {r.name}
-            </option>
-          ))}
-        </select>
+          onChange={setFilterRoleId}
+          maxWidth={280}
+          options={[
+            { value: "", label: "All roles" },
+            ...roles.map((r) => ({ value: r.id, label: r.name })),
+          ]}
+        />
       </div>
 
       {/* ---- Table ---- */}

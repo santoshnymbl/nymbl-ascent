@@ -31,14 +31,13 @@ export default function Stage2Page() {
   >([]);
 
   useEffect(() => {
+    if (!token) return;
     async function fetchScenarios() {
       try {
-        const res = await fetch("/api/admin/scenarios?stage=2&type=core");
+        const res = await fetch(`/api/assess/scenarios?token=${token}&stage=2`);
         if (!res.ok) throw new Error("Failed to load scenarios");
         const data: ScenarioData[] = await res.json();
-        // Randomly pick 2 scenarios
-        const shuffled = [...data].sort(() => Math.random() - 0.5);
-        setScenarios(shuffled.slice(0, 2));
+        setScenarios(data);
       } catch {
         setError("Failed to load assessment. Please refresh.");
       } finally {
@@ -46,7 +45,7 @@ export default function Stage2Page() {
       }
     }
     fetchScenarios();
-  }, []);
+  }, [token]);
 
   const saveProgress = useCallback(
     async (scenarioResults: Stage2Result["scenarios"]) => {

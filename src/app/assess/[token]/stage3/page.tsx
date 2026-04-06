@@ -55,13 +55,14 @@ export default function Stage3Page() {
   const [startTime] = useState(Date.now());
 
   useEffect(() => {
+    if (!token) return;
     async function fetchScenarios() {
       try {
-        const res = await fetch("/api/admin/scenarios?stage=3&type=role-specific");
+        const res = await fetch(`/api/assess/scenarios?token=${token}&stage=3`);
         if (!res.ok) throw new Error("Failed to load scenarios");
         const data: ScenarioData[] = await res.json();
         if (data.length > 0) {
-          // Pick first available role-specific scenario
+          // Pick first scenario attached to this candidate's role
           setScenario(data[0]);
           // Determine initial phase based on tree type
           if ("rootNodeId" in data[0].tree) {
@@ -77,7 +78,7 @@ export default function Stage3Page() {
       }
     }
     fetchScenarios();
-  }, []);
+  }, [token]);
 
   const submitAssessment = useCallback(
     async (responses: Record<string, unknown>) => {

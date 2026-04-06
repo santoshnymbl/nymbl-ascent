@@ -5,6 +5,7 @@ import Link from "next/link";
 import { TENETS, TENET_LABELS, Tenet } from "@/types";
 import { Download, ArrowRight, BarChart3 } from "lucide-react";
 import { Tooltip } from "@/components/ui/Tooltip";
+import { Select } from "@/components/ui/Select";
 
 interface RoleOption {
   id: string;
@@ -144,33 +145,25 @@ export default function AdminResultsPage() {
 
       {/* Filters */}
       <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
-        <select
+        <Select
           value={roleFilter}
-          onChange={(e) => setRoleFilter(e.target.value)}
-          className="select-field"
-          style={{ maxWidth: 240 }}
-        >
-          <option value="">All Roles</option>
-          {roles.map((r) => (
-            <option key={r.id} value={r.id}>
-              {r.name}
-            </option>
-          ))}
-        </select>
+          onChange={setRoleFilter}
+          maxWidth={240}
+          options={[
+            { value: "", label: "All Roles" },
+            ...roles.map((r) => ({ value: r.id, label: r.name })),
+          ]}
+        />
 
-        <select
+        <Select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as SortKey)}
-          className="select-field"
-          style={{ maxWidth: 240 }}
-        >
-          <option value="compositeScore">Composite Score</option>
-          {TENETS.map((t) => (
-            <option key={t} value={t}>
-              {TENET_LABELS[t]}
-            </option>
-          ))}
-        </select>
+          onChange={(v) => setSortBy(v as SortKey)}
+          maxWidth={240}
+          options={[
+            { value: "compositeScore", label: "Composite Score" },
+            ...TENETS.map((t) => ({ value: t, label: TENET_LABELS[t] })),
+          ]}
+        />
       </div>
 
       {loading ? (
