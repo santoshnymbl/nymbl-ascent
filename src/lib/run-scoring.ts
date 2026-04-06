@@ -178,8 +178,13 @@ export async function runScoring(candidateId: string): Promise<{
       challengeType: string;
       responses: Record<string, unknown>;
       timeMs: number;
+      skipped?: boolean;
     };
-    if (s3.challengeType === "debug") {
+
+    if (s3.skipped) {
+      // No Stage 3 attached for this role — neutral score
+      roleFitScore = 50;
+    } else if (s3.challengeType === "debug") {
       const resp = s3.responses as { debugAnswer?: string; followUpAnswer?: string };
       roleFitScore =
         (resp.debugAnswer === "off-by-one" ? 60 : 20) +
@@ -191,7 +196,75 @@ export async function runScoring(candidateId: string): Promise<{
         (s3.timeMs < 180000 ? 10 : 5);
       roleFitScore = Math.min(100, roleFitScore);
     } else if (s3.challengeType === "branching") {
-      roleFitScore = 70;
+      // Score branching Stage 3 by matching candidate's path against the
+      // scenario's rubric — same approach as Stage 2.
+      const path = (s3.responses?.path as
+        | { nodeId: string; choiceId: string }[]
+        | undefined) || [];
+
+      if (path.length === 0) {
+        roleFitScore = 50;
+      } else {
+        // Find the Stage 3 scenario(s) attached to this candidate's role.
+        // Mirrors how /api/assess/scenarios picks the scenario at runtime.
+        const roleStage3 = await prisma.roleScenario.findMany({
+          where: {
+            roleId: candidate.roleId,
+            scenario: { stage: 3, isPublished: true },
+          },
+          include: { scenario: true },
+        });
+
+        // Match the path against any attached scenario's rubric (try each
+        // until we find one that matches — handles the case where rubric
+        // path keys vary slightly).
+        let matched = false;
+        let pathTenetSum = 0;
+        let pathTenetCount = 0;
+
+        for (const rs of roleStage3) {
+          const rawRubric = JSON.parse(rs.scenario.scoringRubric);
+          const pathScores: Record<string, Partial<Record<string, number>>> =
+            rawRubric && typeof rawRubric === "object" && "pathScores" in rawRubric
+              ? rawRubric.pathScores
+              : rawRubric;
+
+          // Build progressive path key (root -> c1 -> c2)
+          const segments = [
+            path[0].nodeId,
+            ...path.map((p) => p.choiceId),
+          ];
+          for (let len = segments.length; len >= 2; len--) {
+            const key = segments.slice(0, len).join("->");
+            const scores = pathScores[key];
+            if (scores) {
+              for (const v of Object.values(scores)) {
+                if (typeof v === "number") {
+                  pathTenetSum += v;
+                  pathTenetCount++;
+                }
+              }
+              matched = true;
+              break;
+            }
+          }
+          if (matched) break;
+        }
+
+        if (matched && pathTenetCount > 0) {
+          // Tenet scores in rubrics are 0-10 → multiply by 10 to get 0-100
+          const avg = pathTenetSum / pathTenetCount;
+          // Bonus for completing under 4 minutes
+          const timeBonus = s3.timeMs < 240000 ? 10 : 0;
+          roleFitScore = Math.min(100, Math.round(avg * 10 + timeBonus));
+        } else {
+          // Path didn't match any rubric — log and fall back
+          console.warn(
+            `Stage 3 path did not match any rubric for candidate ${candidate.id}`,
+          );
+          roleFitScore = 50;
+        }
+      }
     }
   }
 

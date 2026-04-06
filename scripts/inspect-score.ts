@@ -10,6 +10,14 @@ const prisma = new PrismaClient({
 });
 
 (async () => {
+  const all = await prisma.score.findMany({ include: { assessment: { include: { candidate: true } } } });
+  console.log(`Total scores: ${all.length}\n`);
+  for (const s of all) {
+    console.log(`--- ${s.assessment.candidate.name} ---`);
+    console.log(`composite: ${s.compositeScore.toFixed(2)} (scoredAt ${s.scoredAt.toISOString()})`);
+    console.log(`breakdown: ${s.breakdown}`);
+    console.log("");
+  }
   const score = await prisma.score.findFirst();
   if (score) {
     console.log("Composite:", score.compositeScore);
