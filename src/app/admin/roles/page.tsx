@@ -162,7 +162,13 @@ export default function RolesPage() {
   }
 
   async function handleDelete(role: Role) {
-    if (!confirm(`Delete role "${role.name}"? This cannot be undone.`)) return;
+    const candidateCount = role._count.candidates;
+    const scenarioCount = role._count.roleScenarios;
+    const warning =
+      candidateCount > 0
+        ? `Delete role "${role.name}"?\n\n⚠️ This will PERMANENTLY DELETE:\n  • ${candidateCount} candidate${candidateCount === 1 ? "" : "s"} (and their assessment data + scores)\n  • ${scenarioCount} scenario attachment${scenarioCount === 1 ? "" : "s"}\n\nThis cannot be undone.`
+        : `Delete role "${role.name}"?\n\nThis will remove ${scenarioCount} scenario attachment${scenarioCount === 1 ? "" : "s"}. This cannot be undone.`;
+    if (!confirm(warning)) return;
     try {
       const res = await fetch("/api/admin/roles", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: role.id }) });
       if (!res.ok) { const body = await res.json(); throw new Error(body.error || "Delete failed"); }

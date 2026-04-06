@@ -236,6 +236,7 @@ OUTPUT STRICT JSON (no markdown, no prose):
       title: parsed.title || `${input.roleName} Challenge`,
       tree: parsed.tree,
       tenets: (parsed.tenets || []) as Tenet[],
+      // Canonical wrapped shape, matching prisma/seed.ts and unwrapped by run-scoring.ts
       scoringRubric: { pathScores },
     };
   } catch (err) {

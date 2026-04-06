@@ -221,14 +221,37 @@ export default function Stage3Page() {
     );
   }
 
-  /* ---------- No scenario ---------- */
+  /* ---------- No scenario attached to this role ---------- */
   if (!scenario) {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
         style={{ background: "var(--bg-base)" }}
       >
-        <p style={{ color: "var(--text-secondary)" }}>No challenge available.</p>
+        <div className="glass-card max-w-md w-full mx-4 text-center p-8">
+          <div
+            className="w-14 h-14 flex items-center justify-center mx-auto mb-4"
+            style={{ background: "var(--warning-surface)", borderRadius: "var(--radius-full)" }}
+          >
+            <AlertCircle size={28} style={{ color: "var(--warning)" }} />
+          </div>
+          <p className="font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
+            Stage 3 isn&apos;t set up for your role yet
+          </p>
+          <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
+            No role-specific challenge is attached to your role. Your Stage 1 and Stage 2
+            answers have been saved. Please contact your hiring coordinator.
+          </p>
+          <button
+            onClick={() =>
+              submitAssessment({ skipped: true, reason: "No Stage 3 scenario attached" })
+            }
+            className="btn-cta"
+            style={{ fontSize: "0.875rem" }}
+          >
+            Submit what I&apos;ve done so far
+          </button>
+        </div>
       </div>
     );
   }

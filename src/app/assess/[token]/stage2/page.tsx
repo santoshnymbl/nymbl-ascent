@@ -156,18 +156,41 @@ export default function Stage2Page() {
     );
   }
 
-  /* ---------- No scenarios ---------- */
-  const currentScenario = scenarios[currentIndex];
-  if (!currentScenario) {
+  /* ---------- No scenarios attached to this role ---------- */
+  if (scenarios.length === 0) {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
         style={{ background: "var(--bg-base)" }}
       >
-        <p style={{ color: "var(--text-secondary)" }}>No scenarios available.</p>
+        <div className="glass-card max-w-md w-full mx-4 text-center p-8">
+          <div
+            className="w-14 h-14 flex items-center justify-center mx-auto mb-4"
+            style={{ background: "var(--warning-surface)", borderRadius: "var(--radius-full)" }}
+          >
+            <AlertCircle size={28} style={{ color: "var(--warning)" }} />
+          </div>
+          <p className="font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
+            Stage 2 isn&apos;t set up for your role yet
+          </p>
+          <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
+            No Stage 2 scenarios are attached to your role. Please contact your hiring
+            coordinator and ask them to attach scenarios in the admin panel.
+          </p>
+          <button
+            onClick={() => router.push(`/assess/${token}/stage3`)}
+            className="btn-ghost"
+            style={{ fontSize: "0.875rem" }}
+          >
+            Skip to Stage 3
+          </button>
+        </div>
       </div>
     );
   }
+
+  const currentScenario = scenarios[currentIndex];
+  if (!currentScenario) return null;
 
   /* ---------- Step dots ---------- */
   const stepDots = Array.from({ length: scenarios.length }, (_, i) => i);

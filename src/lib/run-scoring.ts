@@ -96,10 +96,16 @@ export async function runScoring(candidateId: string): Promise<{
     const scenarios = await prisma.scenario.findMany({
       where: { id: { in: scenarioIds } },
     });
-    const rubrics: ScenarioRubric[] = scenarios.map((s) => ({
-      scenarioId: s.id,
-      pathScores: JSON.parse(s.scoringRubric),
-    }));
+    const rubrics: ScenarioRubric[] = scenarios.map((s) => {
+      // Rubrics are stored as either { pathScores: {...} } (canonical) or
+      // { "root->...": {...}, ... } (legacy/flat). Unwrap if needed.
+      const parsed = JSON.parse(s.scoringRubric);
+      const pathScores =
+        parsed && typeof parsed === "object" && "pathScores" in parsed
+          ? parsed.pathScores
+          : parsed;
+      return { scenarioId: s.id, pathScores };
+    });
     stage2Scores = computeStage2Scores(stage2, rubrics);
   }
 

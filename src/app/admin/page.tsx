@@ -91,7 +91,8 @@ export default function AdminDashboard() {
   }
 
   const total = candidates.length;
-  const pending = candidates.filter((c) => c.status === "completed" && !c.assessment?.score).length;
+  // Pending = anyone who finished but isn't fully scored yet (status "completed" or has no Score row)
+  const pending = candidates.filter((c) => c.status === "completed").length;
   const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
   const today = candidates.filter((c) => (c.status === "completed" || c.status === "scored") && new Date(c.createdAt) >= todayStart).length;
   const recent = [...candidates].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5);
