@@ -87,6 +87,24 @@ async function copyTable(table: string) {
   console.log(`   ✓ ${inserted} row${inserted === 1 ? "" : "s"} copied`);
 }
 
+async function copyIndexes() {
+  console.log("\n📑 Copying indexes (CRITICAL for Prisma upsert / @unique)");
+  const { rows } = await local.execute(
+    `SELECT name, sql FROM sqlite_master WHERE type='index' AND sql IS NOT NULL`,
+  );
+  for (const idx of rows) {
+    const name = idx.name as string;
+    const sql = idx.sql as string;
+    try {
+      await remote.execute(`DROP INDEX IF EXISTS "${name}"`);
+      await remote.execute(sql);
+      console.log(`   ✓ ${name}`);
+    } catch (err) {
+      console.error(`   ❌ ${name}:`, err);
+    }
+  }
+}
+
 async function main() {
   console.log("🚀 Migrating local SQLite → Turso");
   console.log(`   Source: prisma/dev.db`);
@@ -100,6 +118,8 @@ async function main() {
       process.exit(1);
     }
   }
+
+  await copyIndexes();
 
   console.log("\n✅ Migration complete. Verify with:");
   for (const table of TABLES) {
