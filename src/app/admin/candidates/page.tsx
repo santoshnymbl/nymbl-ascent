@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import CsvUpload from "@/components/admin/CsvUpload";
-import { UserPlus, AlertCircle, CheckCircle2, ChevronDown, ChevronUp, Users } from "lucide-react";
+import { UserPlus, AlertCircle, CheckCircle2, ChevronDown, ChevronUp, Users, Mail, RefreshCw, Calculator } from "lucide-react";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { Select } from "@/components/ui/Select";
 
@@ -74,6 +74,13 @@ export default function AdminCandidatesPage() {
   const [csvCandidates, setCsvCandidates] = useState<InviteCandidate[]>([]);
   const [inviting, setInviting] = useState(false);
   const [inviteMsg, setInviteMsg] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
+
+  /* per-row action state */
+  const [actionBusy, setActionBusy] = useState<string | null>(null);
+  const [actionMsg, setActionMsg] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
@@ -173,6 +180,59 @@ export default function AdminCandidatesPage() {
 
   function handleBulkInvite() {
     handleInvite(csvCandidates);
+  }
+
+  /* ---------- Resend invite ---------- */
+  async function handleResend(c: CandidateRow) {
+    if (
+      !confirm(
+        `Resend invite to ${c.name}?\n\nThis generates a new token, deletes any partial assessment, and sends a fresh email.`,
+      )
+    )
+      return;
+    setActionBusy(c.id);
+    setActionMsg(null);
+    try {
+      const res = await fetch(`/api/admin/candidates/${c.id}/resend`, {
+        method: "POST",
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error || "Resend failed");
+      setActionMsg({ type: "success", text: `Invite resent to ${c.email}` });
+      await fetchCandidates();
+    } catch (err) {
+      setActionMsg({
+        type: "error",
+        text: err instanceof Error ? err.message : "Resend failed",
+      });
+    } finally {
+      setActionBusy(null);
+    }
+  }
+
+  /* ---------- Re-score ---------- */
+  async function handleRescore(c: CandidateRow) {
+    setActionBusy(c.id);
+    setActionMsg(null);
+    try {
+      const res = await fetch(`/api/admin/candidates/${c.id}/rescore`, {
+        method: "POST",
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error || "Re-score failed");
+      setActionMsg({
+        type: "success",
+        text: `${c.name} scored: composite ${body.compositeScore?.toFixed(1)}`,
+      });
+      await fetchCandidates();
+    } catch (err) {
+      setActionMsg({
+        type: "error",
+        text: err instanceof Error ? err.message : "Re-score failed",
+      });
+    } finally {
+      setActionBusy(null);
+    }
   }
 
   /* ---------- render ---------- */
@@ -397,6 +457,34 @@ export default function AdminCandidatesPage() {
         </div>
       )}
 
+      {/* ---- Action feedback banner ---- */}
+      {actionMsg && (
+        <div
+          style={{
+            marginBottom: 16,
+            padding: 12,
+            background: actionMsg.type === "success" ? "var(--success-surface)" : "var(--error-surface)",
+            border: `1px solid ${actionMsg.type === "success" ? "var(--success)" : "var(--error)"}`,
+            color: actionMsg.type === "success" ? "var(--success)" : "var(--error)",
+            borderRadius: "var(--radius-md)",
+            fontSize: "0.875rem",
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          {actionMsg.type === "success" ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+          {actionMsg.text}
+          <button
+            onClick={() => setActionMsg(null)}
+            className="btn-ghost"
+            style={{ marginLeft: "auto", padding: 2, fontSize: "0.7rem" }}
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
       {/* ---- Filter ---- */}
       <div
         style={{
@@ -557,6 +645,7 @@ export default function AdminCandidatesPage() {
                     Composite Score
                   </th>
                   <th style={{ padding: "12px 16px", fontWeight: 500 }}>Date</th>
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -609,8 +698,11 @@ export default function AdminCandidatesPage() {
                       <td style={{ padding: "12px 16px" }}>
                         <Tooltip content={statusStyle.tooltip}>
                           <span
+                            className={c.status === "completed" ? "status-pulse" : ""}
                             style={{
-                              display: "inline-block",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 6,
                               padding: "2px 10px",
                               borderRadius: "var(--radius-full)",
                               fontSize: "0.75rem",
@@ -621,6 +713,18 @@ export default function AdminCandidatesPage() {
                               cursor: "help",
                             }}
                           >
+                            {c.status === "completed" && (
+                              <span
+                                style={{
+                                  display: "inline-block",
+                                  width: 6,
+                                  height: 6,
+                                  borderRadius: "50%",
+                                  background: "var(--cta)",
+                                  animation: "pulseDot 1.4s ease-in-out infinite",
+                                }}
+                              />
+                            )}
                             {statusLabel(c.status)}
                           </span>
                         </Tooltip>
@@ -648,6 +752,69 @@ export default function AdminCandidatesPage() {
                         }}
                       >
                         {new Date(c.createdAt).toLocaleDateString()}
+                      </td>
+                      <td style={{ padding: "12px 16px" }}>
+                        <div style={{ display: "flex", gap: 6 }}>
+                          {c.status !== "scored" && (
+                            <Tooltip content="Resend invite (new token, fresh start)">
+                              <button
+                                onClick={() => handleResend(c)}
+                                disabled={actionBusy === c.id}
+                                className="btn-ghost"
+                                style={{
+                                  padding: "5px 8px",
+                                  fontSize: "0.7rem",
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: 4,
+                                  opacity: actionBusy === c.id ? 0.5 : 1,
+                                }}
+                              >
+                                <Mail size={12} />
+                              </button>
+                            </Tooltip>
+                          )}
+                          {c.status === "completed" && (
+                            <Tooltip content="Run scoring now">
+                              <button
+                                onClick={() => handleRescore(c)}
+                                disabled={actionBusy === c.id}
+                                className="btn-ghost"
+                                style={{
+                                  padding: "5px 8px",
+                                  fontSize: "0.7rem",
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: 4,
+                                  color: "var(--cta)",
+                                  opacity: actionBusy === c.id ? 0.5 : 1,
+                                }}
+                              >
+                                <Calculator size={12} />
+                                Score
+                              </button>
+                            </Tooltip>
+                          )}
+                          {c.status === "scored" && (
+                            <Tooltip content="Re-run scoring (overwrites existing)">
+                              <button
+                                onClick={() => handleRescore(c)}
+                                disabled={actionBusy === c.id}
+                                className="btn-ghost"
+                                style={{
+                                  padding: "5px 8px",
+                                  fontSize: "0.7rem",
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: 4,
+                                  opacity: actionBusy === c.id ? 0.5 : 1,
+                                }}
+                              >
+                                <RefreshCw size={12} />
+                              </button>
+                            </Tooltip>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );

@@ -12,10 +12,12 @@ async function main() {
   const arg = process.argv[2] || "test-token-12345";
 
   // Try matching by token first, then by email/name (LIKE)
-  let candidates = await prisma.candidate.findMany({
+  const candidates = await prisma.candidate.findMany({
     where: {
       OR: [
+        { id: arg },
         { token: arg },
+        { token: { contains: arg } },
         { email: { contains: arg } },
         { name: { contains: arg } },
       ],
