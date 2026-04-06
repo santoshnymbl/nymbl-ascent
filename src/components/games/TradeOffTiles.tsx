@@ -11,7 +11,15 @@ interface TradeOffTilesProps {
 type SliderPosition = -2 | -1 | 0 | 1 | 2;
 
 const SLIDER_POSITIONS: SliderPosition[] = [-2, -1, 0, 1, 2];
-const ROUND_TIMER_SECONDS = 8;
+const ROUND_TIMER_SECONDS = 20;
+
+const POSITION_LABEL: Record<SliderPosition, string> = {
+  [-2]: "Strongly LEFT",
+  [-1]: "Slightly left",
+  [0]: "Neutral / Both equally",
+  [1]: "Slightly right",
+  [2]: "Strongly RIGHT",
+};
 
 export function TradeOffTiles({ pairs, onComplete }: TradeOffTilesProps) {
   const [currentRound, setCurrentRound] = useState(0);
@@ -108,11 +116,14 @@ export function TradeOffTiles({ pairs, onComplete }: TradeOffTilesProps) {
         Trade-Off Tiles
       </h2>
       <p
-        className="flex items-center gap-2 mb-6 text-base"
+        className="flex items-center gap-2 mb-2 text-base"
         style={{ color: "var(--text-secondary)" }}
       >
         <Scale size={16} aria-hidden="true" style={{ color: "var(--text-muted)", flexShrink: 0 }} />
-        Weigh each trade-off. Slide toward the behavior you lean into more.
+        Read both behaviors below, then pick how strongly you lean toward one.
+      </p>
+      <p className="text-xs mb-6" style={{ color: "var(--text-muted)" }}>
+        Outer dots = <strong>strongly</strong> that side · Inner dots = <strong>slightly</strong> · Center = neutral
       </p>
 
       {/* Round progress */}
@@ -269,10 +280,12 @@ export function TradeOffTiles({ pairs, onComplete }: TradeOffTilesProps) {
             />
           )}
 
-          {/* Dots */}
+          {/* Dots — sized by intensity (outer = bigger = stronger) */}
           {SLIDER_POSITIONS.map((pos) => {
             const isActive = pos === sliderPosition;
-            const size = isActive ? 16 : 10;
+            // Outer = larger (strongly), inner = smaller (slightly), center = smallest (neutral)
+            const baseSize = pos === 0 ? 14 : Math.abs(pos) === 1 ? 18 : 24;
+            const size = isActive ? baseSize + 6 : baseSize;
             return (
               <button
                 key={pos}
@@ -285,39 +298,39 @@ export function TradeOffTiles({ pairs, onComplete }: TradeOffTilesProps) {
                   backgroundColor: isActive ? "var(--accent)" : "var(--bg-surface-solid)",
                   border: isActive
                     ? "none"
-                    : "2px solid var(--border-default)",
-                  boxShadow: isActive ? "0 0 10px var(--accent-glow)" : "none",
+                    : `2px solid ${Math.abs(pos) === 2 ? "var(--accent)" : "var(--border-default)"}`,
+                  boxShadow: isActive ? "0 0 14px var(--accent-glow)" : "none",
                   cursor: "pointer",
-                  transition: `all var(--transition-fast)`,
+                  transition: "all var(--transition-fast)",
                   padding: 0,
                 }}
-                aria-label={
-                  pos === -2
-                    ? "Strongly left"
-                    : pos === -1
-                      ? "Slightly left"
-                      : pos === 0
-                        ? "Neutral"
-                        : pos === 1
-                          ? "Slightly right"
-                          : "Strongly right"
-                }
+                aria-label={POSITION_LABEL[pos]}
               />
             );
           })}
         </div>
 
-        {/* Labels */}
-        <div className="flex justify-between px-2 mt-2">
-          <span className="text-xs" style={{ color: "var(--text-muted)" }}>
-            Strongly
-          </span>
-          <span className="text-xs" style={{ color: "var(--text-muted)" }}>
-            Neutral
-          </span>
-          <span className="text-xs" style={{ color: "var(--text-muted)" }}>
-            Strongly
-          </span>
+        {/* Granular labels: Strongly | Slightly | Neutral | Slightly | Strongly */}
+        <div className="grid grid-cols-5 mt-3" style={{ fontSize: 11, color: "var(--text-muted)", textAlign: "center" }}>
+          <span style={{ fontWeight: 600 }}>STRONGLY</span>
+          <span>slightly</span>
+          <span>neutral</span>
+          <span>slightly</span>
+          <span style={{ fontWeight: 600 }}>STRONGLY</span>
+        </div>
+
+        {/* Live selection indicator */}
+        <div
+          className="text-center mt-3 text-sm font-semibold"
+          style={{
+            color: sliderPosition === 0 ? "var(--text-muted)" : "var(--accent)",
+            minHeight: 22,
+            transition: "color var(--transition-fast)",
+          }}
+        >
+          {sliderPosition === 0
+            ? "Tap a dot to indicate your preference"
+            : `Your choice: ${POSITION_LABEL[sliderPosition]}`}
         </div>
       </div>
 
