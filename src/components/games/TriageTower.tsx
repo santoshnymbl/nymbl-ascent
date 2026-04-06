@@ -27,7 +27,7 @@ export function TriageTower({ items, onComplete }: TriageTowerProps) {
 
   // Interrupt phase
   const [interruptPhase, setInterruptPhase] = useState(false);
-  const [interruptTimer, setInterruptTimer] = useState(10);
+  const [interruptTimer, setInterruptTimer] = useState(12);
   const [bumpItemId, setBumpItemId] = useState<string | null>(null);
   const [interruptResolved, setInterruptResolved] = useState(false);
 
@@ -52,7 +52,7 @@ export function TriageTower({ items, onComplete }: TriageTowerProps) {
   useEffect(() => {
     if (allRegularPlaced && interruptItem && !interruptPhase && !interruptResolved) {
       setInterruptPhase(true);
-      setInterruptTimer(10);
+      setInterruptTimer(12);
     }
   }, [allRegularPlaced, interruptItem, interruptPhase, interruptResolved]);
 

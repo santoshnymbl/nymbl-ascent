@@ -221,7 +221,7 @@ export default function Stage2Page() {
               Stage 2 &mdash; Build
             </span>
             <div className="flex-shrink-0">
-              <Timer durationMs={300000} onExpire={handleTimerExpire} />
+              <Timer durationMs={360000} onExpire={handleTimerExpire} />
             </div>
           </div>
           <ProgressBar

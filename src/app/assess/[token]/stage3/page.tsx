@@ -310,7 +310,7 @@ export default function Stage3Page() {
               Stage 3 &mdash; Grow
             </span>
             <div className="flex-shrink-0">
-              <Timer durationMs={300000} onExpire={handleTimerExpire} />
+              <Timer durationMs={360000} onExpire={handleTimerExpire} />
             </div>
           </div>
           <ProgressBar

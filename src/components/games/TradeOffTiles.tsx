@@ -11,7 +11,7 @@ interface TradeOffTilesProps {
 type SliderPosition = -2 | -1 | 0 | 1 | 2;
 
 const SLIDER_POSITIONS: SliderPosition[] = [-2, -1, 0, 1, 2];
-const ROUND_TIMER_SECONDS = 20;
+const ROUND_TIMER_SECONDS = 24;
 
 const POSITION_LABEL: Record<SliderPosition, string> = {
   [-2]: "Strongly LEFT",

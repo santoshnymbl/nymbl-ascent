@@ -295,7 +295,7 @@ export default function Stage1Page() {
               Stage 1 &mdash; Learn
             </span>
             <div className="flex-shrink-0">
-              <Timer durationMs={360000} onExpire={handleTimerExpire} />
+              <Timer durationMs={432000} onExpire={handleTimerExpire} />
             </div>
           </div>
           <ProgressBar
