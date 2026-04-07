@@ -385,7 +385,7 @@ describe("computeStage2Scores", () => {
       },
     ];
 
-    const scores = computeStage2Scores(stage2, rubrics);
+    const { scores, measured } = computeStage2Scores(stage2, rubrics);
 
     // Normalized 0-10 to 0-100
     expect(scores.clientFocused).toBe(80);
@@ -395,9 +395,11 @@ describe("computeStage2Scores", () => {
     expect(scores.reliable).toBe(90);
     expect(scores.improving).toBe(40);
     expect(scores.transparent).toBe(70);
+    // All 7 tenets were measured by this path
+    expect(measured.size).toBe(7);
   });
 
-  it("averages scores across multiple scenarios", () => {
+  it("averages scores across multiple scenarios, per-tenet counts", () => {
     const stage2: Stage2Result = {
       scenarios: [
         {
@@ -416,22 +418,87 @@ describe("computeStage2Scores", () => {
       {
         scenarioId: "s1",
         pathScores: {
-          "root->a": { clientFocused: 10, empowering: 0 },
+          // Only clientFocused is measured here (empowering absent, not zero)
+          "root->a": { clientFocused: 10 },
         },
       },
       {
         scenarioId: "s2",
         pathScores: {
-          "root->b": { clientFocused: 0, empowering: 10 },
+          // Only empowering is measured here (clientFocused absent, not zero)
+          "root->b": { empowering: 10 },
         },
       },
     ];
 
-    const scores = computeStage2Scores(stage2, rubrics);
+    const { scores, measured } = computeStage2Scores(stage2, rubrics);
 
-    // Average of (100, 0) and (0, 100) = 50 each
-    expect(scores.clientFocused).toBe(50);
-    expect(scores.empowering).toBe(50);
+    // Each tenet measured exactly once → its own average, not diluted by 0
+    expect(scores.clientFocused).toBe(100);
+    expect(scores.empowering).toBe(100);
+    expect(measured.has("clientFocused")).toBe(true);
+    expect(measured.has("empowering")).toBe(true);
+    // Unmeasured tenets are NOT in the measured set
+    expect(measured.has("productive")).toBe(false);
+    expect(measured.has("reliable")).toBe(false);
+    expect(scores.productive).toBe(0);
+    expect(scores.reliable).toBe(0);
+  });
+
+  it("leaves tenets out of measured set when rubric omits them", () => {
+    // This is the regression test for the zero-normalization bug:
+    // previously, omitted tenets were treated as `0 * 10 = 0` and averaged
+    // in, dragging composites down. Now they must be flagged as "not
+    // measured" so the caller can fall back to Stage 1 for those tenets.
+    const stage2: Stage2Result = {
+      scenarios: [
+        {
+          scenarioId: "s1",
+          path: [{ nodeId: "root", choiceId: "a", timeMs: 3000 }],
+        },
+      ],
+      signals: [],
+    };
+
+    const rubrics: ScenarioRubric[] = [
+      {
+        scenarioId: "s1",
+        pathScores: {
+          "root->a": { transparent: 9, balanced: 7 },
+        },
+      },
+    ];
+
+    const { scores, measured } = computeStage2Scores(stage2, rubrics);
+
+    expect(measured.size).toBe(2);
+    expect(measured.has("transparent")).toBe(true);
+    expect(measured.has("balanced")).toBe(true);
+    expect(scores.transparent).toBe(90);
+    expect(scores.balanced).toBe(70);
+    // Unmeasured tenets are absent from `measured`, and their scores
+    // default to 0 — but the caller MUST use `measured` to know that
+    // "0" here means "not measured" and fall back accordingly.
+    expect(measured.has("clientFocused")).toBe(false);
+    expect(measured.has("empowering")).toBe(false);
+    expect(measured.has("productive")).toBe(false);
+    expect(measured.has("reliable")).toBe(false);
+    expect(measured.has("improving")).toBe(false);
+  });
+
+  it("returns empty measured set when no rubrics match", () => {
+    const stage2: Stage2Result = {
+      scenarios: [
+        {
+          scenarioId: "nonexistent",
+          path: [{ nodeId: "root", choiceId: "a", timeMs: 3000 }],
+        },
+      ],
+      signals: [],
+    };
+
+    const { measured } = computeStage2Scores(stage2, []);
+    expect(measured.size).toBe(0);
   });
 });
 

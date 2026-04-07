@@ -19,7 +19,8 @@ const rubrics = [{
   } as Record<string, Record<string, number>>,
 }];
 
-const scores = computeStage2Scores(stage2Data, rubrics);
+const result = computeStage2Scores(stage2Data, rubrics);
 console.log("Full path key would be: root->flag-now->flag-report->ref-protect");
-console.log("Scores:", JSON.stringify(scores, null, 2));
-console.log("Transparent should be > 0:", scores.transparent);
+console.log("Scores:", JSON.stringify(result.scores, null, 2));
+console.log("Measured tenets:", Array.from(result.measured));
+console.log("Transparent should be > 0:", result.scores.transparent);

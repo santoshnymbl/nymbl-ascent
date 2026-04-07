@@ -46,7 +46,18 @@ The candidate made these decisions in workplace scenarios:
 
 ${pathDescriptions}
 
-Score the candidate 0-100 on each tenet based on their decision patterns. Provide a brief qualitative analysis.
+Score the candidate 0-100 on each tenet based on their decision patterns. Use the FULL scale — most candidates should land in the 40-75 range on most tenets. Reserve 85+ for candidates whose decisions clearly and repeatedly exemplify that tenet at a senior level.
+
+CALIBRATION ANCHORS:
+- Score BELOW 40 on a tenet if the candidate's decisions contradict it, show generic/rehearsed-sounding reasoning, or actively trade it away every time it conflicts with another value.
+- Score 40-60 if the candidate shows that tenet weakly or inconsistently — they don't actively violate it but they don't prioritize it either.
+- Score 60-80 if the candidate demonstrates the tenet clearly in at least one substantive decision and it's internally consistent with their other choices.
+- Score 80-95 only if the tenet is clearly dominant across MULTIPLE decisions AND the candidate accepted a real cost for it (time, comfort, approval, etc.).
+- Avoid 50 as a "safe default" — prefer 40 or 60 based on which direction the evidence leans. Differentiation is more useful than safety.
+
+Do NOT average your scores toward the middle. If the decision paths simply don't touch a tenet, score 50 exactly (neutral) rather than guessing high.
+
+Provide a brief qualitative analysis (2-3 sentences) that names at least one tenet where the candidate showed strength and at least one where they showed a gap or trade-off.
 
 Respond with ONLY valid JSON in this exact format:
 {

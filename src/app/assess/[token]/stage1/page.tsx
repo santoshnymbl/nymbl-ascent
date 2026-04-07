@@ -61,9 +61,14 @@ export default function Stage1Page() {
   const [result, setResult] = useState<Partial<Stage1Result>>({});
 
   useEffect(() => {
+    if (!token) return;
     async function fetchScenarios() {
       try {
-        const res = await fetch("/api/admin/scenarios?stage=1&type=core");
+        // Token-authenticated endpoint that also randomly sub-samples
+        // each game's item pool so every candidate sees a different draw.
+        const res = await fetch(
+          `/api/assess/scenarios?token=${token}&stage=1`,
+        );
         if (!res.ok) throw new Error("Failed to load scenarios");
         const data: ScenarioData[] = await res.json();
         // Sort by game order
@@ -80,7 +85,7 @@ export default function Stage1Page() {
       }
     }
     fetchScenarios();
-  }, []);
+  }, [token]);
 
   const saveProgress = useCallback(
     async (data: Partial<Stage1Result>) => {

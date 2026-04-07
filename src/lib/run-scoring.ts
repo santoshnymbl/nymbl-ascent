@@ -12,6 +12,7 @@ import {
   computeCompositeScore,
   mergeScores,
 } from "@/lib/scoring";
+import type { Stage2ScoreResult } from "@/lib/scoring";
 import { scoreWithAi } from "@/lib/ai-scoring";
 import {
   sendEmail,
@@ -24,8 +25,32 @@ import type {
   Stage3Result,
   ScenarioRubric,
   TenetScores,
+  Tenet,
 } from "@/types";
 import { TENETS } from "@/types";
+
+/**
+ * Per-tenet merge of Stage 1 and Stage 2 scores.
+ *
+ * For each tenet, if Stage 2 actually measured it (via a matched path
+ * rubric that included that tenet), we blend Stage 1 and Stage 2 at the
+ * given weights. If Stage 2 did NOT measure it, we use 100% Stage 1 —
+ * otherwise the old code would silently pull the tenet toward 0.
+ */
+function mergeStage1AndStage2(
+  s1: TenetScores,
+  s2: Stage2ScoreResult,
+  s1Weight: number,
+  s2Weight: number,
+): TenetScores {
+  const out = {} as TenetScores;
+  for (const t of TENETS) {
+    out[t] = s2.measured.has(t)
+      ? s1[t] * s1Weight + s2.scores[t] * s2Weight
+      : s1[t];
+  }
+  return out;
+}
 
 function pearsonCorrelation(x: number[], y: number[]): number {
   const n = x.length;
@@ -90,7 +115,7 @@ export async function runScoring(candidateId: string): Promise<{
   }
 
   // Stage 2 — branching scenarios
-  let stage2Scores: TenetScores | null = null;
+  let stage2Result: Stage2ScoreResult | null = null;
   if (stage2) {
     const scenarioIds = stage2.scenarios.map((s) => s.scenarioId);
     const scenarios = await prisma.scenario.findMany({
@@ -106,7 +131,7 @@ export async function runScoring(candidateId: string): Promise<{
           : parsed;
       return { scenarioId: s.id, pathScores };
     });
-    stage2Scores = computeStage2Scores(stage2, rubrics);
+    stage2Result = computeStage2Scores(stage2, rubrics);
   }
 
   // AI qualitative scoring
@@ -142,15 +167,20 @@ export async function runScoring(candidateId: string): Promise<{
   // Merge tenet scores
   const emptyTenets = Object.fromEntries(TENETS.map((t) => [t, 50])) as TenetScores;
   let finalTenets: TenetScores = emptyTenets;
-  if (stage1Scores && stage2Scores) {
-    finalTenets = mergeScores(stage1Scores, stage2Scores, 0.4, 0.6);
+  if (stage1Scores && stage2Result) {
+    // Per-tenet merge: unmeasured Stage 2 tenets fall back to 100% Stage 1
+    finalTenets = mergeStage1AndStage2(stage1Scores, stage2Result, 0.4, 0.6);
   } else if (stage1Scores) {
     finalTenets = stage1Scores;
-  } else if (stage2Scores) {
-    finalTenets = stage2Scores;
+  } else if (stage2Result) {
+    // No Stage 1 data — use Stage 2 alone, leaving unmeasured tenets at 0.
+    // (Unusual edge case: candidate skipped Stage 1 entirely.)
+    finalTenets = stage2Result.scores;
   }
   if (aiResult) {
-    finalTenets = mergeScores(finalTenets, aiResult.tenets, 0.6, 0.4);
+    // AI qualitative pass — dropped from 40% → 20% so the LLM's positivity
+    // bias can't dominate the real behavioral signal from Stage 1/2.
+    finalTenets = mergeScores(finalTenets, aiResult.tenets, 0.8, 0.2);
   }
 
   // Behavioral
@@ -159,14 +189,18 @@ export async function runScoring(candidateId: string): Promise<{
     ...(stage2?.signals || []),
     ...(stage3?.signals || []),
   ];
-  if (stage1Scores && stage2Scores) {
-    const s1Values = TENETS.map((t) => stage1Scores![t]);
-    const s2Values = TENETS.map((t) => stage2Scores![t]);
+  if (stage1Scores && stage2Result && stage2Result.measured.size >= 2) {
+    // Correlate only over tenets Stage 2 actually measured. Including
+    // unmeasured (zero) tenets would drag the correlation toward 0 and
+    // falsely flag consistent candidates as inconsistent.
+    const measuredTenets: Tenet[] = Array.from(stage2Result.measured);
+    const s1Values = measuredTenets.map((t) => stage1Scores![t]);
+    const s2Values = measuredTenets.map((t) => stage2Result!.scores[t]);
     const correlation = pearsonCorrelation(s1Values, s2Values);
     allSignals.push({
       event: "cross_stage_consistency",
       timestamp: Date.now(),
-      data: { correlation },
+      data: { correlation, measuredCount: measuredTenets.length },
     });
   }
   const behavioralScore = computeBehavioralScore(allSignals);
@@ -236,7 +270,7 @@ export async function runScoring(candidateId: string): Promise<{
         // path keys vary slightly).
         let matched = false;
         let matchedKey = "";
-        let matchedTenets: Record<string, number> = {};
+        const matchedTenets: Record<string, number> = {};
         let pathTenetSum = 0;
         let pathTenetCount = 0;
 
@@ -310,7 +344,10 @@ export async function runScoring(candidateId: string): Promise<{
       compositeScore,
       breakdown: JSON.stringify({
         stage1Scores,
-        stage2Scores,
+        stage2Scores: stage2Result?.scores ?? null,
+        stage2Measured: stage2Result
+          ? Array.from(stage2Result.measured)
+          : null,
         aiScores: aiResult?.tenets,
         stage3: stage3Detail,
       }),
@@ -323,7 +360,10 @@ export async function runScoring(candidateId: string): Promise<{
       compositeScore,
       breakdown: JSON.stringify({
         stage1Scores,
-        stage2Scores,
+        stage2Scores: stage2Result?.scores ?? null,
+        stage2Measured: stage2Result
+          ? Array.from(stage2Result.measured)
+          : null,
         aiScores: aiResult?.tenets,
         stage3: stage3Detail,
       }),

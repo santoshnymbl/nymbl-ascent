@@ -162,12 +162,26 @@ export function computeStage1ScoresFromRubrics(
 // Stage 2
 // ---------------------------------------------------------------------------
 
+export interface Stage2ScoreResult {
+  scores: TenetScores;
+  /** Set of tenets that were actually present in at least one matched path rubric. */
+  measured: Set<Tenet>;
+}
+
 export function computeStage2Scores(
   data: Stage2Result,
   scenarioRubrics: ScenarioRubric[],
-): TenetScores {
+): Stage2ScoreResult {
   const rubricMap = new Map(scenarioRubrics.map((r) => [r.scenarioId, r]));
-  const allScenarioScores: TenetScores[] = [];
+
+  // Per-tenet running sum and per-tenet running count — so a tenet only
+  // gets averaged over scenarios where the rubric actually scored it.
+  const sums: Record<Tenet, number> = Object.fromEntries(
+    TENETS.map((t) => [t, 0]),
+  ) as Record<Tenet, number>;
+  const counts: Record<Tenet, number> = Object.fromEntries(
+    TENETS.map((t) => [t, 0]),
+  ) as Record<Tenet, number>;
 
   for (const scenario of data.scenarios) {
     const rubric = rubricMap.get(scenario.scenarioId);
@@ -189,24 +203,27 @@ export function computeStage2Scores(
     }
     if (!rawScores) continue;
 
-    // Normalize 0-10 to 0-100
-    const normalized = emptyScores();
+    // Only accumulate tenets the rubric actually scored for this path.
+    // This is the critical fix: a tenet missing from the path rubric means
+    // "not measured by this scenario" — NOT "scored zero."
     for (const tenet of TENETS) {
-      normalized[tenet] = (rawScores[tenet] ?? 0) * 10;
+      const raw = rawScores[tenet];
+      if (raw === undefined) continue;
+      sums[tenet] += raw * 10; // normalize 0-10 to 0-100
+      counts[tenet] += 1;
     }
-    allScenarioScores.push(normalized);
   }
 
-  if (allScenarioScores.length === 0) return emptyScores();
-
-  // Average across all scenarios
-  const result = emptyScores();
+  const scores = emptyScores();
+  const measured = new Set<Tenet>();
   for (const tenet of TENETS) {
-    const sum = allScenarioScores.reduce((acc, s) => acc + s[tenet], 0);
-    result[tenet] = sum / allScenarioScores.length;
+    if (counts[tenet] > 0) {
+      scores[tenet] = sums[tenet] / counts[tenet];
+      measured.add(tenet);
+    }
   }
 
-  return result;
+  return { scores, measured };
 }
 
 // ---------------------------------------------------------------------------
