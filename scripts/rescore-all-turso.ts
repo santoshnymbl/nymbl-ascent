@@ -46,7 +46,7 @@ async function main() {
     }
     console.log();
 
-    const oldBreakdown = JSON.parse(prev.breakdown);
+    const oldBreakdown = prev.breakdown ? JSON.parse(prev.breakdown) : {};
     console.log(`    old stage2Scores: ${JSON.stringify(oldBreakdown.stage2Scores)}`);
 
     const result = await runScoring(c.id);
@@ -67,7 +67,7 @@ async function main() {
     }
     console.log();
 
-    const newBreakdown = JSON.parse(updated.breakdown);
+    const newBreakdown = updated.breakdown ? JSON.parse(updated.breakdown) : {};
     console.log(`    new stage2Scores: ${JSON.stringify(newBreakdown.stage2Scores)}`);
     console.log(`    stage2Measured:   ${JSON.stringify(newBreakdown.stage2Measured)}`);
     console.log(`    new aiScores:     ${JSON.stringify(newBreakdown.aiScores)}`);

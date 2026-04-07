@@ -352,7 +352,7 @@ async function runFullPipeline(label: string, token: string) {
   });
   if (!score) return false;
 
-  const breakdown = JSON.parse(score.breakdown);
+  const breakdown = score.breakdown ? JSON.parse(score.breakdown) : {};
   console.log(`\n  COMPOSITE: ${score.compositeScore.toFixed(2)}`);
   console.log(`  RoleFit:   ${score.roleFitScore}`);
   console.log(`  Behavioral: ${score.behavioralScore}`);
