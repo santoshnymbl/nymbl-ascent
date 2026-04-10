@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { TENET_LABELS, type Tenet } from "@/types";
-import { Sparkles, ChevronRight } from "lucide-react";
+import { Sparkles, ChevronRight, Trash2 } from "lucide-react";
 import { Tooltip } from "@/components/ui/Tooltip";
 
 interface Scenario {
@@ -59,6 +59,19 @@ export default function AdminScenariosPage() {
       console.error("Failed to fetch scenarios", err);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleDeleteScenario(s: Scenario) {
+    const msg = `Delete scenario "${s.title}"?\n\nThis will detach it from all roles and permanently remove it. This cannot be undone.`;
+    if (!confirm(msg)) return;
+    try {
+      const res = await fetch(`/api/admin/scenarios/${s.id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Delete failed");
+      await fetchScenarios();
+    } catch (err) {
+      console.error("Failed to delete scenario", err);
+      alert("Failed to delete scenario.");
     }
   }
 
@@ -246,15 +259,30 @@ export default function AdminScenariosPage() {
                 >
                   {s.title}
                 </h3>
-                <ChevronRight
-                  size={18}
-                  style={{
-                    color: "var(--text-muted)",
-                    flexShrink: 0,
-                    marginTop: 2,
-                    transition: "color var(--transition-fast)",
-                  }}
-                />
+                <div style={{ display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleDeleteScenario(s);
+                    }}
+                    className="btn-ghost"
+                    style={{ padding: 4, color: "var(--text-muted)", transition: "color var(--transition-fast)" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = "var(--error)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; }}
+                    title="Delete scenario"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                  <ChevronRight
+                    size={18}
+                    style={{
+                      color: "var(--text-muted)",
+                      marginTop: 2,
+                      transition: "color var(--transition-fast)",
+                    }}
+                  />
+                </div>
               </div>
 
               <div

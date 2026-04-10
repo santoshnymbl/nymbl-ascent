@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import CsvUpload from "@/components/admin/CsvUpload";
-import { UserPlus, AlertCircle, CheckCircle2, ChevronDown, ChevronUp, Users, Mail, RefreshCw, Calculator } from "lucide-react";
+import { UserPlus, AlertCircle, CheckCircle2, ChevronDown, ChevronUp, Users, Mail, RefreshCw, Calculator, Pencil, Trash2, X, Eraser } from "lucide-react";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { Select } from "@/components/ui/Select";
 
@@ -84,6 +84,12 @@ export default function AdminCandidatesPage() {
     type: "success" | "error";
     text: string;
   } | null>(null);
+
+  /* edit candidate modal state */
+  const [editCandidate, setEditCandidate] = useState<CandidateRow | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editSaving, setEditSaving] = useState(false);
 
   /* ---------- data fetching ---------- */
 
@@ -230,6 +236,67 @@ export default function AdminCandidatesPage() {
         type: "error",
         text: err instanceof Error ? err.message : "Re-score failed",
       });
+    } finally {
+      setActionBusy(null);
+    }
+  }
+
+  /* ---------- Edit candidate ---------- */
+  function openEditCandidate(c: CandidateRow) {
+    setEditCandidate(c);
+    setEditName(c.name);
+    setEditEmail(c.email);
+    setEditSaving(false);
+  }
+
+  async function handleEditSave() {
+    if (!editCandidate) return;
+    setEditSaving(true);
+    try {
+      const res = await fetch(`/api/admin/candidates/${editCandidate.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: editName, email: editEmail }),
+      });
+      if (!res.ok) { const b = await res.json(); throw new Error(b.error || "Update failed"); }
+      setEditCandidate(null);
+      setActionMsg({ type: "success", text: `Updated ${editName}` });
+      await fetchCandidates();
+    } catch (err) {
+      setActionMsg({ type: "error", text: err instanceof Error ? err.message : "Update failed" });
+    } finally {
+      setEditSaving(false);
+    }
+  }
+
+  /* ---------- Delete candidate ---------- */
+  async function handleDeleteCandidate(c: CandidateRow) {
+    const msg = `Delete "${c.name}" (${c.email})?\n\nThis permanently removes their assessment data and scores. This cannot be undone.`;
+    if (!confirm(msg)) return;
+    setActionBusy(c.id);
+    try {
+      const res = await fetch(`/api/admin/candidates/${c.id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Delete failed");
+      setActionMsg({ type: "success", text: `Deleted ${c.name}` });
+      await fetchCandidates();
+    } catch (err) {
+      setActionMsg({ type: "error", text: err instanceof Error ? err.message : "Delete failed" });
+    } finally {
+      setActionBusy(null);
+    }
+  }
+
+  /* ---------- Clear score ---------- */
+  async function handleClearScore(c: CandidateRow) {
+    if (!confirm(`Clear score for "${c.name}"?\n\nThe Score row will be deleted and status will reset to "completed". You can then re-score from the admin panel.`)) return;
+    setActionBusy(c.id);
+    try {
+      const res = await fetch(`/api/admin/candidates/${c.id}/score`, { method: "DELETE" });
+      if (!res.ok) { const b = await res.json(); throw new Error(b.error || "Clear failed"); }
+      setActionMsg({ type: "success", text: `Score cleared for ${c.name} — status is now "completed"` });
+      await fetchCandidates();
+    } catch (err) {
+      setActionMsg({ type: "error", text: err instanceof Error ? err.message : "Clear failed" });
     } finally {
       setActionBusy(null);
     }
@@ -754,66 +821,45 @@ export default function AdminCandidatesPage() {
                         {new Date(c.createdAt).toLocaleDateString()}
                       </td>
                       <td style={{ padding: "12px 16px" }}>
-                        <div style={{ display: "flex", gap: 6 }}>
+                        <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
                           {c.status !== "scored" && (
                             <Tooltip content="Resend invite (new token, fresh start)">
-                              <button
-                                onClick={() => handleResend(c)}
-                                disabled={actionBusy === c.id}
-                                className="btn-ghost"
-                                style={{
-                                  padding: "5px 8px",
-                                  fontSize: "0.7rem",
-                                  display: "inline-flex",
-                                  alignItems: "center",
-                                  gap: 4,
-                                  opacity: actionBusy === c.id ? 0.5 : 1,
-                                }}
-                              >
+                              <button onClick={() => handleResend(c)} disabled={actionBusy === c.id} className="btn-ghost" style={{ padding: "5px 8px", fontSize: "0.7rem", display: "inline-flex", alignItems: "center", gap: 4, opacity: actionBusy === c.id ? 0.5 : 1 }}>
                                 <Mail size={12} />
                               </button>
                             </Tooltip>
                           )}
+                          <Tooltip content="Edit name / email">
+                            <button onClick={() => openEditCandidate(c)} className="btn-ghost" style={{ padding: "5px 8px", fontSize: "0.7rem", display: "inline-flex", alignItems: "center", gap: 4 }}>
+                              <Pencil size={12} />
+                            </button>
+                          </Tooltip>
                           {c.status === "completed" && (
                             <Tooltip content="Run scoring now">
-                              <button
-                                onClick={() => handleRescore(c)}
-                                disabled={actionBusy === c.id}
-                                className="btn-ghost"
-                                style={{
-                                  padding: "5px 8px",
-                                  fontSize: "0.7rem",
-                                  display: "inline-flex",
-                                  alignItems: "center",
-                                  gap: 4,
-                                  color: "var(--cta)",
-                                  opacity: actionBusy === c.id ? 0.5 : 1,
-                                }}
-                              >
-                                <Calculator size={12} />
-                                Score
+                              <button onClick={() => handleRescore(c)} disabled={actionBusy === c.id} className="btn-ghost" style={{ padding: "5px 8px", fontSize: "0.7rem", display: "inline-flex", alignItems: "center", gap: 4, color: "var(--cta)", opacity: actionBusy === c.id ? 0.5 : 1 }}>
+                                <Calculator size={12} /> Score
                               </button>
                             </Tooltip>
                           )}
                           {c.status === "scored" && (
-                            <Tooltip content="Re-run scoring (overwrites existing)">
-                              <button
-                                onClick={() => handleRescore(c)}
-                                disabled={actionBusy === c.id}
-                                className="btn-ghost"
-                                style={{
-                                  padding: "5px 8px",
-                                  fontSize: "0.7rem",
-                                  display: "inline-flex",
-                                  alignItems: "center",
-                                  gap: 4,
-                                  opacity: actionBusy === c.id ? 0.5 : 1,
-                                }}
-                              >
-                                <RefreshCw size={12} />
-                              </button>
-                            </Tooltip>
+                            <>
+                              <Tooltip content="Re-run scoring">
+                                <button onClick={() => handleRescore(c)} disabled={actionBusy === c.id} className="btn-ghost" style={{ padding: "5px 8px", fontSize: "0.7rem", display: "inline-flex", alignItems: "center", gap: 4, opacity: actionBusy === c.id ? 0.5 : 1 }}>
+                                  <RefreshCw size={12} />
+                                </button>
+                              </Tooltip>
+                              <Tooltip content="Clear score (reset to completed)">
+                                <button onClick={() => handleClearScore(c)} disabled={actionBusy === c.id} className="btn-ghost" style={{ padding: "5px 8px", fontSize: "0.7rem", display: "inline-flex", alignItems: "center", gap: 4, color: "var(--warning)", opacity: actionBusy === c.id ? 0.5 : 1 }}>
+                                  <Eraser size={12} />
+                                </button>
+                              </Tooltip>
+                            </>
                           )}
+                          <Tooltip content="Delete candidate">
+                            <button onClick={() => handleDeleteCandidate(c)} disabled={actionBusy === c.id} className="btn-ghost" style={{ padding: "5px 8px", fontSize: "0.7rem", display: "inline-flex", alignItems: "center", gap: 4, color: "var(--error)", opacity: actionBusy === c.id ? 0.5 : 1 }}>
+                              <Trash2 size={12} />
+                            </button>
+                          </Tooltip>
                         </div>
                       </td>
                     </tr>
@@ -821,6 +867,61 @@ export default function AdminCandidatesPage() {
                 })}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+      {/* Edit Candidate Modal */}
+      {editCandidate && (
+        <div
+          onClick={() => setEditCandidate(null)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 100,
+            background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            padding: 16,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="glass-card"
+            style={{ width: "100%", maxWidth: 440, padding: 0, background: "var(--bg-surface-solid)" }}
+          >
+            <div style={{ padding: "20px 24px", borderBottom: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <h3 style={{ fontSize: "1.125rem", fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", color: "var(--text-primary)", margin: 0 }}>
+                Edit Candidate
+              </h3>
+              <button onClick={() => setEditCandidate(null)} className="btn-ghost" style={{ padding: 6 }}>
+                <X size={18} />
+              </button>
+            </div>
+            <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
+              <div>
+                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 500, color: "var(--text-secondary)", marginBottom: 4 }}>Name</label>
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  className="input-field"
+                  style={{ width: "100%" }}
+                />
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 500, color: "var(--text-secondary)", marginBottom: 4 }}>Email</label>
+                <input
+                  type="email"
+                  value={editEmail}
+                  onChange={(e) => setEditEmail(e.target.value)}
+                  className="input-field"
+                  style={{ width: "100%" }}
+                />
+              </div>
+            </div>
+            <div style={{ padding: "16px 24px", borderTop: "1px solid var(--border-subtle)", display: "flex", gap: 12, justifyContent: "flex-end" }}>
+              <button onClick={() => setEditCandidate(null)} className="btn-ghost">Cancel</button>
+              <button onClick={handleEditSave} disabled={editSaving} className="btn-primary" style={{ opacity: editSaving ? 0.5 : 1 }}>
+                {editSaving ? "Saving..." : "Save"}
+              </button>
+            </div>
           </div>
         </div>
       )}
