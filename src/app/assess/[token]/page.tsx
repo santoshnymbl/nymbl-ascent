@@ -206,20 +206,13 @@ export default function WelcomePage() {
         className="glass-card w-full text-center p-8 sm:p-10"
         style={{ maxWidth: 620 }}
       >
-        {/* Logo / Wordmark */}
+        {/* Logo */}
         <div className="mb-8">
-          <span
-            className="text-2xl font-bold tracking-tight"
-            style={{ fontFamily: "var(--font-heading)", color: "var(--accent)" }}
-          >
-            nymbl
-          </span>
-          <span
-            className="text-2xl font-bold tracking-tight ml-1"
-            style={{ fontFamily: "var(--font-heading)", color: "var(--cta)" }}
-          >
-            ascent
-          </span>
+          <img
+            src="/nymbl-logo.png"
+            alt="Nymbl Ascent"
+            style={{ width: 200, height: "auto", margin: "0 auto", display: "block" }}
+          />
         </div>
 
         {/* Greeting */}

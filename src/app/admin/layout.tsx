@@ -36,11 +36,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="sidebar-modern" style={{ width: 240, flexShrink: 0, display: "flex", flexDirection: "column", position: "relative", zIndex: 10 }}>
         {/* Logo */}
         <div style={{ padding: "20px 20px 8px" }}>
-          <h1 style={{ fontSize: "1.15rem", fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.03em", margin: 0 }}>
-            <span style={{ color: "var(--accent)" }}>nymbl</span>
-            <span style={{ color: "var(--cta)" }}>ascent</span>
-          </h1>
-          <p style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.15em", color: "var(--text-muted)", marginTop: 2, fontWeight: 700 }}>Admin</p>
+          <img
+            src="/nymbl-logo.png"
+            alt="Nymbl"
+            style={{ width: 140, height: "auto", display: "block" }}
+          />
+          <p style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.15em", color: "var(--text-muted)", marginTop: 6, fontWeight: 700 }}>Admin</p>
         </div>
 
         {/* Nav */}
