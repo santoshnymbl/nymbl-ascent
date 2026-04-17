@@ -6,7 +6,6 @@ import {
   SlidersHorizontal,
   MessageSquare,
   Coins,
-  Clock,
   RotateCcw,
   MinusCircle,
   AlertTriangle,
@@ -1261,11 +1260,15 @@ export default function ScoringExplanationPage() {
                   alignItems: "center",
                   justifyContent: "center",
                   color: "#fff",
-                  fontSize: "0.65rem",
+                  fontSize: "0.7rem",
                   fontWeight: 700,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  padding: "0 6px",
                 }}
               >
-                Bug ID — 60pts
+                Bug ID
               </div>
               <div
                 style={{
@@ -1275,11 +1278,15 @@ export default function ScoringExplanationPage() {
                   alignItems: "center",
                   justifyContent: "center",
                   color: "#fff",
-                  fontSize: "0.65rem",
+                  fontSize: "0.7rem",
                   fontWeight: 700,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  padding: "0 6px",
                 }}
               >
-                Approach — 25-30pts
+                Approach
               </div>
               <div
                 style={{
@@ -1289,11 +1296,15 @@ export default function ScoringExplanationPage() {
                   alignItems: "center",
                   justifyContent: "center",
                   color: "#fff",
-                  fontSize: "0.65rem",
+                  fontSize: "0.7rem",
                   fontWeight: 700,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  padding: "0 6px",
                 }}
               >
-                Spd
+                Speed
               </div>
             </div>
             <ul
@@ -1764,8 +1775,12 @@ export default function ScoringExplanationPage() {
                   alignItems: "center",
                   justifyContent: "center",
                   color: "#fff",
-                  fontSize: "0.68rem",
+                  fontSize: "0.72rem",
                   fontWeight: 700,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  padding: "0 6px",
                 }}
               >
                 Bug ID — 60
@@ -1778,8 +1793,12 @@ export default function ScoringExplanationPage() {
                   alignItems: "center",
                   justifyContent: "center",
                   color: "#fff",
-                  fontSize: "0.68rem",
+                  fontSize: "0.72rem",
                   fontWeight: 700,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  padding: "0 6px",
                 }}
               >
                 Approach — 30
@@ -1792,8 +1811,12 @@ export default function ScoringExplanationPage() {
                   alignItems: "center",
                   justifyContent: "center",
                   color: "#fff",
-                  fontSize: "0.68rem",
+                  fontSize: "0.72rem",
                   fontWeight: 700,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  padding: "0 6px",
                 }}
               >
                 10

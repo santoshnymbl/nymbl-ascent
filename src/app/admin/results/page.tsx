@@ -49,6 +49,7 @@ export default function AdminResultsPage() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reset loading flag when filter changes
     setLoading(true);
     const params = new URLSearchParams();
     if (roleFilter) params.set("roleId", roleFilter);
@@ -188,7 +189,7 @@ export default function AdminResultsPage() {
                   letterSpacing: "0.05em",
                 }}
               >
-                <th style={{ padding: "12px 16px", textAlign: "left", fontWeight: 500 }}>#</th>
+                <th style={{ padding: "12px 16px", textAlign: "left", fontWeight: 500 }}>Rank</th>
                 <th style={{ padding: "12px 16px", textAlign: "left", fontWeight: 500 }}>Candidate</th>
                 <th style={{ padding: "12px 16px", textAlign: "left", fontWeight: 500 }}>Role</th>
                 <th style={{ padding: "12px 16px", textAlign: "right", fontWeight: 500 }}>Composite Score</th>
@@ -285,7 +286,7 @@ export default function AdminResultsPage() {
                     fontWeight: 500,
                   }}
                 >
-                  #
+                  Rank
                 </th>
                 <th
                   style={{
@@ -312,7 +313,7 @@ export default function AdminResultsPage() {
                     fontWeight: 500,
                   }}
                 >
-                  <Tooltip content="Weighted score: 60% tenets + 25% role fit + 15% behavioral">
+                  <Tooltip content="Weighted score: 60% tenets + 25% role fit + 15% behavioral" position="bottom">
                     <span style={{ cursor: "help", borderBottom: "1px dashed var(--border-default)" }}>
                       Composite Score
                     </span>
@@ -362,19 +363,21 @@ export default function AdminResultsPage() {
                     <td style={{ padding: "12px 16px" }}>
                       <span
                         style={{
-                          width: 28,
+                          minWidth: 28,
                           height: 28,
+                          padding: "0 10px",
                           borderRadius: "var(--radius-full)",
                           background: "var(--accent)",
                           color: "#fff",
                           fontSize: "0.75rem",
                           fontWeight: 600,
+                          fontVariantNumeric: "tabular-nums",
                           display: "inline-flex",
                           alignItems: "center",
                           justifyContent: "center",
                         }}
                       >
-                        {i + 1}
+                        #{i + 1}
                       </span>
                     </td>
                     <td style={{ padding: "12px 16px" }}>
@@ -405,7 +408,7 @@ export default function AdminResultsPage() {
                     </td>
                     <td style={{ padding: "12px 16px", textAlign: "right" }}>
                       {hasScore ? (
-                        <Tooltip content="Weighted score: 60% tenets + 25% role fit + 15% behavioral">
+                        <Tooltip content="Weighted score: 60% tenets + 25% role fit + 15% behavioral" position="left">
                           <span
                             style={{
                               fontSize: "1.25rem",

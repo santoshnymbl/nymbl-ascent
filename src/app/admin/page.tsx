@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import { Responsive, WidthProvider } from "react-grid-layout/legacy";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- react-grid-layout/legacy has mismatched type defs
 type RGLLayouts = { lg: any[] };
 import {
   Briefcase, Users, Clock, Zap, ArrowRight, UserPlus,
@@ -48,11 +48,11 @@ export default function AdminDashboard() {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        const parsed = JSON.parse(saved);
-        // Apply static flag based on current lock state
+        const parsed = JSON.parse(saved) as RGLLayouts;
         if (parsed.lg) {
-          parsed.lg = parsed.lg.map((item: any) => ({ ...item, static: true }));
+          parsed.lg = parsed.lg.map((item) => ({ ...item, static: true }));
         }
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time localStorage hydration after mount
         setLayouts(parsed);
       }
     } catch {}
@@ -65,9 +65,9 @@ export default function AdminDashboard() {
     ]).then(([r, c]) => { setRoles(r); setCandidates(c); setLoading(false); }).catch(() => setLoading(false));
   }, []);
 
-  const onLayoutChange = useCallback((_: any, allLayouts: any) => {
+  const onLayoutChange = useCallback((_current: unknown, allLayouts: unknown) => {
     if (!locked) {
-      setLayouts(allLayouts);
+      setLayouts(allLayouts as RGLLayouts);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(allLayouts));
     }
   }, [locked]);
@@ -129,18 +129,18 @@ export default function AdminDashboard() {
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, padding: "0 4px" }}>
         <div>
-          <h2 style={{ fontSize: "1.3rem", fontWeight: 700, fontFamily: "'Montserrat', sans-serif", color: "var(--text-primary)", margin: 0 }}>Dashboard</h2>
-          <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", margin: "2px 0 0" }}>Hiring pipeline overview</p>
+          <h2 style={{ fontSize: "1.55rem", fontWeight: 700, fontFamily: "'Montserrat', sans-serif", color: "var(--text-primary)", margin: 0 }}>Dashboard</h2>
+          <p style={{ fontSize: "0.92rem", color: "var(--text-muted)", margin: "2px 0 0" }}>Hiring pipeline overview</p>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 5, padding: "3px 10px", borderRadius: "var(--radius-full)", background: "var(--success-surface)", border: "1px solid rgba(16,185,129,0.2)" }}>
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--success)", display: "inline-block" }}/>
-            <span style={{ fontSize: "0.68rem", color: "var(--success)", fontWeight: 600 }}>Live</span>
+            <span style={{ fontSize: "0.82rem", color: "var(--success)", fontWeight: 600 }}>Live</span>
           </div>
           <Tooltip content={locked ? "Unlock to drag & resize widgets" : "Lock layout"} position="bottom">
             <button
               onClick={toggleLock}
-              style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: "var(--radius-md)", background: locked ? "transparent" : "var(--accent-surface)", border: `1px solid ${locked ? "var(--border-default)" : "var(--accent)"}`, color: locked ? "var(--text-muted)" : "var(--accent)", cursor: "pointer", fontSize: "0.72rem", fontWeight: 600, transition: "all 150ms ease" }}
+              style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: "var(--radius-md)", background: locked ? "transparent" : "var(--accent-surface)", border: `1px solid ${locked ? "var(--border-default)" : "var(--accent)"}`, color: locked ? "var(--text-muted)" : "var(--accent)", cursor: "pointer", fontSize: "0.86rem", fontWeight: 600, transition: "all 150ms ease" }}
             >
               {locked ? <Lock size={13}/> : <Unlock size={13}/>}
               {locked ? "Edit" : "Editing"}
@@ -180,10 +180,10 @@ export default function AdminDashboard() {
             <div key={s.key} className="stat-card" style={{ display: "flex", flexDirection: "column", justifyContent: "center", overflow: "hidden" }}>
               {!locked && <div className="drag-handle" style={{ position: "absolute", top: 4, right: 4, cursor: "grab", color: "var(--text-muted)", opacity: 0.5 }}><GripHorizontal size={12}/></div>}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6, padding: "0 4px" }}>
-                <span style={{ fontSize: "0.7rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-muted)" }}>{s.t}</span>
+                <span style={{ fontSize: "0.84rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-muted)" }}>{s.t}</span>
                 <div style={{ width: 30, height: 30, borderRadius: "var(--radius-md)", background: s.bg, color: s.c, display: "flex", alignItems: "center", justifyContent: "center" }}><I size={15}/></div>
               </div>
-              <span style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--text-primary)", fontVariantNumeric: "tabular-nums", lineHeight: 1, padding: "0 4px" }}>{s.v}</span>
+              <span style={{ fontSize: "1.8rem", fontWeight: 700, color: "var(--text-primary)", fontVariantNumeric: "tabular-nums", lineHeight: 1, padding: "0 4px" }}>{s.v}</span>
             </div>
           );
         })}
@@ -194,16 +194,16 @@ export default function AdminDashboard() {
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               {!locked && <div className="drag-handle" style={{ cursor: "grab", color: "var(--text-muted)", opacity: 0.5 }}><GripHorizontal size={12}/></div>}
               <Users size={14} style={{ color: "var(--accent)" }}/>
-              <h3 style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif", margin: 0 }}>Recent Candidates</h3>
+              <h3 style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif", margin: 0 }}>Recent Candidates</h3>
             </div>
-            <Link href="/admin/candidates" style={{ fontSize: "0.7rem", color: "var(--accent)", textDecoration: "none", display: "flex", alignItems: "center", gap: 3, fontWeight: 600 }}>All <ArrowRight size={10}/></Link>
+            <Link href="/admin/candidates" style={{ fontSize: "0.84rem", color: "var(--accent)", textDecoration: "none", display: "flex", alignItems: "center", gap: 3, fontWeight: 600 }}>All <ArrowRight size={10}/></Link>
           </div>
           <div style={{ flex: 1, overflowY: "auto" }}>
             {recent.length === 0 ? (
               <div style={{ padding: "24px 14px", textAlign: "center" }}>
                 <UserPlus size={20} style={{ color: "var(--accent)", marginBottom: 6 }}/>
-                <p style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-primary)", margin: "0 0 4px" }}>No candidates yet</p>
-                <Link href="/admin/candidates" className="btn-cta" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: "0.75rem", padding: "6px 14px", marginTop: 8 }}>
+                <p style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text-primary)", margin: "0 0 4px" }}>No candidates yet</p>
+                <Link href="/admin/candidates" className="btn-cta" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: "0.9rem", padding: "6px 14px", marginTop: 8 }}>
                   <UserPlus size={13}/> Invite
                 </Link>
               </div>
@@ -217,16 +217,16 @@ export default function AdminDashboard() {
                       <tr key={c.id}>
                         <td>
                           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                            <div style={{ width: 26, height: 26, borderRadius: "var(--radius-full)", background: "var(--accent-surface)", color: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.65rem", fontWeight: 700, flexShrink: 0 }}>{c.name[0]}</div>
+                            <div style={{ width: 26, height: 26, borderRadius: "var(--radius-full)", background: "var(--accent-surface)", color: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.78rem", fontWeight: 700, flexShrink: 0 }}>{c.name[0]}</div>
                             <div>
-                              <div style={{ fontWeight: 600, fontSize: "0.78rem" }}>{c.name}</div>
-                              <div style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>{c.email}</div>
+                              <div style={{ fontWeight: 600, fontSize: "0.92rem" }}>{c.name}</div>
+                              <div style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>{c.email}</div>
                             </div>
                           </div>
                         </td>
-                        <td style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>{c.role.name}</td>
-                        <td><span className="badge" style={{ background: st.bg, color: st.color, fontSize: "0.65rem" }}>{st.label}</span></td>
-                        <td style={{ textAlign: "right", fontWeight: 700, fontSize: "0.82rem", color: c.assessment?.score ? "var(--accent)" : "var(--text-muted)", fontVariantNumeric: "tabular-nums" }}>
+                        <td style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>{c.role.name}</td>
+                        <td><span className="badge" style={{ background: st.bg, color: st.color, fontSize: "0.78rem" }}>{st.label}</span></td>
+                        <td style={{ textAlign: "right", fontWeight: 700, fontSize: "0.98rem", color: c.assessment?.score ? "var(--accent)" : "var(--text-muted)", fontVariantNumeric: "tabular-nums" }}>
                           {c.assessment?.score?.compositeScore?.toFixed(1) ?? "—"}
                         </td>
                       </tr>
@@ -243,12 +243,12 @@ export default function AdminDashboard() {
           <div style={{ padding: "10px 14px", borderBottom: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
             {!locked && <div className="drag-handle" style={{ cursor: "grab", color: "var(--text-muted)", opacity: 0.5 }}><GripHorizontal size={12}/></div>}
             <Activity size={13} style={{ color: "var(--accent)" }}/>
-            <h3 style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif", margin: 0, textTransform: "uppercase", letterSpacing: "0.04em" }}>Pipeline</h3>
+            <h3 style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif", margin: 0, textTransform: "uppercase", letterSpacing: "0.04em" }}>Pipeline</h3>
           </div>
           <div style={{ flex: 1, padding: "12px 14px", display: "flex", flexDirection: "column", justifyContent: "center", gap: 10 }}>
             {pipelineStages.map(p => (
               <div key={p.label}>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.72rem", marginBottom: 4 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.86rem", marginBottom: 4 }}>
                   <span style={{ color: "var(--text-secondary)" }}>{p.label}</span>
                   <span style={{ color: "var(--text-primary)", fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>{p.count}</span>
                 </div>
@@ -265,7 +265,7 @@ export default function AdminDashboard() {
           <div style={{ padding: "10px 14px", borderBottom: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
             {!locked && <div className="drag-handle" style={{ cursor: "grab", color: "var(--text-muted)", opacity: 0.5 }}><GripHorizontal size={12}/></div>}
             <Sparkles size={14} style={{ color: "var(--cta)" }}/>
-            <h3 style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif", margin: 0 }}>Getting Started</h3>
+            <h3 style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif", margin: 0 }}>Getting Started</h3>
           </div>
           <div style={{ flex: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
             {[
@@ -281,12 +281,12 @@ export default function AdminDashboard() {
                   transition: "background 150ms ease",
                 }} onMouseEnter={e => { e.currentTarget.style.background = "var(--bg-elevated)"; }} onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                    <div style={{ width: 24, height: 24, borderRadius: "var(--radius-sm)", background: item.done ? "var(--success-surface)" : "var(--bg-elevated)", color: item.done ? "var(--success)" : item.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.65rem", fontWeight: 700 }}>
+                    <div style={{ width: 24, height: 24, borderRadius: "var(--radius-sm)", background: item.done ? "var(--success-surface)" : "var(--bg-elevated)", color: item.done ? "var(--success)" : item.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.78rem", fontWeight: 700 }}>
                       {item.done ? "✓" : <I size={12}/>}
                     </div>
-                    <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--text-primary)" }}>{item.title}</span>
+                    <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--text-primary)" }}>{item.title}</span>
                   </div>
-                  <p style={{ fontSize: "0.68rem", color: "var(--text-muted)", margin: 0, lineHeight: 1.4 }}>{item.desc}</p>
+                  <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", margin: 0, lineHeight: 1.4 }}>{item.desc}</p>
                 </Link>
               );
             })}
@@ -299,17 +299,17 @@ export default function AdminDashboard() {
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               {!locked && <div className="drag-handle" style={{ cursor: "grab", color: "var(--text-muted)", opacity: 0.5 }}><GripHorizontal size={12}/></div>}
               <Briefcase size={13} style={{ color: "var(--accent)" }}/>
-              <h3 style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif", margin: 0, textTransform: "uppercase", letterSpacing: "0.04em" }}>Roles</h3>
+              <h3 style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif", margin: 0, textTransform: "uppercase", letterSpacing: "0.04em" }}>Roles</h3>
             </div>
-            <Link href="/admin/roles" style={{ fontSize: "0.65rem", color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>Manage</Link>
+            <Link href="/admin/roles" style={{ fontSize: "0.78rem", color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>Manage</Link>
           </div>
           <div style={{ flex: 1, padding: "8px 14px", overflowY: "auto" }}>
             {roles.map(r => (
               <div key={r.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid var(--border-subtle)" }}>
-                <span style={{ fontSize: "0.75rem", fontWeight: 500, color: "var(--text-primary)" }}>{r.name}</span>
+                <span style={{ fontSize: "0.9rem", fontWeight: 500, color: "var(--text-primary)" }}>{r.name}</span>
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>{r._count.roleScenarios} scn</span>
-                  <span className="badge" style={{ background: "var(--accent-surface)", color: "var(--accent)", fontSize: "0.6rem" }}>{r._count.candidates}</span>
+                  <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>{r._count.roleScenarios} scn</span>
+                  <span className="badge" style={{ background: "var(--accent-surface)", color: "var(--accent)", fontSize: "0.72rem" }}>{r._count.candidates}</span>
                 </div>
               </div>
             ))}
@@ -320,7 +320,7 @@ export default function AdminDashboard() {
               ].map(a => {
                 const I = a.icon;
                 return (
-                  <Link key={a.label} href={a.href} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 4, padding: "6px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)", textDecoration: "none", color: "var(--text-secondary)", fontSize: "0.68rem", fontWeight: 500, transition: "all 150ms ease" }}
+                  <Link key={a.label} href={a.href} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 4, padding: "6px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)", textDecoration: "none", color: "var(--text-secondary)", fontSize: "0.82rem", fontWeight: 500, transition: "all 150ms ease" }}
                     onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.background = "var(--bg-elevated)"; }}
                     onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border-subtle)"; e.currentTarget.style.background = "transparent"; }}
                   ><I size={12} style={{ color: a.c }}/>{a.label}</Link>

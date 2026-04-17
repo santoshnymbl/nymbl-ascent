@@ -143,7 +143,7 @@ export default function AdminScenarioEditorPage({
   }
 
   return (
-    <div style={{ maxWidth: 768 }}>
+    <div style={{ width: "100%" }}>
       <button
         onClick={() => router.push("/admin/scenarios")}
         style={{

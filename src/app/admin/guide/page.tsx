@@ -55,7 +55,7 @@ function Badge({ children, color }: { children: React.ReactNode; color?: string 
         display: "inline-flex",
         alignItems: "center",
         gap: 6,
-        fontSize: "0.72rem",
+        fontSize: "0.8rem",
         fontWeight: 600,
         padding: "4px 10px",
         borderRadius: "var(--radius-full)",
@@ -84,7 +84,7 @@ function ProTip({ children }: { children: React.ReactNode }) {
       }}
     >
       <Info size={16} style={{ color: "var(--info)", flexShrink: 0, marginTop: 2 }} />
-      <p style={{ margin: 0, fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
+      <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
         {children}
       </p>
     </div>
@@ -142,14 +142,14 @@ function SectionTitle({
         <Icon size={18} style={{ color: "var(--accent)" }} />
       </div>
       <div>
-        <p style={{ margin: 0, fontSize: "0.7rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+        <p style={{ margin: 0, fontSize: "0.77rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
           Step {step}
         </p>
         <h2
           style={{
             margin: 0,
             fontFamily: "'Montserrat', sans-serif",
-            fontSize: "1.25rem",
+            fontSize: "1.4rem",
             fontWeight: 700,
             letterSpacing: "-0.03em",
             color: "var(--text-primary)",
@@ -181,14 +181,14 @@ function MiniStep({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: "0.72rem",
+          fontSize: "0.8rem",
           fontWeight: 700,
           flexShrink: 0,
         }}
       >
         {num}
       </div>
-      <div style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.6, paddingTop: 2 }}>
+      <div style={{ fontSize: "0.94rem", color: "var(--text-secondary)", lineHeight: 1.6, paddingTop: 2 }}>
         {children}
       </div>
     </div>
@@ -205,7 +205,7 @@ function GoToLink({ href, label }: { href: string; label: string }) {
         alignItems: "center",
         gap: 6,
         marginTop: 18,
-        fontSize: "0.82rem",
+        fontSize: "0.9rem",
         fontWeight: 600,
         color: "var(--accent)",
         textDecoration: "none",
@@ -279,7 +279,7 @@ export default function GuidePage() {
         <h1
           style={{
             fontFamily: "'Montserrat', sans-serif",
-            fontSize: "2rem",
+            fontSize: "2.2rem",
             fontWeight: 700,
             letterSpacing: "-0.04em",
             margin: "0 0 8px",
@@ -290,7 +290,7 @@ export default function GuidePage() {
         </h1>
         <p
           style={{
-            fontSize: "1rem",
+            fontSize: "1.1rem",
             color: "var(--text-secondary)",
             maxWidth: 540,
             margin: "0 auto",
@@ -347,7 +347,7 @@ export default function GuidePage() {
                     : isCompleted
                     ? "var(--success)"
                     : "var(--text-muted)",
-                  fontSize: "0.75rem",
+                  fontSize: "0.83rem",
                   fontWeight: 600,
                   cursor: "pointer",
                   transition: "var(--transition-fast)",
@@ -373,7 +373,7 @@ export default function GuidePage() {
         <SectionCard id="step-1">
           <SectionTitle icon={Briefcase} step={1} title="Setup Roles" />
 
-          <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 20 }}>
+          <p style={{ fontSize: "0.97rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 20 }}>
             <strong style={{ color: "var(--text-primary)" }}>Define the positions you&rsquo;re hiring for.</strong>{" "}
             Each role can have its own job description and scenario pool.
           </p>
@@ -396,7 +396,7 @@ export default function GuidePage() {
                     alignItems: "center",
                     gap: 6,
                     padding: "6px 14px",
-                    fontSize: "0.78rem",
+                    fontSize: "0.86rem",
                     borderRadius: "var(--radius-md)",
                     pointerEvents: "none",
                   }}
@@ -417,8 +417,8 @@ export default function GuidePage() {
                   maxWidth: 340,
                 }}
               >
-                <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginBottom: 4, fontWeight: 600 }}>Role Name</div>
-                <div style={{ fontSize: "0.82rem", color: "var(--text-primary)" }}>e.g. &ldquo;Software Engineer&rdquo;</div>
+                <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginBottom: 4, fontWeight: 600 }}>Role Name</div>
+                <div style={{ fontSize: "0.9rem", color: "var(--text-primary)" }}>e.g. &ldquo;Software Engineer&rdquo;</div>
               </div>
             </MiniStep>
             <MiniStep num={3}>
@@ -435,8 +435,8 @@ export default function GuidePage() {
                   border: "1px solid var(--border-subtle)",
                 }}
               >
-                <span style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontWeight: 600 }}>Pool Size:</span>
-                <span style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--accent)" }}>3</span>
+                <span style={{ fontSize: "0.86rem", color: "var(--text-muted)", fontWeight: 600 }}>Pool Size:</span>
+                <span style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--accent)" }}>3</span>
               </div>
             </MiniStep>
           </div>
@@ -457,7 +457,7 @@ export default function GuidePage() {
         <SectionCard id="step-2" borderColor="var(--cta)">
           <SectionTitle icon={GitBranch} step={2} title="Configure Scenarios" />
 
-          <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 20 }}>
+          <p style={{ fontSize: "0.97rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 20 }}>
             <strong style={{ color: "var(--text-primary)" }}>Scenarios are the assessment content.</strong>{" "}
             There are 3 stages, each with different types.
           </p>
@@ -474,7 +474,7 @@ export default function GuidePage() {
                   border: stageTab === idx ? "2px solid var(--accent)" : "2px solid var(--border-default)",
                   background: stageTab === idx ? "var(--accent-surface)" : "transparent",
                   color: stageTab === idx ? "var(--accent)" : "var(--text-muted)",
-                  fontSize: "0.78rem",
+                  fontSize: "0.86rem",
                   fontWeight: 600,
                   cursor: "pointer",
                   transition: "var(--transition-fast)",
@@ -488,7 +488,7 @@ export default function GuidePage() {
           {/* Stage 1 content */}
           {stageTab === 0 && (
             <div>
-              <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 16 }}>
+              <p style={{ fontSize: "0.94rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 16 }}>
                 <strong>4 quick-fire games (3 minutes total).</strong> No right or wrong answers &mdash;
                 they reveal how candidates prioritize.
               </p>
@@ -512,9 +512,9 @@ export default function GuidePage() {
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                         <GIcon size={16} style={{ color: "var(--accent)" }} />
-                        <strong style={{ fontSize: "0.82rem", color: "var(--text-primary)" }}>{game.name}</strong>
+                        <strong style={{ fontSize: "0.9rem", color: "var(--text-primary)" }}>{game.name}</strong>
                       </div>
-                      <p style={{ margin: 0, fontSize: "0.78rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
+                      <p style={{ margin: 0, fontSize: "0.86rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
                         {game.desc}
                       </p>
                     </div>
@@ -528,7 +528,7 @@ export default function GuidePage() {
           {/* Stage 2 content */}
           {stageTab === 1 && (
             <div>
-              <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 16 }}>
+              <p style={{ fontSize: "0.94rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 16 }}>
                 <strong>Branching workplace scenarios (5 minutes).</strong> Candidates make decisions,
                 see consequences, and face follow-ups.
               </p>
@@ -557,30 +557,30 @@ export default function GuidePage() {
                         borderRadius: "var(--radius-md)",
                         border: "2px solid var(--accent)",
                         background: "var(--accent-surface)",
-                        fontSize: "0.82rem",
+                        fontSize: "0.9rem",
                         fontWeight: 600,
                         color: "var(--accent)",
                       }}
                     >
                       {node.label}
                     </div>
-                    <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", margin: "4px 0" }}>
+                    <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: "4px 0" }}>
                       {node.sub}
                     </div>
                     {idx < 2 && (
-                      <div style={{ color: "var(--text-muted)", fontSize: "1rem", margin: "2px 0" }}>&#8595;</div>
+                      <div style={{ color: "var(--text-muted)", fontSize: "1.1rem", margin: "2px 0" }}>&#8595;</div>
                     )}
                   </div>
                 ))}
               </div>
 
-              <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.6, marginBottom: 8 }}>
+              <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.6, marginBottom: 8 }}>
                 Each scenario has <strong>resource bars</strong> (Time, Team Energy, Client Trust) that change based on decisions.
               </p>
-              <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.6, marginBottom: 8 }}>
+              <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.6, marginBottom: 8 }}>
                 Scenarios can be <strong>created manually</strong> or <strong>generated by AI</strong>.
               </p>
-              <p style={{ fontSize: "0.82rem", color: "var(--text-primary)", lineHeight: 1.6, marginBottom: 14, fontWeight: 600 }}>
+              <p style={{ fontSize: "0.9rem", color: "var(--text-primary)", lineHeight: 1.6, marginBottom: 14, fontWeight: 600 }}>
                 The &ldquo;Core Pool Size&rdquo; on each role determines how many of these scenarios each candidate sees.
               </p>
               <Badge>You can add/edit scenarios in the Scenarios page</Badge>
@@ -590,7 +590,7 @@ export default function GuidePage() {
           {/* Stage 3 content */}
           {stageTab === 2 && (
             <div>
-              <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 16 }}>
+              <p style={{ fontSize: "0.94rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 16 }}>
                 <strong>Role-specific challenges (5 minutes).</strong> Different content for different roles.
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
@@ -611,9 +611,9 @@ export default function GuidePage() {
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                         <EIcon size={16} style={{ color: "var(--cta)" }} />
-                        <strong style={{ fontSize: "0.82rem", color: "var(--text-primary)" }}>{ex.role}</strong>
+                        <strong style={{ fontSize: "0.9rem", color: "var(--text-primary)" }}>{ex.role}</strong>
                       </div>
-                      <p style={{ margin: 0, fontSize: "0.78rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
+                      <p style={{ margin: 0, fontSize: "0.86rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
                         {ex.desc}
                       </p>
                     </div>
@@ -637,7 +637,7 @@ export default function GuidePage() {
         <SectionCard id="step-3" borderColor="var(--success)">
           <SectionTitle icon={UserPlus} step={3} title="Invite Candidates" />
 
-          <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 20 }}>
+          <p style={{ fontSize: "0.97rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 20 }}>
             <strong style={{ color: "var(--text-primary)" }}>Send assessment links to candidates.</strong>{" "}
             Each gets a unique token &mdash; no account needed.
           </p>
@@ -673,12 +673,12 @@ export default function GuidePage() {
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
               <Lock size={14} style={{ color: "var(--accent)" }} />
-              <strong style={{ fontSize: "0.82rem", color: "var(--text-primary)" }}>The candidate link</strong>
+              <strong style={{ fontSize: "0.9rem", color: "var(--text-primary)" }}>The candidate link</strong>
             </div>
             <div
               style={{
                 fontFamily: "monospace",
-                fontSize: "0.8rem",
+                fontSize: "0.88rem",
                 color: "var(--accent)",
                 background: "var(--bg-base)",
                 padding: "8px 12px",
@@ -688,7 +688,7 @@ export default function GuidePage() {
             >
               yoursite.com/assess/abc123...
             </div>
-            <ul style={{ margin: 0, paddingLeft: 18, fontSize: "0.78rem", color: "var(--text-muted)", lineHeight: 1.8 }}>
+            <ul style={{ margin: 0, paddingLeft: 18, fontSize: "0.86rem", color: "var(--text-muted)", lineHeight: 1.8 }}>
               <li>Each link is <strong>unique</strong>, expires in 7 days, and can be paused/resumed</li>
               <li>Candidates <strong>don&rsquo;t create an account</strong> &mdash; just click and play</li>
             </ul>
@@ -709,7 +709,7 @@ export default function GuidePage() {
         <SectionCard id="step-4" borderColor="var(--cta)">
           <SectionTitle icon={Gamepad2} step={4} title="Candidate Experience" />
 
-          <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 24 }}>
+          <p style={{ fontSize: "0.97rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 24 }}>
             Here&rsquo;s what candidates see after clicking their assessment link.
           </p>
 
@@ -795,7 +795,7 @@ export default function GuidePage() {
         <SectionCard id="step-5" borderColor="var(--accent)">
           <SectionTitle icon={BarChart3} step={5} title="Review Results" />
 
-          <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 20 }}>
+          <p style={{ fontSize: "0.97rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 20 }}>
             <strong style={{ color: "var(--text-primary)" }}>After a candidate completes the assessment, their scores appear automatically.</strong>{" "}
             Go to the Results page &mdash; candidates are ranked by composite score.
           </p>
@@ -808,7 +808,7 @@ export default function GuidePage() {
               marginBottom: 16,
             }}
           >
-            <h4 style={{ margin: "0 0 12px", fontSize: "0.88rem", color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif" }}>
+            <h4 style={{ margin: "0 0 12px", fontSize: "0.97rem", color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif" }}>
               What you&rsquo;ll see
             </h4>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
@@ -834,8 +834,8 @@ export default function GuidePage() {
                   >
                     <IIcon size={16} style={{ color: "var(--accent)", marginTop: 2, flexShrink: 0 }} />
                     <div>
-                      <strong style={{ fontSize: "0.8rem", color: "var(--text-primary)" }}>{item.label}</strong>
-                      <p style={{ margin: 0, fontSize: "0.72rem", color: "var(--text-muted)" }}>{item.desc}</p>
+                      <strong style={{ fontSize: "0.88rem", color: "var(--text-primary)" }}>{item.label}</strong>
+                      <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--text-muted)" }}>{item.desc}</p>
                     </div>
                   </div>
                 );
@@ -852,8 +852,8 @@ export default function GuidePage() {
               marginBottom: 8,
             }}
           >
-            <strong style={{ fontSize: "0.82rem", color: "var(--accent)" }}>How scores work</strong>
-            <p style={{ margin: "6px 0 0", fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
+            <strong style={{ fontSize: "0.9rem", color: "var(--accent)" }}>How scores work</strong>
+            <p style={{ margin: "6px 0 0", fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
               See the Scoring page for the full formula. Quick version:{" "}
               <strong>60% tenet alignment + 25% role fit + 15% behavioral signals.</strong>
             </p>
@@ -873,7 +873,7 @@ export default function GuidePage() {
         <SectionCard id="step-6" borderColor="var(--success)">
           <SectionTitle icon={CheckCircle2} step={6} title="Take Action" />
 
-          <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 20 }}>
+          <p style={{ fontSize: "0.97rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 20 }}>
             <strong style={{ color: "var(--text-primary)" }}>Use the assessment data to make better hiring decisions.</strong>
           </p>
 
@@ -909,10 +909,10 @@ export default function GuidePage() {
                   >
                     <CIcon size={20} style={{ color: card.color }} />
                   </div>
-                  <h4 style={{ margin: "0 0 6px", fontSize: "0.88rem", color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif" }}>
+                  <h4 style={{ margin: "0 0 6px", fontSize: "0.97rem", color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif" }}>
                     {card.title}
                   </h4>
-                  <p style={{ margin: 0, fontSize: "0.78rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
+                  <p style={{ margin: 0, fontSize: "0.86rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
                     {card.desc}
                   </p>
                 </div>
@@ -962,7 +962,7 @@ export default function GuidePage() {
               }}
             >
               <LIcon size={18} style={{ color: "var(--accent)" }} />
-              <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-primary)" }}>
+              <span style={{ fontSize: "0.94rem", fontWeight: 600, color: "var(--text-primary)" }}>
                 {link.label}
               </span>
               <ChevronRight size={14} style={{ color: "var(--text-muted)", marginLeft: "auto" }} />
@@ -979,14 +979,14 @@ export default function GuidePage() {
 /* ------------------------------------------------------------------ */
 const tlP: React.CSSProperties = {
   margin: "0 0 6px",
-  fontSize: "0.82rem",
+  fontSize: "0.9rem",
   color: "var(--text-secondary)",
   lineHeight: 1.6,
 };
 
 const transitionStyle: React.CSSProperties = {
   marginTop: 8,
-  fontSize: "0.75rem",
+  fontSize: "0.83rem",
   fontStyle: "italic",
   color: "var(--text-muted)",
   paddingLeft: 10,
@@ -1029,11 +1029,11 @@ function TimelineNode({
       {/* Content */}
       <div style={{ paddingLeft: 8 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-          <strong style={{ fontSize: "0.88rem", color: "var(--text-primary)" }}>{label}</strong>
+          <strong style={{ fontSize: "0.97rem", color: "var(--text-primary)" }}>{label}</strong>
           {badge && (
             <span
               style={{
-                fontSize: "0.65rem",
+                fontSize: "0.72rem",
                 fontWeight: 700,
                 padding: "2px 8px",
                 borderRadius: "var(--radius-full)",

@@ -8,6 +8,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   const { theme, toggleTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration guard for SSR-safe icon swap
   useEffect(() => setMounted(true), []);
 
   return (

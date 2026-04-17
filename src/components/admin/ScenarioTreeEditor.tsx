@@ -82,7 +82,7 @@ function OptionEditor({ option, index, nodeIds, onUpdate, onDelete, onAddFollowU
   const letter = String.fromCharCode(65 + index);
 
   return (
-    <div style={{ marginLeft: 24, border: expanded ? "2px solid var(--accent)" : "1px solid var(--success-surface)", borderRadius: "var(--radius-md)", padding: expanded ? 14 : 10, marginBottom: 8, background: expanded ? "var(--accent-surface)" : "rgba(52, 211, 153, 0.04)", boxShadow: expanded ? "0 0 12px var(--accent-glow)" : "none", transition: "all var(--transition-fast)" }}>
+    <div style={{ marginLeft: 24, border: expanded ? "2px solid var(--accent)" : "1px solid var(--success)", borderRadius: "var(--radius-md)", padding: expanded ? 14 : 10, marginBottom: 8, background: expanded ? "var(--accent-surface)" : "var(--bg-surface-solid)", boxShadow: expanded ? "0 0 12px var(--accent-glow)" : "none", transition: "all var(--transition-fast)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }} onClick={() => setExpanded(!expanded)}>
         {expanded ? <ChevronDown size={14} style={{ color: "var(--accent)" }} /> : <ChevronRight size={14} style={{ color: "var(--success)" }} />}
         <span style={{ fontSize: "0.7rem", background: "var(--success-surface)", color: "var(--success)", padding: "2px 8px", borderRadius: "var(--radius-full)", fontWeight: 700 }}>{letter}</span>
@@ -90,7 +90,7 @@ function OptionEditor({ option, index, nodeIds, onUpdate, onDelete, onAddFollowU
         {!expanded && Object.keys(option.scores).length > 0 && (
           <div style={{ display: "flex", gap: 3 }}>
             {Object.entries(option.scores).map(([t, v]) => (
-              <span key={t} style={{ fontSize: "0.6rem", background: "var(--accent-surface)", color: "var(--accent-light)", padding: "2px 6px", borderRadius: "var(--radius-full)" }}>{TENET_LABELS[t as Tenet]?.slice(0, 3)} {v}</span>
+              <span key={t} style={{ fontSize: "0.65rem", fontWeight: 600, background: "var(--bg-surface-solid)", color: "var(--accent)", border: "1px solid var(--accent)", padding: "2px 7px", borderRadius: "var(--radius-full)" }}>{TENET_LABELS[t as Tenet]?.slice(0, 3)} {v}</span>
             ))}
           </div>
         )}
@@ -172,10 +172,10 @@ function NodeEditor({ node, tree, isRoot, label, onUpdateTree }: { node: Scenari
   const bgColor = isRoot ? "var(--accent-surface)" : "var(--info-surface)";
 
   return (
-    <div style={{ border: `1px solid ${borderColor}`, borderRadius: "var(--radius-md)", padding: 14, marginBottom: 10, background: expanded ? bgColor : "transparent", transition: "all var(--transition-fast)" }}>
+    <div style={{ border: `1px solid ${borderColor}`, borderRadius: "var(--radius-md)", padding: 14, marginBottom: 10, background: expanded ? bgColor : "var(--bg-surface-solid)", transition: "all var(--transition-fast)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }} onClick={() => setExpanded(!expanded)}>
         {expanded ? <ChevronDown size={14} style={{ color: borderColor }} /> : <ChevronRight size={14} style={{ color: borderColor }} />}
-        <span style={{ fontSize: "0.65rem", background: bgColor, color: borderColor, padding: "2px 8px", borderRadius: "var(--radius-full)", fontWeight: 700, textTransform: "uppercase" }}>{label}</span>
+        <span style={{ fontSize: "0.65rem", background: "var(--bg-surface-solid)", color: borderColor, border: `1px solid ${borderColor}`, padding: "2px 8px", borderRadius: "var(--radius-full)", fontWeight: 700, textTransform: "uppercase" }}>{label}</span>
         <span style={{ flex: 1, color: "var(--text-primary)", fontSize: "0.82rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{node.text || "(empty prompt)"}</span>
         {!isRoot && (
           <button onClick={(e) => { e.stopPropagation(); deleteNode(); }} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--error)", padding: 2 }} title="Delete node"><Trash2 size={13} /></button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { createContext, useContext, useCallback, useEffect, useState } from "react";
 
 type Theme = "light" | "dark";
 
@@ -18,11 +18,6 @@ export function useTheme() {
   return useContext(ThemeContext);
 }
 
-function getStoredTheme(): Theme {
-  if (typeof window === "undefined") return "dark";
-  return (localStorage.getItem("nymbl-theme") as Theme) || "dark";
-}
-
 function applyTheme(theme: Theme) {
   document.documentElement.setAttribute("data-theme", theme);
 }
@@ -34,6 +29,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Hydrate from localStorage after mount (avoids SSR mismatch)
   useEffect(() => {
     const stored = (localStorage.getItem("nymbl-theme") as Theme) || "dark";
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time localStorage hydration after mount
     setTheme(stored);
     applyTheme(stored);
     setMounted(true);
