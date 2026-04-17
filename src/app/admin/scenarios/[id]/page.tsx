@@ -3,6 +3,9 @@
 import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, Trash2 } from "lucide-react";
+import ScenarioTreeEditor from "@/components/admin/ScenarioTreeEditor";
+import { buildPathScores } from "@/components/admin/buildPathScores";
+import type { ScenarioTree } from "@/types";
 
 interface ScenarioData {
   id: string;
@@ -26,13 +29,10 @@ export default function AdminScenarioEditorPage({
   const [scenario, setScenario] = useState<ScenarioData | null>(null);
   const [title, setTitle] = useState("");
   const [isPublished, setIsPublished] = useState(false);
-  const [treeJson, setTreeJson] = useState("");
-  const [rubricJson, setRubricJson] = useState("");
+  const [tree, setTree] = useState<ScenarioTree | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [treeError, setTreeError] = useState("");
-  const [rubricError, setRubricError] = useState("");
 
   useEffect(() => {
     async function fetchScenario() {
@@ -43,8 +43,7 @@ export default function AdminScenarioEditorPage({
         setScenario(data);
         setTitle(data.title);
         setIsPublished(data.isPublished);
-        setTreeJson(JSON.stringify(data.tree, null, 2));
-        setRubricJson(JSON.stringify(data.scoringRubric, null, 2));
+        setTree(data.tree as ScenarioTree);
       } catch (err) {
         console.error("Failed to fetch scenario", err);
       } finally {
@@ -54,25 +53,16 @@ export default function AdminScenarioEditorPage({
     fetchScenario();
   }, [id]);
 
-  function validateJson(value: string, setError: (e: string) => void): boolean {
-    try {
-      JSON.parse(value);
-      setError("");
-      return true;
-    } catch {
-      setError("Invalid JSON");
-      return false;
-    }
-  }
-
   async function handleSave() {
-    if (!scenario) return;
-    const treeValid = validateJson(treeJson, setTreeError);
-    const rubricValid = validateJson(rubricJson, setRubricError);
-    if (!treeValid || !rubricValid) return;
+    if (!scenario || !tree) return;
 
     setSaving(true);
     try {
+      const scoringRubric = {
+        scenarioId: scenario.id,
+        pathScores: buildPathScores(tree),
+      };
+
       const res = await fetch(`/api/admin/scenarios/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -82,8 +72,8 @@ export default function AdminScenarioEditorPage({
           type: scenario.type,
           roleType: scenario.roleType,
           tenets: scenario.tenets,
-          tree: JSON.parse(treeJson),
-          scoringRubric: JSON.parse(rubricJson),
+          tree,
+          scoringRubric,
           isPublished,
         }),
       });
@@ -264,125 +254,10 @@ export default function AdminScenarioEditorPage({
           )}
         </div>
 
-        {/* Tree JSON */}
-        <div>
-          <label
-            style={{
-              display: "block",
-              fontSize: "0.875rem",
-              fontWeight: 500,
-              color: "var(--text-secondary)",
-              marginBottom: 4,
-            }}
-          >
-            Scenario Tree (JSON)
-          </label>
-          <textarea
-            value={treeJson}
-            onChange={(e) => {
-              setTreeJson(e.target.value);
-              setTreeError("");
-            }}
-            rows={14}
-            style={{
-              width: "100%",
-              padding: "12px 16px",
-              borderRadius: "var(--radius-lg)",
-              fontFamily: "monospace",
-              fontSize: "0.875rem",
-              outline: "none",
-              transition: "box-shadow var(--transition-fast)",
-              background: "var(--bg-surface-solid)",
-              color: "var(--accent-light)",
-              border: "1px solid var(--border-default)",
-              boxShadow: treeError
-                ? "0 0 0 2px var(--error)"
-                : "none",
-              resize: "vertical",
-            }}
-            onFocus={(e) => {
-              if (!treeError) {
-                e.currentTarget.style.boxShadow = "0 0 0 2px var(--accent)";
-              }
-            }}
-            onBlur={(e) => {
-              if (!treeError) {
-                e.currentTarget.style.boxShadow = "none";
-              }
-            }}
-          />
-          {treeError && (
-            <p
-              style={{
-                color: "var(--error)",
-                fontSize: "0.75rem",
-                marginTop: 4,
-              }}
-            >
-              {treeError}
-            </p>
-          )}
-        </div>
-
-        {/* Rubric JSON */}
-        <div>
-          <label
-            style={{
-              display: "block",
-              fontSize: "0.875rem",
-              fontWeight: 500,
-              color: "var(--text-secondary)",
-              marginBottom: 4,
-            }}
-          >
-            Scoring Rubric (JSON)
-          </label>
-          <textarea
-            value={rubricJson}
-            onChange={(e) => {
-              setRubricJson(e.target.value);
-              setRubricError("");
-            }}
-            rows={10}
-            style={{
-              width: "100%",
-              padding: "12px 16px",
-              borderRadius: "var(--radius-lg)",
-              fontFamily: "monospace",
-              fontSize: "0.875rem",
-              outline: "none",
-              transition: "box-shadow var(--transition-fast)",
-              background: "var(--bg-surface-solid)",
-              color: "var(--accent-light)",
-              border: "1px solid var(--border-default)",
-              boxShadow: rubricError
-                ? "0 0 0 2px var(--error)"
-                : "none",
-              resize: "vertical",
-            }}
-            onFocus={(e) => {
-              if (!rubricError) {
-                e.currentTarget.style.boxShadow = "0 0 0 2px var(--accent)";
-              }
-            }}
-            onBlur={(e) => {
-              if (!rubricError) {
-                e.currentTarget.style.boxShadow = "none";
-              }
-            }}
-          />
-          {rubricError && (
-            <p
-              style={{
-                color: "var(--error)",
-                fontSize: "0.75rem",
-                marginTop: 4,
-              }}
-            >
-              {rubricError}
-            </p>
-          )}
-        </div>
+        {/* Visual Tree Editor */}
+        {tree && (
+          <ScenarioTreeEditor tree={tree} onChange={setTree} />
+        )}
 
         {/* Actions */}
         <div style={{ display: "flex", gap: 12, paddingTop: 8 }}>
