@@ -10,14 +10,14 @@
 :root {
   color-scheme: light;
   --bg-base: #f8fdff;
-  --bg-surface: rgba(255, 255, 255, 0.7);
-  --bg-surface-solid: #ffffff;
-  --bg-elevated: rgba(255, 255, 255, 0.85);
+  --bg-surface: rgba(255, 255, 255, 0.88);
+  --bg-surface-solid: rgba(255, 255, 255, 0.95);
+  --bg-elevated: rgba(255, 255, 255, 0.92);
   --bg-input: #ffffff;
 
-  --text-primary: #0F172A;
-  --text-secondary: #475569;
-  --text-muted: #94A3B8;
+  --text-primary: #0a0f1e;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
   --text-inverse: #FFFFFF;
 
   --border-subtle: rgba(0, 0, 0, 0.06);
@@ -71,14 +71,14 @@
 [data-theme="dark"] {
   color-scheme: dark;
   --bg-base: #001030;
-  --bg-surface: rgba(255, 255, 255, 0.05);
-  --bg-surface-solid: #0a1a3a;
-  --bg-elevated: rgba(255, 255, 255, 0.07);
-  --bg-input: rgba(255, 255, 255, 0.06);
+  --bg-surface: rgba(10, 26, 58, 0.85);
+  --bg-surface-solid: rgba(10, 22, 50, 0.92);
+  --bg-elevated: rgba(15, 30, 65, 0.88);
+  --bg-input: rgba(255, 255, 255, 0.08);
 
-  --text-primary: #F1F1F3;
-  --text-secondary: #9CA3AF;
-  --text-muted: #6B7280;
+  --text-primary: #FFFFFF;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
   --text-inverse: #0B0D18;
 
   --border-subtle: rgba(255, 255, 255, 0.08);
@@ -130,6 +130,7 @@ body {
   background-attachment: fixed;
   color: var(--text-primary);
   font-family: 'Raleway', system-ui, sans-serif;
+  font-weight: 500;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -138,6 +139,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
 }
