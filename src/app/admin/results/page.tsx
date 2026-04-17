@@ -123,7 +123,7 @@ export default function AdminResultsPage() {
           style={{
             fontSize: "1.5rem",
             fontWeight: 700,
-            fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+            fontFamily: "var(--font-heading), 'Montserrat', sans-serif",
             color: "var(--text-primary)",
           }}
         >
@@ -241,7 +241,7 @@ export default function AdminResultsPage() {
               color: "var(--text-primary)",
               fontSize: "1.125rem",
               fontWeight: 600,
-              fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+              fontFamily: "var(--font-heading), 'Montserrat', sans-serif",
             }}
           >
             No results yet

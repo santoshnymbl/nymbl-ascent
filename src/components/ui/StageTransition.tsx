@@ -64,7 +64,7 @@ export function StageTransition({
       <h1
         className="text-4xl md:text-5xl font-bold mb-4 text-center px-6 relative z-10"
         style={{
-          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          fontFamily: "'Montserrat', system-ui, sans-serif",
           color: "var(--text-inverse)",
         }}
       >

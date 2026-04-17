@@ -318,7 +318,7 @@ export default function AdminCandidatesPage() {
           style={{
             fontSize: "1.5rem",
             fontWeight: 700,
-            fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+            fontFamily: "var(--font-heading), 'Montserrat', sans-serif",
             color: "var(--text-primary)",
           }}
         >
@@ -358,7 +358,7 @@ export default function AdminCandidatesPage() {
               style={{
                 fontSize: "1.125rem",
                 fontWeight: 600,
-                fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+                fontFamily: "var(--font-heading), 'Montserrat', sans-serif",
                 color: "var(--text-primary)",
               }}
             >
@@ -651,7 +651,7 @@ export default function AdminCandidatesPage() {
               color: "var(--text-primary)",
               fontSize: "1.125rem",
               fontWeight: 600,
-              fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+              fontFamily: "var(--font-heading), 'Montserrat', sans-serif",
             }}
           >
             No candidates found
@@ -887,7 +887,7 @@ export default function AdminCandidatesPage() {
             style={{ width: "100%", maxWidth: 440, padding: 0, background: "var(--bg-surface-solid)" }}
           >
             <div style={{ padding: "20px 24px", borderBottom: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <h3 style={{ fontSize: "1.125rem", fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", color: "var(--text-primary)", margin: 0 }}>
+              <h3 style={{ fontSize: "1.125rem", fontWeight: 600, fontFamily: "'Montserrat', sans-serif", color: "var(--text-primary)", margin: 0 }}>
                 Edit Candidate
               </h3>
               <button onClick={() => setEditCandidate(null)} className="btn-ghost" style={{ padding: 6 }}>

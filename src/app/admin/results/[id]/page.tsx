@@ -168,7 +168,7 @@ export default function CandidateDetailPage() {
           style={{
             fontSize: "1.5rem",
             fontWeight: 700,
-            fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+            fontFamily: "var(--font-heading), 'Montserrat', sans-serif",
             color: "var(--text-primary)",
           }}
         >
@@ -235,7 +235,7 @@ export default function CandidateDetailPage() {
                   fontSize: "1rem",
                   fontWeight: 600,
                   fontFamily:
-                    "var(--font-heading), 'Space Grotesk', sans-serif",
+                    "var(--font-heading), 'Montserrat', sans-serif",
                   color: "var(--text-primary)",
                   marginBottom: 16,
                 }}
@@ -358,7 +358,7 @@ export default function CandidateDetailPage() {
                   fontSize: "1rem",
                   fontWeight: 600,
                   fontFamily:
-                    "var(--font-heading), 'Space Grotesk', sans-serif",
+                    "var(--font-heading), 'Montserrat', sans-serif",
                   color: "var(--text-primary)",
                   marginBottom: 16,
                 }}
@@ -379,7 +379,7 @@ export default function CandidateDetailPage() {
                 fontSize: "1rem",
                 fontWeight: 600,
                 fontFamily:
-                  "var(--font-heading), 'Space Grotesk', sans-serif",
+                  "var(--font-heading), 'Montserrat', sans-serif",
                 color: "var(--text-primary)",
                 marginBottom: 16,
               }}
@@ -478,7 +478,7 @@ export default function CandidateDetailPage() {
                     fontSize: "1rem",
                     fontWeight: 600,
                     fontFamily:
-                      "var(--font-heading), 'Space Grotesk', sans-serif",
+                      "var(--font-heading), 'Montserrat', sans-serif",
                     color: "var(--text-primary)",
                   }}
                 >

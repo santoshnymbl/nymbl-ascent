@@ -162,7 +162,7 @@ export default function AdminScenarioEditorPage({
         style={{
           fontSize: "1.5rem",
           fontWeight: 700,
-          fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+          fontFamily: "var(--font-heading), 'Montserrat', sans-serif",
           color: "var(--text-primary)",
           marginBottom: 24,
         }}

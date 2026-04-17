@@ -129,7 +129,7 @@ export default function AdminDashboard() {
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, padding: "0 4px" }}>
         <div>
-          <h2 style={{ fontSize: "1.3rem", fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: "var(--text-primary)", margin: 0 }}>Dashboard</h2>
+          <h2 style={{ fontSize: "1.3rem", fontWeight: 700, fontFamily: "'Montserrat', sans-serif", color: "var(--text-primary)", margin: 0 }}>Dashboard</h2>
           <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", margin: "2px 0 0" }}>Hiring pipeline overview</p>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -194,7 +194,7 @@ export default function AdminDashboard() {
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               {!locked && <div className="drag-handle" style={{ cursor: "grab", color: "var(--text-muted)", opacity: 0.5 }}><GripHorizontal size={12}/></div>}
               <Users size={14} style={{ color: "var(--accent)" }}/>
-              <h3 style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Space Grotesk', sans-serif", margin: 0 }}>Recent Candidates</h3>
+              <h3 style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif", margin: 0 }}>Recent Candidates</h3>
             </div>
             <Link href="/admin/candidates" style={{ fontSize: "0.7rem", color: "var(--accent)", textDecoration: "none", display: "flex", alignItems: "center", gap: 3, fontWeight: 600 }}>All <ArrowRight size={10}/></Link>
           </div>
@@ -243,7 +243,7 @@ export default function AdminDashboard() {
           <div style={{ padding: "10px 14px", borderBottom: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
             {!locked && <div className="drag-handle" style={{ cursor: "grab", color: "var(--text-muted)", opacity: 0.5 }}><GripHorizontal size={12}/></div>}
             <Activity size={13} style={{ color: "var(--accent)" }}/>
-            <h3 style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Space Grotesk', sans-serif", margin: 0, textTransform: "uppercase", letterSpacing: "0.04em" }}>Pipeline</h3>
+            <h3 style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif", margin: 0, textTransform: "uppercase", letterSpacing: "0.04em" }}>Pipeline</h3>
           </div>
           <div style={{ flex: 1, padding: "12px 14px", display: "flex", flexDirection: "column", justifyContent: "center", gap: 10 }}>
             {pipelineStages.map(p => (
@@ -265,7 +265,7 @@ export default function AdminDashboard() {
           <div style={{ padding: "10px 14px", borderBottom: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
             {!locked && <div className="drag-handle" style={{ cursor: "grab", color: "var(--text-muted)", opacity: 0.5 }}><GripHorizontal size={12}/></div>}
             <Sparkles size={14} style={{ color: "var(--cta)" }}/>
-            <h3 style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Space Grotesk', sans-serif", margin: 0 }}>Getting Started</h3>
+            <h3 style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif", margin: 0 }}>Getting Started</h3>
           </div>
           <div style={{ flex: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
             {[
@@ -299,7 +299,7 @@ export default function AdminDashboard() {
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               {!locked && <div className="drag-handle" style={{ cursor: "grab", color: "var(--text-muted)", opacity: 0.5 }}><GripHorizontal size={12}/></div>}
               <Briefcase size={13} style={{ color: "var(--accent)" }}/>
-              <h3 style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Space Grotesk', sans-serif", margin: 0, textTransform: "uppercase", letterSpacing: "0.04em" }}>Roles</h3>
+              <h3 style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif", margin: 0, textTransform: "uppercase", letterSpacing: "0.04em" }}>Roles</h3>
             </div>
             <Link href="/admin/roles" style={{ fontSize: "0.65rem", color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>Manage</Link>
           </div>

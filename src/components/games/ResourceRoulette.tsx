@@ -143,7 +143,7 @@ export function ResourceRoulette({
         className="text-2xl font-bold mb-2"
         style={{
           color: "var(--text-primary)",
-          fontFamily: "var(--font-heading, 'Space Grotesk', sans-serif)",
+          fontFamily: "var(--font-heading, 'Montserrat', sans-serif)",
         }}
       >
         Resource Roulette

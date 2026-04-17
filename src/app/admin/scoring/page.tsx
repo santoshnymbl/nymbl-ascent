@@ -40,7 +40,7 @@ function SectionHeading({
     <div style={{ marginBottom: 20 }}>
       <h2
         style={{
-          fontFamily: "'Space Grotesk', sans-serif",
+          fontFamily: "'Montserrat', sans-serif",
           fontSize: "1.5rem",
           fontWeight: 700,
           letterSpacing: "-0.03em",
@@ -122,7 +122,7 @@ export default function ScoringExplanationPage() {
       <div style={{ marginBottom: 8 }}>
         <h1
           style={{
-            fontFamily: "'Space Grotesk', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             fontSize: "1.85rem",
             fontWeight: 700,
             letterSpacing: "-0.03em",
@@ -171,7 +171,7 @@ export default function ScoringExplanationPage() {
               color: "#fff",
               fontWeight: 700,
               fontSize: "0.82rem",
-              fontFamily: "'Space Grotesk', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
             }}
           >
             Tenets — 60%
@@ -186,7 +186,7 @@ export default function ScoringExplanationPage() {
               color: "#fff",
               fontWeight: 700,
               fontSize: "0.82rem",
-              fontFamily: "'Space Grotesk', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
             }}
           >
             Role Fit — 25%
@@ -201,7 +201,7 @@ export default function ScoringExplanationPage() {
               color: "#fff",
               fontWeight: 700,
               fontSize: "0.78rem",
-              fontFamily: "'Space Grotesk', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
             }}
           >
             Beh. — 15%
@@ -211,7 +211,7 @@ export default function ScoringExplanationPage() {
         {/* Large formula text */}
         <p
           style={{
-            fontFamily: "'Space Grotesk', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             fontSize: "1.05rem",
             fontWeight: 600,
             color: "var(--text-primary)",
@@ -239,7 +239,7 @@ export default function ScoringExplanationPage() {
         >
           <h3
             style={{
-              fontFamily: "'Space Grotesk', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
               fontSize: "1rem",
               fontWeight: 600,
               margin: "0 0 18px",
@@ -427,7 +427,7 @@ export default function ScoringExplanationPage() {
             </span>
             <div
               style={{
-                fontFamily: "'Space Grotesk', sans-serif",
+                fontFamily: "'Montserrat', sans-serif",
                 fontSize: "2.4rem",
                 fontWeight: 700,
                 color: "var(--accent)",
@@ -505,7 +505,7 @@ export default function ScoringExplanationPage() {
         {/* Stage 1 Games */}
         <h3
           style={{
-            fontFamily: "'Space Grotesk', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             fontSize: "1.05rem",
             fontWeight: 600,
             margin: "0 0 14px",
@@ -551,7 +551,7 @@ export default function ScoringExplanationPage() {
               </div>
               <h4
                 style={{
-                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontWeight: 600,
                   fontSize: "0.92rem",
                   margin: 0,
@@ -644,7 +644,7 @@ export default function ScoringExplanationPage() {
               </div>
               <h4
                 style={{
-                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontWeight: 600,
                   fontSize: "0.92rem",
                   margin: 0,
@@ -753,7 +753,7 @@ export default function ScoringExplanationPage() {
               </div>
               <h4
                 style={{
-                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontWeight: 600,
                   fontSize: "0.92rem",
                   margin: 0,
@@ -862,7 +862,7 @@ export default function ScoringExplanationPage() {
               </div>
               <h4
                 style={{
-                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontWeight: 600,
                   fontSize: "0.92rem",
                   margin: 0,
@@ -951,7 +951,7 @@ export default function ScoringExplanationPage() {
         {/* Stage 2 Scenarios */}
         <h3
           style={{
-            fontFamily: "'Space Grotesk', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             fontSize: "1.05rem",
             fontWeight: 600,
             margin: "0 0 10px",
@@ -1029,7 +1029,7 @@ export default function ScoringExplanationPage() {
         {/* Merge visual */}
         <h3
           style={{
-            fontFamily: "'Space Grotesk', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             fontSize: "1.05rem",
             fontWeight: 600,
             margin: "0 0 14px",
@@ -1166,7 +1166,7 @@ export default function ScoringExplanationPage() {
 
         <p
           style={{
-            fontFamily: "'Space Grotesk', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             fontSize: "0.85rem",
             fontWeight: 600,
             color: "var(--text-secondary)",
@@ -1224,7 +1224,7 @@ export default function ScoringExplanationPage() {
               <div>
                 <h4
                   style={{
-                    fontFamily: "'Space Grotesk', sans-serif",
+                    fontFamily: "'Montserrat', sans-serif",
                     fontWeight: 600,
                     fontSize: "0.92rem",
                     margin: 0,
@@ -1343,7 +1343,7 @@ export default function ScoringExplanationPage() {
               <div>
                 <h4
                   style={{
-                    fontFamily: "'Space Grotesk', sans-serif",
+                    fontFamily: "'Montserrat', sans-serif",
                     fontWeight: 600,
                     fontSize: "0.92rem",
                     margin: 0,
@@ -1521,7 +1521,7 @@ export default function ScoringExplanationPage() {
                 </div>
                 <div
                   style={{
-                    fontFamily: "'Space Grotesk', sans-serif",
+                    fontFamily: "'Montserrat', sans-serif",
                     fontWeight: 700,
                     fontSize: "0.92rem",
                     color: isPositive
@@ -1613,7 +1613,7 @@ export default function ScoringExplanationPage() {
               </div>
               <div
                 style={{
-                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontSize: "1.3rem",
                   fontWeight: 700,
                   color: item.color,
@@ -1668,7 +1668,7 @@ export default function ScoringExplanationPage() {
           </p>
           <div
             style={{
-              fontFamily: "'Space Grotesk', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
               fontSize: "2rem",
               fontWeight: 700,
               color: "var(--accent)",
@@ -1726,7 +1726,7 @@ export default function ScoringExplanationPage() {
               <div>
                 <h4
                   style={{
-                    fontFamily: "'Space Grotesk', sans-serif",
+                    fontFamily: "'Montserrat', sans-serif",
                     fontWeight: 600,
                     fontSize: "0.92rem",
                     margin: 0,
@@ -1865,7 +1865,7 @@ export default function ScoringExplanationPage() {
               <div>
                 <h4
                   style={{
-                    fontFamily: "'Space Grotesk', sans-serif",
+                    fontFamily: "'Montserrat', sans-serif",
                     fontWeight: 600,
                     fontSize: "0.92rem",
                     margin: 0,

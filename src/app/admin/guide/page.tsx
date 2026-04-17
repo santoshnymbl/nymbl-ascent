@@ -148,7 +148,7 @@ function SectionTitle({
         <h2
           style={{
             margin: 0,
-            fontFamily: "'Space Grotesk', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             fontSize: "1.25rem",
             fontWeight: 700,
             letterSpacing: "-0.03em",
@@ -278,7 +278,7 @@ export default function GuidePage() {
         </div>
         <h1
           style={{
-            fontFamily: "'Space Grotesk', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             fontSize: "2rem",
             fontWeight: 700,
             letterSpacing: "-0.04em",
@@ -540,7 +540,7 @@ export default function GuidePage() {
                   borderRadius: "var(--radius-lg)",
                   padding: "20px 24px",
                   marginBottom: 16,
-                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   textAlign: "center",
                 }}
               >
@@ -808,7 +808,7 @@ export default function GuidePage() {
               marginBottom: 16,
             }}
           >
-            <h4 style={{ margin: "0 0 12px", fontSize: "0.88rem", color: "var(--text-primary)", fontFamily: "'Space Grotesk', sans-serif" }}>
+            <h4 style={{ margin: "0 0 12px", fontSize: "0.88rem", color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif" }}>
               What you&rsquo;ll see
             </h4>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
@@ -909,7 +909,7 @@ export default function GuidePage() {
                   >
                     <CIcon size={20} style={{ color: card.color }} />
                   </div>
-                  <h4 style={{ margin: "0 0 6px", fontSize: "0.88rem", color: "var(--text-primary)", fontFamily: "'Space Grotesk', sans-serif" }}>
+                  <h4 style={{ margin: "0 0 6px", fontSize: "0.88rem", color: "var(--text-primary)", fontFamily: "'Montserrat', sans-serif" }}>
                     {card.title}
                   </h4>
                   <p style={{ margin: 0, fontSize: "0.78rem", color: "var(--text-muted)", lineHeight: 1.5 }}>

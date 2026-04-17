@@ -133,7 +133,7 @@ export default function AdminScenariosPage() {
           style={{
             fontSize: "1.5rem",
             fontWeight: 700,
-            fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+            fontFamily: "var(--font-heading), 'Montserrat', sans-serif",
             color: "var(--text-primary)",
           }}
         >

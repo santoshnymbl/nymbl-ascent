@@ -180,7 +180,7 @@ export default function RolesPage() {
     <div>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-        <h2 style={{ fontSize: "1.5rem", fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: "var(--text-primary)" }}>
+        <h2 style={{ fontSize: "1.5rem", fontWeight: 700, fontFamily: "'Montserrat', sans-serif", color: "var(--text-primary)" }}>
           Roles{!loading && ` (${roles.length})`}
         </h2>
         <button onClick={showForm ? closeForm : openAdd} className={showForm ? "btn-ghost" : "btn-primary"} style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
@@ -198,7 +198,7 @@ export default function RolesPage() {
       {/* Form */}
       {showForm && (
         <form onSubmit={handleSubmit} className="glass-card" style={{ marginBottom: 24, padding: 24 }}>
-          <h3 style={{ fontSize: "1.125rem", fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", color: "var(--text-primary)", marginBottom: 20 }}>
+          <h3 style={{ fontSize: "1.125rem", fontWeight: 600, fontFamily: "'Montserrat', sans-serif", color: "var(--text-primary)", marginBottom: 20 }}>
             {editingId ? "Edit Role" : "New Role"}
           </h3>
 
@@ -237,7 +237,7 @@ export default function RolesPage() {
               className="input-field"
               placeholder="Paste the full job description here, or upload a file above..."
               rows={6}
-              style={{ resize: "vertical", fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6 }}
+              style={{ resize: "vertical", fontFamily: "'Raleway', sans-serif", lineHeight: 1.6 }}
             />
             <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: 4 }}>
               The job description helps contextualize the assessment. Supports .txt and .md files for upload.
@@ -317,7 +317,7 @@ export default function RolesPage() {
       ) : roles.length === 0 ? (
         <div className="glass-card" style={{ textAlign: "center", padding: "64px 24px" }}>
           <Briefcase size={48} style={{ margin: "0 auto 16px", color: "var(--text-muted)", display: "block" }} />
-          <p style={{ color: "var(--text-primary)", fontSize: "1.125rem", fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif" }}>No roles yet</p>
+          <p style={{ color: "var(--text-primary)", fontSize: "1.125rem", fontWeight: 600, fontFamily: "'Montserrat', sans-serif" }}>No roles yet</p>
           <p style={{ color: "var(--text-muted)", fontSize: "0.875rem", marginTop: 8, marginBottom: 24 }}>Create your first role to start inviting candidates.</p>
           <button onClick={openAdd} className="btn-cta" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><Plus size={16} /> Create your first role</button>
         </div>
@@ -410,7 +410,7 @@ export default function RolesPage() {
             {/* Header */}
             <div style={{ padding: "20px 24px", borderBottom: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div>
-                <h3 style={{ fontSize: "1.125rem", fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", color: "var(--text-primary)", margin: 0 }}>
+                <h3 style={{ fontSize: "1.125rem", fontWeight: 600, fontFamily: "'Montserrat', sans-serif", color: "var(--text-primary)", margin: 0 }}>
                   Manage Scenarios
                 </h3>
                 <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: 2 }}>

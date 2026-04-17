@@ -52,7 +52,7 @@ export function Tooltip({ content, children, position = "top", fill }: TooltipPr
             borderRadius: "var(--radius-sm)",
             padding: "6px 12px",
             fontSize: 12,
-            fontFamily: "'DM Sans', system-ui, sans-serif",
+            fontFamily: "'Raleway', system-ui, sans-serif",
             whiteSpace: "nowrap",
             pointerEvents: "none",
             zIndex: 1000,

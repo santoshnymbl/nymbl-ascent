@@ -76,7 +76,7 @@ export function SignalSort({ messages, onComplete }: SignalSortProps) {
       {/* Header */}
       <h2
         className="text-2xl font-bold mb-2"
-        style={{ color: "var(--text-primary)", fontFamily: "var(--font-heading, 'Space Grotesk', sans-serif)" }}
+        style={{ color: "var(--text-primary)", fontFamily: "var(--font-heading, 'Montserrat', sans-serif)" }}
       >
         Signal Sort
       </h2>

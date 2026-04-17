@@ -207,7 +207,7 @@ export default function Stage1Page() {
             <div style={{ width: 56, height: 56, borderRadius: "var(--radius-lg)", background: "var(--accent-surface)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
               <Sparkles size={28} style={{ color: "var(--accent)" }} />
             </div>
-            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: "var(--text-primary)", margin: "0 0 6px" }}>
+            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, fontFamily: "'Montserrat', sans-serif", color: "var(--text-primary)", margin: "0 0 6px" }}>
               Stage 1 — Learn
             </h2>
             <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: "0 0 24px" }}>

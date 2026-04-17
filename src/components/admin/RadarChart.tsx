@@ -124,7 +124,7 @@ export default function RadarChart({ scores, size = 300 }: RadarChartProps) {
             dominantBaseline="middle"
             fill="var(--text-secondary)"
             fontSize={12}
-            fontFamily="var(--font-heading), 'Space Grotesk', sans-serif"
+            fontFamily="var(--font-heading), 'Montserrat', sans-serif"
             fontWeight={500}
           >
             {RADAR_LABELS[t]}
