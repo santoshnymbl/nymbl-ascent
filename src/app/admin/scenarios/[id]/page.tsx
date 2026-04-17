@@ -30,6 +30,9 @@ export default function AdminScenarioEditorPage({
   const [title, setTitle] = useState("");
   const [isPublished, setIsPublished] = useState(false);
   const [tree, setTree] = useState<ScenarioTree | null>(null);
+  const [isBranchingTree, setIsBranchingTree] = useState(false);
+  const [rawTreeJson, setRawTreeJson] = useState("");
+  const [rawTreeError, setRawTreeError] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -46,9 +49,11 @@ export default function AdminScenarioEditorPage({
         const rawTree = data.tree as ScenarioTree;
         if (rawTree?.rootNodeId && rawTree?.nodes) {
           setTree(rawTree);
+          setIsBranchingTree(true);
         } else {
-          // Legacy or malformed tree — wrap in a valid structure
-          setTree({ rootNodeId: "root", nodes: { root: { id: "root", text: "" } } });
+          // Stage 1 game configs or non-branching Stage 3 — keep as raw JSON
+          setRawTreeJson(JSON.stringify(data.tree, null, 2));
+          setIsBranchingTree(false);
         }
       } catch (err) {
         console.error("Failed to fetch scenario", err);
@@ -60,15 +65,31 @@ export default function AdminScenarioEditorPage({
   }, [id]);
 
   async function handleSave() {
-    if (!scenario || !tree) return;
+    if (!scenario) return;
 
-    setSaving(true);
-    try {
-      const scoringRubric = {
+    let treeData: unknown;
+    let scoringRubric: unknown = scenario.scoringRubric;
+
+    if (isBranchingTree) {
+      if (!tree) return;
+      treeData = tree;
+      scoringRubric = {
         scenarioId: scenario.id,
         pathScores: buildPathScores(tree),
       };
+    } else {
+      // Raw JSON mode — parse and validate
+      try {
+        treeData = JSON.parse(rawTreeJson);
+        setRawTreeError("");
+      } catch {
+        setRawTreeError("Invalid JSON");
+        return;
+      }
+    }
 
+    setSaving(true);
+    try {
       const res = await fetch(`/api/admin/scenarios/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -78,7 +99,7 @@ export default function AdminScenarioEditorPage({
           type: scenario.type,
           roleType: scenario.roleType,
           tenets: scenario.tenets,
-          tree,
+          tree: treeData,
           scoringRubric,
           isPublished,
         }),
@@ -260,9 +281,56 @@ export default function AdminScenarioEditorPage({
           )}
         </div>
 
-        {/* Visual Tree Editor */}
-        {tree && (
+        {/* Editor: visual tree for branching scenarios, JSON textarea for game configs */}
+        {isBranchingTree && tree ? (
           <ScenarioTreeEditor tree={tree} onChange={setTree} />
+        ) : (
+          <div>
+            <label
+              style={{
+                display: "block",
+                fontSize: "0.875rem",
+                fontWeight: 500,
+                color: "var(--text-secondary)",
+                marginBottom: 4,
+              }}
+            >
+              Game Configuration (JSON)
+            </label>
+            <textarea
+              value={rawTreeJson}
+              onChange={(e) => {
+                setRawTreeJson(e.target.value);
+                setRawTreeError("");
+              }}
+              rows={14}
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                borderRadius: "var(--radius-lg)",
+                fontFamily: "monospace",
+                fontSize: "0.875rem",
+                outline: "none",
+                transition: "box-shadow var(--transition-fast)",
+                background: "var(--bg-surface-solid)",
+                color: "var(--accent-light)",
+                border: "1px solid var(--border-default)",
+                boxShadow: rawTreeError ? "0 0 0 2px var(--error)" : "none",
+                resize: "vertical",
+              }}
+              onFocus={(e) => {
+                if (!rawTreeError) e.currentTarget.style.boxShadow = "0 0 0 2px var(--accent)";
+              }}
+              onBlur={(e) => {
+                if (!rawTreeError) e.currentTarget.style.boxShadow = "none";
+              }}
+            />
+            {rawTreeError && (
+              <p style={{ color: "var(--error)", fontSize: "0.75rem", marginTop: 4 }}>
+                {rawTreeError}
+              </p>
+            )}
+          </div>
         )}
 
         {/* Actions */}
