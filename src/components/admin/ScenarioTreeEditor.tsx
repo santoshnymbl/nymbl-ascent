@@ -213,7 +213,7 @@ export default function ScenarioTreeEditor({ tree, onChange }: { tree: ScenarioT
   const [showJson, setShowJson] = useState(false);
   const [jsonText, setJsonText] = useState("");
   const [jsonError, setJsonError] = useState("");
-  const root = tree.nodes[tree.rootNodeId];
+  const root = tree?.nodes?.[tree?.rootNodeId];
 
   function handleJsonToggle() {
     if (!showJson) { setJsonText(JSON.stringify(tree, null, 2)); setJsonError(""); }

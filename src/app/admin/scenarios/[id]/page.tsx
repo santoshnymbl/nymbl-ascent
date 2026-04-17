@@ -43,7 +43,13 @@ export default function AdminScenarioEditorPage({
         setScenario(data);
         setTitle(data.title);
         setIsPublished(data.isPublished);
-        setTree(data.tree as ScenarioTree);
+        const rawTree = data.tree as ScenarioTree;
+        if (rawTree?.rootNodeId && rawTree?.nodes) {
+          setTree(rawTree);
+        } else {
+          // Legacy or malformed tree — wrap in a valid structure
+          setTree({ rootNodeId: "root", nodes: { root: { id: "root", text: "" } } });
+        }
       } catch (err) {
         console.error("Failed to fetch scenario", err);
       } finally {
