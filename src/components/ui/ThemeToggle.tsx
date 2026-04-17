@@ -1,10 +1,14 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Sun, Moon } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 
 export function ThemeToggle({ className }: { className?: string }) {
   const { theme, toggleTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   return (
     <button
@@ -25,7 +29,7 @@ export function ThemeToggle({ className }: { className?: string }) {
         transition: "all var(--transition-fast)",
       }}
     >
-      {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+      {mounted ? (theme === "dark" ? <Sun size={18} /> : <Moon size={18} />) : <Moon size={18} />}
     </button>
   );
 }

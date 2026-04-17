@@ -28,13 +28,23 @@ function applyTheme(theme: Theme) {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(getStoredTheme);
+  const [theme, setTheme] = useState<Theme>("dark"); // must match server default
+  const [mounted, setMounted] = useState(false);
 
-  // Apply on mount and whenever theme changes
+  // Hydrate from localStorage after mount (avoids SSR mismatch)
   useEffect(() => {
+    const stored = (localStorage.getItem("nymbl-theme") as Theme) || "dark";
+    setTheme(stored);
+    applyTheme(stored);
+    setMounted(true);
+  }, []);
+
+  // Apply on subsequent changes (not the initial mount)
+  useEffect(() => {
+    if (!mounted) return;
     applyTheme(theme);
     localStorage.setItem("nymbl-theme", theme);
-  }, [theme]);
+  }, [theme, mounted]);
 
   const toggleTheme = useCallback(() => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
