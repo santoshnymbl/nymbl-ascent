@@ -10,9 +10,9 @@
 :root {
   color-scheme: light;
   --bg-base: #f8fdff;
-  --bg-surface: rgba(255, 255, 255, 0.88);
-  --bg-surface-solid: rgba(255, 255, 255, 0.95);
-  --bg-elevated: rgba(255, 255, 255, 0.92);
+  --bg-surface: #ffffff;
+  --bg-surface-solid: #ffffff;
+  --bg-elevated: #ffffff;
   --bg-input: #ffffff;
 
   --text-primary: #0a0f1e;
@@ -71,10 +71,10 @@
 [data-theme="dark"] {
   color-scheme: dark;
   --bg-base: #001030;
-  --bg-surface: rgba(10, 26, 58, 0.85);
-  --bg-surface-solid: rgba(10, 22, 50, 0.92);
-  --bg-elevated: rgba(15, 30, 65, 0.88);
-  --bg-input: rgba(255, 255, 255, 0.08);
+  --bg-surface: #0b1d42;
+  --bg-surface-solid: #0a1a3a;
+  --bg-elevated: #0f2248;
+  --bg-input: #0f2248;
 
   --text-primary: #FFFFFF;
   --text-secondary: #CBD5E1;
