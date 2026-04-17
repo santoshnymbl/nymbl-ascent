@@ -2,18 +2,18 @@
 
 /* ========================================================================
    Nymbl Ascent Design System v2 — Glassmorphism + Modern Dark Cinema
-   Fonts: Space Grotesk (headings) + DM Sans (body)
+   Fonts: Montserrat (headings) + Raleway (body)
    Loaded via <link> in layout.tsx
    ======================================================================== */
 
 /* ---- Light Theme (default) ---- */
 :root {
   color-scheme: light;
-  --bg-base: #F0F2F5;
+  --bg-base: #f8fdff;
   --bg-surface: rgba(255, 255, 255, 0.7);
-  --bg-surface-solid: #FFFFFF;
+  --bg-surface-solid: #ffffff;
   --bg-elevated: rgba(255, 255, 255, 0.85);
-  --bg-input: #FFFFFF;
+  --bg-input: #ffffff;
 
   --text-primary: #0F172A;
   --text-secondary: #475569;
@@ -68,11 +68,11 @@
 /* ---- Dark Theme ---- */
 [data-theme="dark"] {
   color-scheme: dark;
-  --bg-base: #0B0D18;
-  --bg-surface: rgba(255, 255, 255, 0.06);
-  --bg-surface-solid: #141625;
-  --bg-elevated: rgba(255, 255, 255, 0.09);
-  --bg-input: rgba(255, 255, 255, 0.08);
+  --bg-base: #001030;
+  --bg-surface: rgba(255, 255, 255, 0.05);
+  --bg-surface-solid: #0a1a3a;
+  --bg-elevated: rgba(255, 255, 255, 0.07);
+  --bg-input: rgba(255, 255, 255, 0.06);
 
   --text-primary: #F1F1F3;
   --text-secondary: #9CA3AF;
@@ -116,15 +116,15 @@
 @theme inline {
   --color-background: var(--bg-base);
   --color-foreground: var(--text-primary);
-  --font-sans: 'DM Sans', system-ui, sans-serif;
-  --font-heading: 'Space Grotesk', system-ui, sans-serif;
+  --font-sans: 'Raleway', system-ui, sans-serif;
+  --font-heading: 'Montserrat', system-ui, sans-serif;
 }
 
 /* ---- Base ---- */
 body {
   background: var(--bg-base);
   color: var(--text-primary);
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Raleway', system-ui, sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -132,7 +132,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-family: 'Montserrat', system-ui, sans-serif;
   line-height: 1.2;
   letter-spacing: -0.02em;
 }
@@ -165,7 +165,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-md);
   padding: 10px 20px;
   font-weight: 600;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Raleway', system-ui, sans-serif;
   cursor: pointer;
   transition: all var(--transition-fast);
   box-shadow: 0 0 0 0 var(--accent-glow);
@@ -184,7 +184,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-md);
   padding: 10px 20px;
   font-weight: 600;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Raleway', system-ui, sans-serif;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
@@ -201,7 +201,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-md);
   padding: 10px 20px;
   font-weight: 500;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Raleway', system-ui, sans-serif;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
@@ -218,7 +218,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-md);
   padding: 10px 14px;
   color: var(--text-primary);
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Raleway', system-ui, sans-serif;
   font-size: 14px;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
   width: 100%;
@@ -239,7 +239,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-full);
   font-size: 12px;
   font-weight: 600;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Raleway', system-ui, sans-serif;
   line-height: 1.6;
 }
 
@@ -283,7 +283,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-sm);
   padding: 6px 12px;
   font-size: 12px;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Raleway', system-ui, sans-serif;
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
@@ -314,20 +314,20 @@ h1, h2, h3, h4, h5, h6 {
   animation: meshFloat 20s ease-in-out infinite alternate;
 }
 .ambient-mesh::before {
-  width: 700px;
-  height: 700px;
-  background: var(--accent);
-  top: -250px;
-  right: -150px;
-  opacity: 0.12;
+  width: 800px;
+  height: 800px;
+  background: #6366f1;
+  top: -300px;
+  left: -200px;
+  opacity: 0.14;
 }
 .ambient-mesh::after {
-  width: 600px;
-  height: 600px;
-  background: var(--cta);
-  bottom: -200px;
-  left: 5%;
-  opacity: 0.08;
+  width: 700px;
+  height: 700px;
+  background: #06b6d4;
+  top: -150px;
+  left: -50px;
+  opacity: 0.10;
   animation-delay: -10s;
 }
 @keyframes meshFloat {
@@ -342,6 +342,22 @@ h1, h2, h3, h4, h5, h6 {
   filter: blur(100px);
   pointer-events: none;
   animation: meshFloat 25s ease-in-out infinite alternate-reverse;
+}
+
+/* Light-theme ambient: cyan glow from top-right */
+:root .ambient-mesh::before {
+  background: #06b6d4;
+  top: -300px;
+  left: auto;
+  right: -200px;
+  opacity: 0.10;
+}
+:root .ambient-mesh::after {
+  background: #38bdf8;
+  top: -100px;
+  left: auto;
+  right: 10%;
+  opacity: 0.08;
 }
 
 /* ---- Gradient Text ---- */
@@ -521,7 +537,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-md);
   padding: 10px 36px 10px 14px;
   color: var(--text-primary);
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Raleway', system-ui, sans-serif;
   font-size: 14px;
   cursor: pointer;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
