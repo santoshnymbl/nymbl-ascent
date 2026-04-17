@@ -4,6 +4,7 @@ import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, Trash2 } from "lucide-react";
 import ScenarioTreeEditor from "@/components/admin/ScenarioTreeEditor";
+import Stage1GameEditor from "@/components/admin/Stage1GameEditor";
 import { buildPathScores } from "@/components/admin/buildPathScores";
 import type { ScenarioTree } from "@/types";
 
@@ -31,8 +32,8 @@ export default function AdminScenarioEditorPage({
   const [isPublished, setIsPublished] = useState(false);
   const [tree, setTree] = useState<ScenarioTree | null>(null);
   const [isBranchingTree, setIsBranchingTree] = useState(false);
-  const [rawTreeJson, setRawTreeJson] = useState("");
-  const [rawTreeError, setRawTreeError] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [gameData, setGameData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -51,8 +52,8 @@ export default function AdminScenarioEditorPage({
           setTree(rawTree);
           setIsBranchingTree(true);
         } else {
-          // Stage 1 game configs or non-branching Stage 3 — keep as raw JSON
-          setRawTreeJson(JSON.stringify(data.tree, null, 2));
+          // Stage 1 game configs or non-branching Stage 3
+          setGameData(data.tree);
           setIsBranchingTree(false);
         }
       } catch (err) {
@@ -78,14 +79,8 @@ export default function AdminScenarioEditorPage({
         pathScores: buildPathScores(tree),
       };
     } else {
-      // Raw JSON mode — parse and validate
-      try {
-        treeData = JSON.parse(rawTreeJson);
-        setRawTreeError("");
-      } catch {
-        setRawTreeError("Invalid JSON");
-        return;
-      }
+      if (!gameData) return;
+      treeData = gameData;
     }
 
     setSaving(true);
@@ -281,57 +276,12 @@ export default function AdminScenarioEditorPage({
           )}
         </div>
 
-        {/* Editor: visual tree for branching scenarios, JSON textarea for game configs */}
+        {/* Editor: visual tree for branching scenarios, visual game editor for Stage 1 */}
         {isBranchingTree && tree ? (
           <ScenarioTreeEditor tree={tree} onChange={setTree} />
-        ) : (
-          <div>
-            <label
-              style={{
-                display: "block",
-                fontSize: "0.875rem",
-                fontWeight: 500,
-                color: "var(--text-secondary)",
-                marginBottom: 4,
-              }}
-            >
-              Game Configuration (JSON)
-            </label>
-            <textarea
-              value={rawTreeJson}
-              onChange={(e) => {
-                setRawTreeJson(e.target.value);
-                setRawTreeError("");
-              }}
-              rows={14}
-              style={{
-                width: "100%",
-                padding: "12px 16px",
-                borderRadius: "var(--radius-lg)",
-                fontFamily: "monospace",
-                fontSize: "0.875rem",
-                outline: "none",
-                transition: "box-shadow var(--transition-fast)",
-                background: "var(--bg-surface-solid)",
-                color: "var(--accent-light)",
-                border: "1px solid var(--border-default)",
-                boxShadow: rawTreeError ? "0 0 0 2px var(--error)" : "none",
-                resize: "vertical",
-              }}
-              onFocus={(e) => {
-                if (!rawTreeError) e.currentTarget.style.boxShadow = "0 0 0 2px var(--accent)";
-              }}
-              onBlur={(e) => {
-                if (!rawTreeError) e.currentTarget.style.boxShadow = "none";
-              }}
-            />
-            {rawTreeError && (
-              <p style={{ color: "var(--error)", fontSize: "0.75rem", marginTop: 4 }}>
-                {rawTreeError}
-              </p>
-            )}
-          </div>
-        )}
+        ) : gameData ? (
+          <Stage1GameEditor data={gameData} onChange={setGameData} />
+        ) : null}
 
         {/* Actions */}
         <div style={{ display: "flex", gap: 12, paddingTop: 8 }}>
