@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import CsvUpload from "@/components/admin/CsvUpload";
 import AssessmentLinksSection from "@/components/admin/AssessmentLinksSection";
-import { UserPlus, AlertCircle, CheckCircle2, ChevronDown, ChevronUp, Users, Mail, RefreshCw, Calculator, Pencil, Trash2, X, Eraser } from "lucide-react";
+import { UserPlus, AlertCircle, CheckCircle2, ChevronDown, ChevronUp, Users, Mail, RefreshCw, Calculator, Pencil, Trash2, X, Eraser, Link2 } from "lucide-react";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { Select } from "@/components/ui/Select";
 
@@ -22,6 +22,7 @@ interface CandidateRow {
   createdAt: string;
   role: { id: string; name: string };
   assessment: { score: { compositeScore: number } | null } | null;
+  assessmentLink: { code: string } | null;
 }
 
 interface InviteCandidate {
@@ -620,12 +621,13 @@ export default function AdminCandidatesPage() {
                   <th style={{ padding: "12px 16px", fontWeight: 500 }}>Status</th>
                   <th style={{ padding: "12px 16px", fontWeight: 500 }}>Composite Score</th>
                   <th style={{ padding: "12px 16px", fontWeight: 500 }}>Date</th>
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>Source</th>
                 </tr>
               </thead>
               <tbody>
                 {[1, 2, 3, 4, 5].map((i) => (
                   <tr key={i} style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-                    {[1, 2, 3, 4, 5, 6].map((j) => (
+                    {[1, 2, 3, 4, 5, 6, 7].map((j) => (
                       <td key={j} style={{ padding: "12px 16px" }}>
                         <div
                           className="skeleton-pulse"
@@ -718,6 +720,7 @@ export default function AdminCandidatesPage() {
                     Composite Score
                   </th>
                   <th style={{ padding: "12px 16px", fontWeight: 500 }}>Date</th>
+                  <th style={{ padding: "12px 16px", fontWeight: 500 }}>Source</th>
                   <th style={{ padding: "12px 16px", fontWeight: 500 }}>Actions</th>
                 </tr>
               </thead>
@@ -825,6 +828,15 @@ export default function AdminCandidatesPage() {
                         }}
                       >
                         {new Date(c.createdAt).toLocaleDateString()}
+                      </td>
+                      <td style={{ padding: "12px 16px" }}>
+                        <Tooltip content={c.assessmentLink ? `Public link: ${c.assessmentLink.code}` : "Admin invite"}>
+                          {c.assessmentLink ? (
+                            <Link2 size={14} style={{ color: "var(--cta)" }} />
+                          ) : (
+                            <Mail size={14} style={{ color: "var(--text-muted)" }} />
+                          )}
+                        </Tooltip>
                       </td>
                       <td style={{ padding: "12px 16px" }}>
                         <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>

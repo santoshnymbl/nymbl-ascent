@@ -9,7 +9,11 @@ export async function GET(request: NextRequest) {
   if (status) where.status = status;
   const candidates = await prisma.candidate.findMany({
     where,
-    include: { role: true, assessment: { include: { score: true } } },
+    include: {
+      role: true,
+      assessment: { include: { score: true } },
+      assessmentLink: { select: { code: true } },
+    },
     orderBy: { createdAt: "desc" },
   });
   return NextResponse.json(candidates);
