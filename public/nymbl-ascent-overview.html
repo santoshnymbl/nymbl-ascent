@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Nymbl Ascent — What It Is &amp; How It Works</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0b14; --bg2: #0f1020;
+    --ink: #e9ecf8; --ink2: #c7cde4; --muted: #9aa3c0;
+    --line: rgba(255,255,255,.08);
+    --accent: #6366f1; --accent2: #8b5cf6; --cyan: #06b6d4;
+    --success: #10b981; --warning: #f59e0b; --pink: #ec4899;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: "Inter", -apple-system, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1200px 700px at 82% -8%, rgba(99,102,241,.28), transparent 60%),
+      radial-gradient(900px 520px at -10% 110%, rgba(6,182,212,.18), transparent 60%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+  }
+  .space { font-family: "Space Grotesk", "Inter", sans-serif; letter-spacing: -.025em; }
+
+  /* Deck */
+  .deck { position: relative; width: 100vw; height: 100vh; }
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 64px 80px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity .6s ease, transform .6s ease;
+    pointer-events: none;
+  }
+  .slide.active { opacity: 1; transform: none; pointer-events: auto; }
+  .slide.active .reveal {
+    animation: rise .6s cubic-bezier(.2,.7,.2,1) both;
+  }
+  .slide.active .reveal:nth-child(2) { animation-delay: .1s; }
+  .slide.active .reveal:nth-child(3) { animation-delay: .2s; }
+  .slide.active .reveal:nth-child(4) { animation-delay: .3s; }
+  .slide.active .reveal:nth-child(5) { animation-delay: .4s; }
+  .slide.active .reveal:nth-child(6) { animation-delay: .5s; }
+  .slide.active .reveal:nth-child(7) { animation-delay: .6s; }
+  .slide.active .reveal:nth-child(8) { animation-delay: .7s; }
+  @keyframes rise { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:none; } }
+
+  /* Typography */
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    color: var(--muted); text-transform: uppercase; letter-spacing: .18em;
+    font-size: 11px; font-weight: 600;
+    padding: 6px 14px; border: 1px solid var(--line);
+    border-radius: 999px; background: rgba(255,255,255,.03);
+    width: max-content; margin-bottom: 20px;
+  }
+  .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+  h1 { font-size: 56px; line-height: 1.08; font-weight: 700; letter-spacing: -.035em; margin-bottom: 18px; }
+  h2 { font-size: 42px; line-height: 1.12; font-weight: 700; letter-spacing: -.03em; margin-bottom: 16px; }
+  .subtitle { font-size: 22px; line-height: 1.5; color: var(--ink2); max-width: 680px; }
+  .big-number { font-size: 80px; font-weight: 700; letter-spacing: -.04em; }
+
+  /* Cards grid */
+  .cards { display: grid; gap: 20px; margin-top: 32px; }
+  .cards-3 { grid-template-columns: repeat(3, 1fr); }
+  .cards-4 { grid-template-columns: repeat(4, 1fr); }
+  .card {
+    background: rgba(255,255,255,.04); border: 1px solid var(--line);
+    border-radius: 16px; padding: 28px; position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+  .card h3 { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+  .card p { font-size: 14px; line-height: 1.6; color: var(--muted); }
+  .card .icon { font-size: 28px; margin-bottom: 14px; display: block; }
+  .card .badge {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .1em;
+    padding: 3px 10px; border-radius: 6px; margin-bottom: 12px;
+  }
+
+  /* Stage colors */
+  .stage-reveal .badge { background: rgba(99,102,241,.15); color: #818cf8; }
+  .stage-build .badge { background: rgba(139,92,246,.15); color: #a78bfa; }
+  .stage-grow .badge { background: rgba(6,182,212,.15); color: #22d3ee; }
+  .stage-reveal::before { background: var(--accent); }
+  .stage-build::before { background: var(--accent2); }
+  .stage-grow::before { background: var(--cyan); }
+
+  /* Tenets */
+  .tenet-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px; }
+  .tenet {
+    background: rgba(255,255,255,.03); border: 1px solid var(--line);
+    border-radius: 12px; padding: 20px; text-align: center;
+  }
+  .tenet .label { font-size: 13px; font-weight: 600; color: var(--ink2); text-transform: uppercase; letter-spacing: .1em; }
+  .tenet .bar { height: 4px; border-radius: 2px; background: var(--line); margin-top: 10px; overflow: hidden; }
+  .tenet .bar-fill { height: 100%; border-radius: 2px; width: 0; transition: width 1.2s ease; }
+
+  /* Scoring formula */
+  .formula {
+    display: flex; align-items: center; gap: 16px;
+    font-size: 24px; font-weight: 600; margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  .formula .part {
+    background: rgba(255,255,255,.05); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 24px; text-align: center;
+  }
+  .formula .part .pct { font-size: 32px; font-weight: 700; }
+  .formula .part .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-top: 4px; }
+  .formula .op { font-size: 28px; color: var(--muted); }
+
+  /* Progress bar */
+  .progress-bar {
+    position: fixed; bottom: 0; left: 0; height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--cyan));
+    transition: width .6s ease; z-index: 100;
+  }
+
+  /* Slide counter */
+  .counter {
+    position: fixed; bottom: 16px; right: 24px;
+    font-size: 12px; color: var(--muted); font-weight: 500;
+    z-index: 100;
+  }
+
+  /* Narration indicator */
+  .narration-indicator {
+    position: fixed; top: 20px; right: 24px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--muted); z-index: 100;
+  }
+  .narration-indicator .pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--success);
+    animation: pulse-dot 1.5s ease infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .5; transform: scale(1.3); }
+  }
+
+  /* Start overlay */
+  .start-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(10,11,20,.95); backdrop-filter: blur(20px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity .5s ease;
+  }
+  .start-overlay.hidden { opacity: 0; pointer-events: none; }
+  .start-btn {
+    padding: 16px 48px; font-size: 18px; font-weight: 600;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white; border: none; border-radius: 12px; cursor: pointer;
+    font-family: inherit; transition: transform .2s, box-shadow .2s;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,.4); }
+  .start-overlay h2 { font-size: 36px; margin-bottom: 8px; font-weight: 700; letter-spacing: -.03em; }
+  .start-overlay p { color: var(--muted); font-size: 16px; margin-bottom: 32px; }
+
+  /* Highlight text */
+  .hl { color: #818cf8; }
+  .hl-cyan { color: #22d3ee; }
+  .hl-green { color: #34d399; }
+  .hl-pink { color: #f472b6; }
+</style>
+</head>
+<body>
+
+<!-- Start overlay (required for Web Speech API) -->
+<div class="start-overlay" id="startOverlay">
+  <h2 class="space">Nymbl Ascent</h2>
+  <p>2-minute overview with narration</p>
+  <button class="start-btn" onclick="startPresentation()">Play Presentation</button>
+</div>
+
+<!-- Progress -->
+<div class="progress-bar" id="progressBar" style="width:0%"></div>
+<div class="counter" id="counter"></div>
+<div class="narration-indicator" id="narrationIndicator" style="display:none">
+  <div class="pulse"></div>
+  <span>Narrating</span>
+</div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide" data-narration="Welcome to Nymbl Ascent — a new way to screen candidates. Instead of resumes and gut feelings, Ascent reveals who someone actually is through game-based behavioral assessment.">
+    <div class="reveal eyebrow"><span class="dot"></span> Introducing</div>
+    <h1 class="reveal space">Nymbl <span class="hl">Ascent</span></h1>
+    <p class="reveal subtitle">A game-based behavioral assessment platform that reveals <em>who someone is</em> — not just what they've memorized.</p>
+    <p class="reveal subtitle" style="margin-top:16px; font-size:18px; color:var(--muted)">Psychology-grounded. Deterministic scoring. Hard to game.</p>
+  </div>
+
+  <!-- SLIDE 2: The Problem -->
+  <div class="slide" data-narration="Here's the problem we're solving. Traditional hiring relies on resumes, which only show credentials. Interviews are subjective and biased toward good talkers. And skills tests miss the most important thing — how someone thinks and acts under pressure.">
+    <div class="reveal eyebrow"><span class="dot"></span> The Problem</div>
+    <h2 class="reveal space">Traditional screening is <span class="hl-pink">broken</span></h2>
+    <div class="reveal cards cards-3" style="margin-top:28px">
+      <div class="card">
+        <span class="icon">📄</span>
+        <h3>Resumes lie</h3>
+        <p>Credentials don't predict performance. You're screening for polish, not potential.</p>
+      </div>
+      <div class="card">
+        <span class="icon">🎭</span>
+        <h3>Interviews are biased</h3>
+        <p>Charisma and rehearsed answers win over genuine competence and values alignment.</p>
+      </div>
+      <div class="card">
+        <span class="icon">📝</span>
+        <h3>Skills tests miss what matters</h3>
+        <p>Coding puzzles and case studies test knowledge, not judgment under ambiguity.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: How It Works (Overview) -->
+  <div class="slide" data-narration="Nymbl Ascent replaces all of that with a 15-minute, three-stage assessment. Each stage is designed to surface different behavioral signals — from gut instincts to complex decision-making to role-specific challenges. Let's walk through each stage.">
+    <div class="reveal eyebrow"><span class="dot"></span> How It Works</div>
+    <h2 class="reveal space">Three stages. <span class="hl-cyan">15 minutes.</span> Zero guesswork.</h2>
+    <div class="reveal cards cards-3" style="margin-top:28px">
+      <div class="card stage-reveal">
+        <span class="badge">Stage 1</span>
+        <h3>Reveal</h3>
+        <p>Four micro-games that surface implicit preferences through clicks, not words. No right answers — just choices that reveal priorities.</p>
+      </div>
+      <div class="card stage-build">
+        <span class="badge">Stage 2</span>
+        <h3>Build</h3>
+        <p>Branching workplace scenarios with depleting resources. Every choice has a cost — there's no way to game the "right" answer.</p>
+      </div>
+      <div class="card stage-grow">
+        <span class="badge">Stage 3</span>
+        <h3>Grow</h3>
+        <p>A role-specific challenge auto-generated from the job description. Engineers debug code. Consultants handle escalations. Sales reps handle objections.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Stage 1 Deep Dive -->
+  <div class="slide" data-narration="In Stage 1, candidates play four quick micro-games. Triage Tower tests how they prioritize a flooded inbox. Trade-Off Tiles forces impossible choices between competing values. Signal Sort measures how they read ambiguous communication. And Resource Roulette tests how they allocate limited resources — then throws a curveball to test adaptability.">
+    <div class="reveal eyebrow"><span class="dot"></span> Stage 1 — Reveal</div>
+    <h2 class="reveal space">Four games. <span class="hl">Pure instinct.</span></h2>
+    <div class="reveal cards cards-4" style="margin-top:24px">
+      <div class="card stage-reveal">
+        <span class="icon">🗼</span>
+        <h3>Triage Tower</h3>
+        <p>Prioritize a flooded inbox. Drag items to rank urgency — then handle an interrupt.</p>
+      </div>
+      <div class="card stage-reveal">
+        <span class="icon">⚖️</span>
+        <h3>Trade-Off Tiles</h3>
+        <p>Slide between competing values. No middle ground — every choice costs something.</p>
+      </div>
+      <div class="card stage-reveal">
+        <span class="icon">📡</span>
+        <h3>Signal Sort</h3>
+        <p>Categorize ambiguous messages as urgent, important, or noise.</p>
+      </div>
+      <div class="card stage-reveal">
+        <span class="icon">🎰</span>
+        <h3>Resource Roulette</h3>
+        <p>Allocate limited tokens across projects — then adapt when a curveball hits.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: What We Measure -->
+  <div class="slide" data-narration="Everything maps to seven behavioral tenets grounded in organizational values. Client Focused, Empowering, Productive, Balanced, Reliable, Improving, and Transparent. Each is scored independently from 0 to 100 — no human subjectivity, just pure rubric-based calculation.">
+    <div class="reveal eyebrow"><span class="dot"></span> What We Measure</div>
+    <h2 class="reveal space">Seven tenets. <span class="hl-green">Zero subjectivity.</span></h2>
+    <div class="reveal tenet-grid">
+      <div class="tenet"><div class="label">Client Focused</div><div class="bar"><div class="bar-fill" style="background:#818cf8" data-width="85%"></div></div></div>
+      <div class="tenet"><div class="label">Empowering</div><div class="bar"><div class="bar-fill" style="background:#a78bfa" data-width="72%"></div></div></div>
+      <div class="tenet"><div class="label">Productive</div><div class="bar"><div class="bar-fill" style="background:#22d3ee" data-width="90%"></div></div></div>
+      <div class="tenet"><div class="label">Balanced</div><div class="bar"><div class="bar-fill" style="background:#34d399" data-width="68%"></div></div></div>
+      <div class="tenet"><div class="label">Reliable</div><div class="bar"><div class="bar-fill" style="background:#f472b6" data-width="88%"></div></div></div>
+      <div class="tenet"><div class="label">Improving</div><div class="bar"><div class="bar-fill" style="background:#fbbf24" data-width="76%"></div></div></div>
+      <div class="tenet"><div class="label">Transparent</div><div class="bar"><div class="bar-fill" style="background:#fb923c" data-width="82%"></div></div></div>
+    </div>
+    <div class="reveal formula" style="margin-top:28px">
+      <div class="part"><div class="pct" style="color:#818cf8">60%</div><div class="lbl">Tenets</div></div>
+      <div class="op">+</div>
+      <div class="part"><div class="pct" style="color:#22d3ee">25%</div><div class="lbl">Role Fit</div></div>
+      <div class="op">+</div>
+      <div class="part"><div class="pct" style="color:#34d399">15%</div><div class="lbl">Behavioral</div></div>
+      <div class="op">=</div>
+      <div class="part"><div class="pct" style="background:linear-gradient(135deg,#818cf8,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Score</div><div class="lbl">Composite 0–100</div></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Anti-Gaming -->
+  <div class="slide" data-narration="A key advantage: Ascent is extremely hard to game. There are no obvious right answers. Behavioral signals run silently in the background — tracking decision pace, consistency across stages, random clicking patterns, and revision behavior. The system penalizes gaming and rewards thoughtful engagement.">
+    <div class="reveal eyebrow"><span class="dot"></span> Hard to Game</div>
+    <h2 class="reveal space">Hidden signals. <span class="hl-pink">Honest results.</span></h2>
+    <div class="reveal cards cards-4" style="margin-top:28px">
+      <div class="card">
+        <span class="icon">⏱️</span>
+        <h3>Decision Pace</h3>
+        <p>Thoughtful responses (2–10s) score higher than instant clicks or excessive deliberation.</p>
+      </div>
+      <div class="card">
+        <span class="icon">🔄</span>
+        <h3>Revision Tracking</h3>
+        <p>Changing your mind shows reflection — a positive signal, not a penalty.</p>
+      </div>
+      <div class="card">
+        <span class="icon">🎯</span>
+        <h3>Cross-Stage Consistency</h3>
+        <p>Values expressed in Stage 1 should align with decisions in Stage 2. Inconsistency flags gaming.</p>
+      </div>
+      <div class="card">
+        <span class="icon">🛡️</span>
+        <h3>Pattern Detection</h3>
+        <p>Random clicking, always-first-option, and speed-running are detected and penalized.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: Admin Experience -->
+  <div class="slide" data-narration="For hiring managers, the admin dashboard shows every candidate's composite score and detailed tenet breakdown at a glance. You can invite candidates individually, upload a CSV, or share a public assessment link that anyone can use to self-register. AI-powered scoring happens automatically — no manual review needed.">
+    <div class="reveal eyebrow"><span class="dot"></span> For Hiring Managers</div>
+    <h2 class="reveal space">Invite. Assess. <span class="hl-cyan">Score. Done.</span></h2>
+    <div class="reveal cards cards-3" style="margin-top:28px">
+      <div class="card">
+        <span class="icon">📨</span>
+        <h3>Flexible Invites</h3>
+        <p>Single invite, CSV bulk upload, or shareable public links with domain allowlists and registration caps.</p>
+      </div>
+      <div class="card">
+        <span class="icon">📊</span>
+        <h3>Instant Scoring</h3>
+        <p>Deterministic scoring with AI-powered qualitative analysis. Every candidate gets a 0–100 composite with full tenet breakdown.</p>
+      </div>
+      <div class="card">
+        <span class="icon">🎯</span>
+        <h3>Role-Scoped</h3>
+        <p>Stage 3 challenges are auto-generated from the job description. Engineers, consultants, and salespeople each get relevant challenges.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Closing -->
+  <div class="slide" data-narration="That's Nymbl Ascent. We're building a future where hiring decisions are grounded in evidence, not intuition. Where every candidate gets a fair, consistent evaluation. And where the best people rise — regardless of their resume. Try it yourself at the link below.">
+    <div class="reveal eyebrow"><span class="dot"></span> The Vision</div>
+    <h1 class="reveal space">Hire for <span class="hl">who they are.</span></h1>
+    <p class="reveal subtitle" style="margin-top:8px">Not who they claim to be.</p>
+    <div class="reveal" style="margin-top:48px; display:flex; gap:24px; flex-wrap:wrap">
+      <div style="background:rgba(99,102,241,.1); border:1px solid rgba(99,102,241,.2); border-radius:12px; padding:20px 32px;">
+        <div style="font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px;">Try It</div>
+        <div style="font-size:20px; font-weight:600; font-family:'Space Grotesk',sans-serif;">/join/consultant</div>
+      </div>
+      <div style="background:rgba(6,182,212,.1); border:1px solid rgba(6,182,212,.2); border-radius:12px; padding:20px 32px;">
+        <div style="font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px;">Built With</div>
+        <div style="font-size:20px; font-weight:600; font-family:'Space Grotesk',sans-serif;">Next.js + Claude AI</div>
+      </div>
+    </div>
+    <p class="reveal" style="margin-top:40px; color:var(--muted); font-size:14px;">Nymbl Ascent &mdash; by the Nymbl team at Adeptia</p>
+  </div>
+
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+let synth = window.speechSynthesis;
+
+function updateUI() {
+  slides.forEach((s, i) => s.classList.toggle('active', i === current));
+  document.getElementById('progressBar').style.width = ((current + 1) / total * 100) + '%';
+  document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
+
+  // Animate tenet bars if on that slide
+  if (current === 4) {
+    setTimeout(() => {
+      document.querySelectorAll('.bar-fill').forEach(b => {
+        b.style.width = b.dataset.width;
+      });
+    }, 400);
+  }
+}
+
+function narrate(text) {
+  return new Promise((resolve) => {
+    synth.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 1.0;
+    utter.pitch = 1.0;
+    utter.volume = 1.0;
+
+    // Pick a good voice
+    const voices = synth.getVoices();
+    const preferred = voices.find(v =>
+      v.name.includes('Google UK English Male') ||
+      v.name.includes('Microsoft Mark') ||
+      v.name.includes('Daniel') ||
+      v.name.includes('Google US English')
+    ) || voices.find(v => v.lang.startsWith('en')) || voices[0];
+    if (preferred) utter.voice = preferred;
+
+    const indicator = document.getElementById('narrationIndicator');
+    indicator.style.display = 'flex';
+
+    utter.onend = () => {
+      indicator.style.display = 'none';
+      resolve();
+    };
+    utter.onerror = () => {
+      indicator.style.display = 'none';
+      resolve();
+    };
+
+    synth.speak(utter);
+  });
+}
+
+async function advanceSlide() {
+  const narrationText = slides[current].dataset.narration;
+  if (narrationText) {
+    await narrate(narrationText);
+    // Small pause after narration
+    await new Promise(r => setTimeout(r, 1200));
+  }
+
+  current++;
+  if (current < total) {
+    updateUI();
+    advanceSlide();
+  } else {
+    document.getElementById('narrationIndicator').style.display = 'none';
+  }
+}
+
+function startPresentation() {
+  document.getElementById('startOverlay').classList.add('hidden');
+  updateUI();
+
+  // Wait for voices to load, then start
+  function tryStart() {
+    const voices = synth.getVoices();
+    if (voices.length > 0) {
+      setTimeout(() => advanceSlide(), 800);
+    } else {
+      setTimeout(tryStart, 100);
+    }
+  }
+  tryStart();
+}
+
+// Preload voices
+synth.getVoices();
+if (synth.onvoiceschanged !== undefined) {
+  synth.onvoiceschanged = () => synth.getVoices();
+}
+
+// Keyboard controls
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    synth.cancel();
+    document.getElementById('narrationIndicator').style.display = 'none';
+  }
+});
+</script>
+</body>
+</html>
