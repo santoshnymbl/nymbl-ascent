@@ -17,6 +17,7 @@ model Role {
   updatedAt       DateTime     @updatedAt
   candidates      Candidate[]
   roleScenarios   RoleScenario[]
+  assessmentLinks AssessmentLink[]
 }
 
 model Scenario {
@@ -44,18 +45,34 @@ model RoleScenario {
   @@unique([roleId, scenarioId])
 }
 
+model AssessmentLink {
+  id               String      @id @default(uuid())
+  code             String      @unique
+  roleId           String
+  expiresAt        DateTime?
+  maxRegistrations Int?
+  allowedDomains   String?
+  isActive         Boolean     @default(true)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  role             Role        @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  candidates       Candidate[]
+}
+
 model Candidate {
-  id          String       @id @default(uuid())
-  name        String
-  email       String
-  roleId      String
-  token       String       @unique
-  tokenExpiry DateTime
-  status      String       @default("invited") // invited, in_progress, completed, scored
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  role        Role         @relation(fields: [roleId], references: [id])
-  assessment  Assessment?
+  id               String          @id @default(uuid())
+  name             String
+  email            String
+  roleId           String
+  token            String          @unique
+  tokenExpiry      DateTime
+  status           String          @default("invited") // invited, in_progress, completed, scored
+  assessmentLinkId String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  role             Role            @relation(fields: [roleId], references: [id])
+  assessmentLink   AssessmentLink? @relation(fields: [assessmentLinkId], references: [id], onDelete: SetNull)
+  assessment       Assessment?
 }
 
 model Assessment {
