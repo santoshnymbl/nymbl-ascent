@@ -313,7 +313,6 @@ export default function AdminCandidatesPage() {
           alignItems: "center",
           justifyContent: "space-between",
           marginBottom: 24,
-          position: "relative",
         }}
       >
         <h2
@@ -327,7 +326,6 @@ export default function AdminCandidatesPage() {
           Candidates
         </h2>
         <div style={{ display: "flex", gap: 8 }}>
-          <AssessmentLinksSection roles={roles} />
           <button
             onClick={() => setShowInvite(!showInvite)}
             className="btn-cta"
@@ -343,6 +341,9 @@ export default function AdminCandidatesPage() {
           </button>
         </div>
       </div>
+
+      {/* ---- Public Assessment Links Section ---- */}
+      <AssessmentLinksSection roles={roles} />
 
       {/* ---- Collapsible Invite Section ---- */}
       {showInvite && (

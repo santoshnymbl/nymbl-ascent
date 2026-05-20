@@ -209,7 +209,7 @@ export default function AssessmentLinksSection({ roles }: Props) {
   }
 
   async function handleCopy(link: AssessmentLinkRow) {
-    const url = `${window.location.origin}/apply/${link.code}`;
+    const url = `${window.location.origin}/join/${link.code}`;
     await navigator.clipboard.writeText(url);
     setCopiedId(link.id);
     setTimeout(() => setCopiedId(null), 2000);
@@ -272,19 +272,8 @@ export default function AssessmentLinksSection({ roles }: Props) {
         {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
       </button>
 
-      {/* Expanded panel — rendered as a sibling outside the header row */}
       {expanded && (
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            marginTop: 8,
-            zIndex: 40,
-            padding: "0 24px",
-          }}
-        >
-          <div className="glass-card" style={{ padding: 24 }}>
+        <div className="glass-card" style={{ padding: 24, marginBottom: 32 }}>
             {/* Header */}
             <div
               style={{
@@ -744,7 +733,6 @@ export default function AssessmentLinksSection({ roles }: Props) {
                 </table>
               </div>
             )}
-          </div>
         </div>
       )}
 
