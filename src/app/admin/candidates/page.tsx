@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import CsvUpload from "@/components/admin/CsvUpload";
+import AssessmentLinksSection from "@/components/admin/AssessmentLinksSection";
 import { UserPlus, AlertCircle, CheckCircle2, ChevronDown, ChevronUp, Users, Mail, RefreshCw, Calculator, Pencil, Trash2, X, Eraser } from "lucide-react";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { Select } from "@/components/ui/Select";
@@ -312,6 +313,7 @@ export default function AdminCandidatesPage() {
           alignItems: "center",
           justifyContent: "space-between",
           marginBottom: 24,
+          position: "relative",
         }}
       >
         <h2
@@ -324,19 +326,22 @@ export default function AdminCandidatesPage() {
         >
           Candidates
         </h2>
-        <button
-          onClick={() => setShowInvite(!showInvite)}
-          className="btn-cta"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          <UserPlus size={16} />
-          Invite Candidates
-          {showInvite ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-        </button>
+        <div style={{ display: "flex", gap: 8 }}>
+          <AssessmentLinksSection roles={roles} />
+          <button
+            onClick={() => setShowInvite(!showInvite)}
+            className="btn-cta"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <UserPlus size={16} />
+            Invite Candidates
+            {showInvite ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
+        </div>
       </div>
 
       {/* ---- Collapsible Invite Section ---- */}
