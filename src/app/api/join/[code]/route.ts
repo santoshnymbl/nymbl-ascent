@@ -100,7 +100,7 @@ export async function POST(request: NextRequest, { params }: Params) {
     });
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
     return NextResponse.json({
-      redirectUrl: `${baseUrl}/assess?token=${existing.token}`,
+      redirectUrl: `${baseUrl}/assess/${existing.token}`,
     });
   }
 
@@ -122,7 +122,7 @@ export async function POST(request: NextRequest, { params }: Params) {
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   return NextResponse.json(
-    { redirectUrl: `${baseUrl}/assess?token=${token}` },
+    { redirectUrl: `${baseUrl}/assess/${token}` },
     { status: 201 },
   );
 }

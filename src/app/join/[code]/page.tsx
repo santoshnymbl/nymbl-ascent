@@ -127,7 +127,7 @@ export default function JoinPage() {
           color: "var(--text-muted)",
           lineHeight: 1.5,
         }}>
-          This assessment has 3 stages and takes approximately 30–45 minutes. You can pause and resume at any time.
+          This assessment has 3 stages and takes approximately 15 minutes. You can pause and resume at any time.
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
